@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: documind-web
+  labels:
+    app: documind
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: documind
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: documind
+        tier: web
+    spec:
+      containers:
+        - name: documind-web
+          image: documind:latest # Replace with your image registry path
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: documind-secrets
+                  key: SECRET_KEY
+            - name: DEBUG
+              value: "False"
+            - name: ALLOWED_HOSTS
+              value: "your-domain.com"
+            - name: OCR_ENGINE
+              value: "tesseract"
+            - name: LLM_PROVIDER
+              value: "openai"
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: documind-secrets
+                  key: OPENAI_API_KEY
+            - name: LLM_MODEL
+              value: "gpt-4-turbo-preview"
+            - name: LLM_TEMPERATURE
+              value: "0.1"
+            - name: CHROMA_PERSIST_DIRECTORY
+              value: "/app/chroma_db"
+            - name: CHROMA_COLLECTION_NAME
+              value: "documents"
+            - name: REDIS_URL
+              value: "redis://redis-service:6379/1"

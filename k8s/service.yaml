@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: documind-web-service
+  labels:
+    app: documind
+    tier: web
+spec:
+  selector:
+    app: documind
+    tier: web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer

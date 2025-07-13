@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python documind/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - SECRET_KEY=your-secret-key-here
+      - DEBUG=True
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - OCR_ENGINE=tesseract
+      - LLM_PROVIDER=openai
+      - OPENAI_API_KEY=your-openai-key
+      - LLM_MODEL=gpt-4-turbo-preview
+      - LLM_TEMPERATURE=0.1
+      - CHROMA_PERSIST_DIRECTORY=./chroma_db
+      - CHROMA_COLLECTION_NAME=documents
+      - REDIS_URL=redis://redis:6379/1
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
