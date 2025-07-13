@@ -7,8 +7,14 @@ from documents.classification.classifier import DocumentClassifier
 from documents.extraction.llm_extractor import LLMExtractor
 from .serializers import DocumentProcessSerializer, DocumentSearchSerializer, DocumentBatchProcessSerializer
 from documents.classification.vector_search import VectorSearch
+from documents.exceptions import DocumentProcessingError, OCRProcessingError, DocumentClassificationError, EntityExtractionError
 import os
 import uuid
+
+ALLOWED_FILE_TYPES = ['.pdf', '.png', '.jpg', '.jpeg']
+
+def is_allowed_file_type(filename):
+    return os.path.splitext(filename)[1].lower() in ALLOWED_FILE_TYPES
 
 class DocumentProcessView(APIView):
     parser_classes = (MultiPartParser, FormParser)
@@ -20,6 +26,9 @@ class DocumentProcessView(APIView):
             extract_entities = serializer.validated_data.get('extract_entities', True)
             # force_ocr = serializer.validated_data.get('force_ocr', False)
             # language = serializer.validated_data.get('language', 'eng')
+
+            if not is_allowed_file_type(file_obj.name):
+                return Response({'status': 'error', 'message': 'Unsupported file type.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Save the uploaded file temporarily
             temp_file_path = os.path.join('/tmp', str(uuid.uuid4()) + file_obj.name)
@@ -51,8 +60,18 @@ class DocumentProcessView(APIView):
                     'extracted_entities': extracted_entities_data,
                 }, status=status.HTTP_200_OK)
 
+            except OCRProcessingError as e:
+                return Response({'status': 'error', 'message': f'OCR processing failed: {e}'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            except DocumentClassificationError as e:
+                return Response({'status': 'error', 'message': f'Document classification failed: {e}'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            except EntityExtractionError as e:
+                return Response({'status': 'error', 'message': f'Entity extraction failed: {e}'}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            except DocumentProcessingError as e:
+                return Response({'status': 'error', 'message': f'Document processing failed: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+            except FileNotFoundError as e:
+                return Response({'status': 'error', 'message': f'File not found during processing: {e}'}, status=status.HTTP_404_NOT_FOUND)
             except Exception as e:
-                return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'status': 'error', 'message': f'An unexpected error occurred: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             finally:
                 # Clean up the temporary file
                 if os.path.exists(temp_file_path):
@@ -74,43 +93,46 @@ class DocumentSearchView(APIView):
             vector_search = VectorSearch()
             embedding_generator = DocumentClassifier().embedding_generator # Reuse embedding generator
 
-            query_embedding = embedding_generator.generate_embedding(query)
+            try:
+                query_embedding = embedding_generator.generate_embedding(query)
 
-            where_clause = {}
-            if document_type:
-                where_clause['document_type'] = document_type
-            
-            # TODO: Add date filtering
+                where_clause = {}
+                if document_type:
+                    where_clause['document_type'] = document_type
+                
+                # TODO: Add date filtering
 
-            results = vector_search.search(query_embedding, n_results=limit + offset)
+                results = vector_search.search(query_embedding, n_results=limit + offset)
 
-            # Filter and paginate results
-            filtered_results = []
-            if results and results['ids']:
-                for i in range(len(results['ids'][0])):
-                    metadata = results['metadatas'][0][i]
-                    doc_id = results['ids'][0][i]
-                    distance = results['distances'][0][i]
+                # Filter and paginate results
+                filtered_results = []
+                if results and results['ids']:
+                    for i in range(len(results['ids'][0])):
+                        metadata = results['metadatas'][0][i]
+                        doc_id = results['ids'][0][i]
+                        distance = results['distances'][0][i]
 
-                    # Apply document_type filter if present
-                    if document_type and metadata.get('document_type') != document_type:
-                        continue
+                        # Apply document_type filter if present
+                        if document_type and metadata.get('document_type') != document_type:
+                            continue
 
-                    filtered_results.append({
-                        'document_id': doc_id,
-                        'document_type': metadata.get('document_type'),
-                        'extracted_entities': {k: v for k, v in metadata.items() if k != 'document_type'},
-                        'similarity': 1 - distance # Convert distance to similarity
-                    })
-            
-            # Apply offset and limit
-            paginated_results = filtered_results[offset:offset+limit]
+                        filtered_results.append({
+                            'document_id': doc_id,
+                            'document_type': metadata.get('document_type'),
+                            'extracted_entities': {k: v for k, v in metadata.items() if k != 'document_type'},
+                            'similarity': 1 - distance # Convert distance to similarity
+                        })
+                
+                # Apply offset and limit
+                paginated_results = filtered_results[offset:offset+limit]
 
-            return Response({
-                'status': 'success',
-                'total_results': len(filtered_results),
-                'results': paginated_results
-            }, status=status.HTTP_200_OK)
+                return Response({
+                    'status': 'success',
+                    'total_results': len(filtered_results),
+                    'results': paginated_results
+                }, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({'status': 'error', 'message': f'Search failed: {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -122,6 +144,11 @@ class DocumentBatchProcessView(APIView):
         if serializer.is_valid():
             files = serializer.validated_data['files']
             async_process = serializer.validated_data.get('async', True)
+
+            # Validate file types for batch processing
+            for file_obj in files:
+                if not is_allowed_file_type(file_obj.name):
+                    return Response({'status': 'error', 'message': f'Unsupported file type: {file_obj.name}'}, status=status.HTTP_400_BAD_REQUEST)
 
             # In a real application, you would offload this to a task queue (e.g., Celery)
             # For now, we'll just simulate the processing.
@@ -164,8 +191,18 @@ class DocumentBatchProcessView(APIView):
                             'extracted_entities': extracted_entities_data,
                             'status': 'success'
                         })
+                    except OCRProcessingError as e:
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'OCR processing failed: {e}', 'error_type': 'OCR_ERROR'})
+                    except DocumentClassificationError as e:
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'Document classification failed: {e}', 'error_type': 'CLASSIFICATION_ERROR'})
+                    except EntityExtractionError as e:
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'Entity extraction failed: {e}', 'error_type': 'EXTRACTION_ERROR'})
+                    except DocumentProcessingError as e:
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'Document processing failed: {e}', 'error_type': 'PROCESSING_ERROR'})
+                    except FileNotFoundError as e:
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'File not found during processing: {e}', 'error_type': 'FILE_NOT_FOUND'})
                     except Exception as e:
-                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': str(e)})
+                        results.append({'document_id': file_obj.name, 'status': 'error', 'message': f'An unexpected error occurred: {e}', 'error_type': 'UNEXPECTED_ERROR'})
                     finally:
                         if os.path.exists(temp_file_path):
                             os.remove(temp_file_path)

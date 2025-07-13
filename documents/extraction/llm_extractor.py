@@ -6,6 +6,7 @@ from documents.extraction.entity_validator import EntityValidator
 from pathlib import Path
 from django.core.cache import cache
 import hashlib
+from documents.exceptions import EntityExtractionError
 
 class LLMExtractor(BaseEntityExtractor):
     """Extracts entities from text using an LLM."""
@@ -34,12 +35,13 @@ class LLMExtractor(BaseEntityExtractor):
         # Replace placeholders in the prompt template
         prompt = prompt_template.format(text=text)
 
-        response = self.llm_provider.get_completion(prompt)
-        
         try:
+            response = self.llm_provider.get_completion(prompt)
             raw_entities = json.loads(response)
             validated_entities = self.validator.validate(raw_entities, expected_entities)
-            cache.set(cache_key, validated_entities, timeout=3600) # Cache for 1 hour
+            cache.set(cache_key, validated_entities, timeout=settings.LLM_CACHE_TIMEOUT) # Cache for configurable time
             return validated_entities
-        except json.JSONDecodeError:
-            raise ValueError("LLM response is not valid JSON.")
+        except json.JSONDecodeError as e:
+            raise EntityExtractionError(f"LLM response is not valid JSON: {e}") from e
+        except Exception as e:
+            raise EntityExtractionError(f"An unexpected error occurred during entity extraction: {e}") from e

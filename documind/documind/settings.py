@@ -42,6 +42,7 @@ LLM_PROVIDER = config('LLM_PROVIDER', default='openai')
 OPENAI_API_KEY = config('OPENAI_API_KEY', default=None)
 LLM_MODEL = config('LLM_MODEL', default='gpt-4-turbo-preview')
 LLM_TEMPERATURE = config('LLM_TEMPERATURE', default=0.1, cast=float)
+LLM_CACHE_TIMEOUT = config('LLM_CACHE_TIMEOUT', default=3600, cast=int)
 
 WORKER_PROCESSES = config('WORKER_PROCESSES', default=4, cast=int)
 
@@ -58,7 +59,21 @@ INSTALLED_APPS = [
     "documents",
     "rest_framework",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'DocuMind API',
+    'DESCRIPTION': 'API for Intelligent Document Classification & Entity Extraction System',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
+        'filter': True,
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -148,7 +163,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
 }
 
 from datetime import timedelta

@@ -1,6 +1,7 @@
 from documents.classification.embedding_generator import EmbeddingGenerator
 from documents.classification.keyword_matcher import KeywordMatcher
 from documents.classification.vector_search import VectorSearch
+from documents.exceptions import DocumentClassificationError
 
 class DocumentClassifier:
     """Classifies documents using a hybrid approach."""
@@ -14,39 +15,45 @@ class DocumentClassifier:
 
     def classify(self, text: str, confidence_threshold: float = 0.7):
         """Classifies the given text."""
-        embedding = self.embedding_generator.generate_embedding(text)
-        
-        # Keyword matching scores
-        keyword_scores = self.keyword_matcher.match(text)
-
-        # Embedding similarity scores
-        search_results = self.vector_search.search(embedding)
-        embedding_scores = {doc_type: 0 for doc_type in keyword_scores.keys()}
-        if search_results and search_results['metadatas'] and search_results['distances']:
-            for metadata, distance in zip(search_results['metadatas'][0], search_results['distances'][0]):
-                doc_type = metadata.get('document_type')
-                if doc_type in embedding_scores:
-                    embedding_scores[doc_type] += 1 - distance # Similarity is 1 - distance
-
-        # Combine scores
-        combined_scores = {doc_type: (self.embedding_weight * embedding_scores.get(doc_type, 0)) + (self.keyword_weight * keyword_scores.get(doc_type, 0)) for doc_type in keyword_scores.keys()}
-
-        # Get the document type with the highest score
-        if not any(combined_scores.values()):
-            return "unknown", 0.0
+        try:
+            embedding = self.embedding_generator.generate_embedding(text)
             
-        best_doc_type = max(combined_scores, key=combined_scores.get)
-        confidence = combined_scores[best_doc_type]
+            # Keyword matching scores
+            keyword_scores = self.keyword_matcher.match(text)
 
-        if confidence < confidence_threshold:
-            return "unknown", confidence
+            # Embedding similarity scores
+            search_results = self.vector_search.search(embedding)
+            embedding_scores = {doc_type: 0 for doc_type in keyword_scores.keys()}
+            if search_results and search_results['metadatas'] and search_results['distances']:
+                for metadata, distance in zip(search_results['metadatas'][0], search_results['distances'][0]):
+                    doc_type = metadata.get('document_type')
+                    if doc_type in embedding_scores:
+                        embedding_scores[doc_type] += 1 - distance # Similarity is 1 - distance
 
-        return best_doc_type, confidence
+            # Combine scores
+            combined_scores = {doc_type: (self.embedding_weight * embedding_scores.get(doc_type, 0)) + (self.keyword_weight * keyword_scores.get(doc_type, 0)) for doc_type in keyword_scores.keys()}
+
+            # Get the document type with the highest score
+            if not any(combined_scores.values()):
+                return "unknown", 0.0
+                
+            best_doc_type = max(combined_scores, key=combined_scores.get)
+            confidence = combined_scores[best_doc_type]
+
+            if confidence < confidence_threshold:
+                return "unknown", confidence
+
+            return best_doc_type, confidence
+        except Exception as e:
+            raise DocumentClassificationError(f"Error during document classification: {e}") from e
 
     def add_document_to_index(self, document_id: str, text: str, document_type: str, extracted_entities: dict = None):
         """Adds a document to the search index."""
-        embedding = self.embedding_generator.generate_embedding(text)
-        metadata = {'document_type': document_type}
-        if extracted_entities:
-            metadata.update(extracted_entities)
-        self.vector_search.upsert(embedding, metadata, document_id)
+        try:
+            embedding = self.embedding_generator.generate_embedding(text)
+            metadata = {'document_type': document_type}
+            if extracted_entities:
+                metadata.update(extracted_entities)
+            self.vector_search.upsert(embedding, metadata, document_id)
+        except Exception as e:
+            raise DocumentClassificationError(f"Error adding document to index: {e}") from e
