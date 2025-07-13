@@ -246,32 +246,32 @@ graph TB
             K8S[Kubernetes Cluster]
             
             subgraph "Services"
-                API_POD[API Pods<br/>(Django REST API)]
-                WORKER_POD[Worker Pods<br/>(Celery Background Tasks)]
-                INGRESS[Nginx Ingress Controller]
+                API_POD["API Pods<br/>(Django REST API)"]
+                WORKER_POD["Worker Pods<br/>(Celery Background Tasks)"]
+                INGRESS["Nginx Ingress Controller"]
             end
         end
         
         subgraph "Managed Services"
-            RDS[(AWS RDS<br/>PostgreSQL)]
-            ELASTICACHE[(ElastiCache<br/>Redis)]
-            S3_PROD[(S3 Bucket<br/>Document Storage)]
-            ECS_CHROMA[(ECS/Dedicated Instance<br/>ChromaDB)]
+            RDS[("AWS RDS<br/>PostgreSQL")]
+            ELASTICACHE[("ElastiCache<br/>Redis")]
+            S3_PROD[("S3 Bucket<br/>Document Storage")]
+            ECS_CHROMA[("ECS/Dedicated Instance<br/>ChromaDB")]
         end
         
         subgraph "Monitoring & Logging"
-            PROMETHEUS[Prometheus<br/>(Metrics)]
-            GRAFANA[Grafana<br/>(Dashboards)]
-            LOKI[Loki<br/>(Log Aggregation)]
-            SENTRY[Sentry<br/>(Error Tracking)]
+            PROMETHEUS["Prometheus<br/>(Metrics)"]
+            GRAFANA["Grafana<br/>(Dashboards)"]
+            LOKI["Loki<br/>(Log Aggregation)"]
+            SENTRY["Sentry<br/>(Error Tracking)"]
         end
     end
     
     subgraph "CI/CD Pipeline"
-        GIT[GitHub Repository]
-        ACTIONS[GitHub Actions]
-        DOCKER_REG[Docker Registry]
-        HELM[Helm Charts (Optional)]
+        GIT["GitHub Repository"]
+        ACTIONS["GitHub Actions"]
+        DOCKER_REG["Docker Registry"]
+        HELM["Helm Charts (Optional)"]
     end
     
     GIT --> ACTIONS
@@ -284,8 +284,8 @@ graph TB
     API_POD --> ELASTICACHE
     API_POD --> S3_PROD
     API_POD --> ECS_CHROMA
-    API_POD --> LLM_API_EXT[External LLM APIs]
-    API_POD --> OCR_API_EXT[External OCR APIs]
+    API_POD --> LLM_API_EXT["External LLM APIs"]
+    API_POD --> OCR_API_EXT["External OCR APIs"]
     
     WORKER_POD --> RDS
     WORKER_POD --> ELASTICACHE
