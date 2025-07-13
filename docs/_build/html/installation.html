@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start Guide" href="quickstart.html" />
+    <link rel="prev" title="DocuMind Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start-with-docker">Quick Start with Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-development-setup">Local Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-dependencies">System Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-environment">Python Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environment-configuration">Environment Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#database-setup">Database Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#production-installation">Production Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#database-configuration">Database Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web-server-configuration">Web Server Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reverse-proxy">Reverse Proxy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kubernetes-deployment">Kubernetes Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<p>This guide provides detailed instructions for installing and setting up DocuMind in different environments.</p>
+<section id="quick-start-with-docker">
+<h2>Quick Start with Docker<a class="headerlink" href="#quick-start-with-docker" title="Link to this heading"></a></h2>
+<p>The fastest way to get DocuMind running is using Docker:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/documind.git
+<span class="nb">cd</span><span class="w"> </span>documind
+
+<span class="c1"># Build and start services</span>
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>build
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># Run migrations</span>
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>web<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+
+<span class="c1"># Create superuser</span>
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>web<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>createsuperuser
+</pre></div>
+</div>
+<p>The API will be available at <code class="docutils literal notranslate"><span class="pre">http://localhost:8000</span></code>.</p>
+</section>
+<section id="local-development-setup">
+<h2>Local Development Setup<a class="headerlink" href="#local-development-setup" title="Link to this heading"></a></h2>
+<p>For local development without Docker:</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<p>Before installing DocuMind, ensure you have:</p>
+<ul class="simple">
+<li><p><strong>Python 3.9+</strong>: <a class="reference external" href="https://www.python.org/downloads/">Download Python</a></p></li>
+<li><p><strong>PostgreSQL 12+</strong>: <a class="reference external" href="https://www.postgresql.org/download/">Download PostgreSQL</a> (optional, SQLite used by default)</p></li>
+<li><p><strong>Redis 6+</strong>: <a class="reference external" href="https://redis.io/download">Download Redis</a></p></li>
+<li><p><strong>Tesseract OCR</strong>: Required for text extraction</p></li>
+</ul>
+</section>
+<section id="system-dependencies">
+<h3>System Dependencies<a class="headerlink" href="#system-dependencies" title="Link to this heading"></a></h3>
+<p><strong>Ubuntu/Debian:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tesseract-ocr<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tesseract-ocr-eng<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>tesseract-ocr-spa<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>poppler-utils<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>redis-server<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>postgresql-client
+</pre></div>
+</div>
+<p><strong>macOS (with Homebrew):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>tesseract<span class="w"> </span>poppler<span class="w"> </span>redis<span class="w"> </span>postgresql
+</pre></div>
+</div>
+<p><strong>Windows:</strong></p>
+<p>Download and install:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/UB-Mannheim/tesseract/wiki">Tesseract OCR</a></p></li>
+<li><p><a class="reference external" href="https://github.com/microsoftarchive/redis/releases">Redis for Windows</a></p></li>
+<li><p><a class="reference external" href="https://www.postgresql.org/download/windows/">PostgreSQL</a></p></li>
+<li><p><a class="reference external" href="https://github.com/oschwartz10612/poppler-windows/releases">Poppler for Windows</a></p></li>
+</ul>
+</section>
+<section id="python-environment">
+<h3>Python Environment<a class="headerlink" href="#python-environment" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create virtual environment</span>
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
+
+<span class="c1"># Install dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="environment-configuration">
+<h3>Environment Configuration<a class="headerlink" href="#environment-configuration" title="Link to this heading"></a></h3>
+<p>Copy the example environment file and configure it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+</pre></div>
+</div>
+<p>Edit <code class="docutils literal notranslate"><span class="pre">.env</span></code> with your settings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Core Django Settings</span>
+<span class="nv">SECRET_KEY</span><span class="o">=</span>your-secret-key-here
+<span class="nv">DEBUG</span><span class="o">=</span>True
+<span class="nv">ALLOWED_HOSTS</span><span class="o">=</span>localhost,127.0.0.1
+
+<span class="c1"># Database (SQLite for development)</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span>sqlite:///db.sqlite3
+
+<span class="c1"># Redis</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://127.0.0.1:6379/1
+
+<span class="c1"># LLM Configuration</span>
+<span class="nv">LLM_PROVIDER</span><span class="o">=</span>openai
+<span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key
+<span class="nv">LLM_MODEL</span><span class="o">=</span>gpt-4-turbo-preview
+
+<span class="c1"># ChromaDB</span>
+<span class="nv">CHROMA_PERSIST_DIRECTORY</span><span class="o">=</span>./chroma_db
+<span class="nv">CHROMA_COLLECTION_NAME</span><span class="o">=</span>documents
+</pre></div>
+</div>
+</section>
+<section id="database-setup">
+<h3>Database Setup<a class="headerlink" href="#database-setup" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to Django project directory</span>
+<span class="nb">cd</span><span class="w"> </span>documind
+
+<span class="c1"># Run migrations</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+
+<span class="c1"># Create superuser</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>createsuperuser
+
+<span class="c1"># Start development server</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>runserver
+</pre></div>
+</div>
+</section>
+</section>
+<section id="production-installation">
+<h2>Production Installation<a class="headerlink" href="#production-installation" title="Link to this heading"></a></h2>
+<p>For production deployment:</p>
+<section id="environment-variables">
+<h3>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h3>
+<p>Configure production environment variables:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Security</span>
+<span class="nv">SECRET_KEY</span><span class="o">=</span>production-secret-key
+<span class="nv">DEBUG</span><span class="o">=</span>False
+<span class="nv">ALLOWED_HOSTS</span><span class="o">=</span>yourdomain.com,www.yourdomain.com
+
+<span class="c1"># Database</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:password@localhost:5432/documind_prod
+
+<span class="c1"># CORS</span>
+<span class="nv">CORS_ALLOWED_ORIGINS</span><span class="o">=</span>https://yourdomain.com,https://www.yourdomain.com
+
+<span class="c1"># Logging</span>
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO
+</pre></div>
+</div>
+</section>
+<section id="database-configuration">
+<h3>Database Configuration<a class="headerlink" href="#database-configuration" title="Link to this heading"></a></h3>
+<p>For production, use PostgreSQL:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create database</span>
+createdb<span class="w"> </span>documind_prod
+
+<span class="c1"># Run migrations</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+
+<span class="c1"># Collect static files</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+</pre></div>
+</div>
+</section>
+<section id="web-server-configuration">
+<h3>Web Server Configuration<a class="headerlink" href="#web-server-configuration" title="Link to this heading"></a></h3>
+<p>Use a production WSGI server like Gunicorn:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install Gunicorn</span>
+pip<span class="w"> </span>install<span class="w"> </span>gunicorn
+
+<span class="c1"># Run with Gunicorn</span>
+gunicorn<span class="w"> </span>documind.wsgi:application<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--bind<span class="w"> </span><span class="m">0</span>.0.0.0:8000<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--workers<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--worker-class<span class="w"> </span>gevent<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--worker-connections<span class="w"> </span><span class="m">1000</span>
+</pre></div>
+</div>
+</section>
+<section id="reverse-proxy">
+<h3>Reverse Proxy<a class="headerlink" href="#reverse-proxy" title="Link to this heading"></a></h3>
+<p>Configure Nginx as a reverse proxy:</p>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">yourdomain.com</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8000</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Real-IP</span><span class="w"> </span><span class="nv">$remote_addr</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/static/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">alias</span><span class="w"> </span><span class="s">/path/to/documind/static/</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kubernetes-deployment">
+<h2>Kubernetes Deployment<a class="headerlink" href="#kubernetes-deployment" title="Link to this heading"></a></h2>
+<p>For Kubernetes deployment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create namespace</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>documind
+
+<span class="c1"># Create secrets</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>secret<span class="w"> </span>generic<span class="w"> </span>documind-secrets<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">SECRET_KEY</span><span class="o">=</span>your-secret-key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-literal<span class="o">=</span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-key<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>documind
+
+<span class="c1"># Apply manifests</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>k8s/<span class="w"> </span>-n<span class="w"> </span>documind
+
+<span class="c1"># Scale deployment</span>
+kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>documind-api<span class="w"> </span>--replicas<span class="o">=</span><span class="m">3</span><span class="w"> </span>-n<span class="w"> </span>documind
+</pre></div>
+</div>
+</section>
+<section id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Link to this heading"></a></h2>
+<p>After installation, verify the setup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test API health</span>
+curl<span class="w"> </span>http://localhost:8000/api/v1/system/status/
+
+<span class="c1"># Get authentication token</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/auth/token/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;: &quot;admin&quot;, &quot;password&quot;: &quot;your-password&quot;}&#39;</span>
+
+<span class="c1"># Test document processing (with valid token)</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/documents/process/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your-token&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@test-document.pdf&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading"></a></h3>
+<p><strong>Tesseract not found:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ubuntu/Debian</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>tesseract-ocr
+
+<span class="c1"># macOS</span>
+brew<span class="w"> </span>install<span class="w"> </span>tesseract
+
+<span class="c1"># Verify installation</span>
+tesseract<span class="w"> </span>--version
+</pre></div>
+</div>
+<p><strong>Redis connection failed:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start Redis service</span>
+redis-server
+
+<span class="c1"># Test connection</span>
+redis-cli<span class="w"> </span>ping
+</pre></div>
+</div>
+<p><strong>Database migration errors:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reset migrations (development only)</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>--fake-initial
+
+<span class="c1"># Check migration status</span>
+python<span class="w"> </span>manage.py<span class="w"> </span>showmigrations
+</pre></div>
+</div>
+<p><strong>ChromaDB permission errors:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ensure directory is writable</span>
+chmod<span class="w"> </span><span class="m">755</span><span class="w"> </span>chroma_db/
+
+<span class="c1"># Check ChromaDB connection</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import chromadb; print(&#39;ChromaDB OK&#39;)&quot;</span>
+</pre></div>
+</div>
+<p><strong>OpenAI API errors:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Verify API key</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-key
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import openai; print(openai.Model.list())&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="support">
+<h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
+<p>If you encounter issues:</p>
+<ol class="arabic simple">
+<li><p>Check the logs: <code class="docutils literal notranslate"><span class="pre">docker-compose</span> <span class="pre">logs</span></code> or <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">runserver</span> <span class="pre">--verbosity=2</span></code></p></li>
+<li><p>Verify environment variables are set correctly</p></li>
+<li><p>Ensure all dependencies are installed</p></li>
+<li><p>Check system requirements are met</p></li>
+<li><p>Refer to the troubleshooting section above</p></li>
+</ol>
+<p>For additional help:</p>
+<ul class="simple">
+<li><p>📧 Email: <a class="reference external" href="mailto:support&#37;&#52;&#48;documind&#46;ai">support<span>&#64;</span>documind<span>&#46;</span>ai</a></p></li>
+<li><p>🐛 Issues: <a class="reference external" href="https://github.com/yourusername/documind/issues">GitHub Issues</a></p></li>
+<li><p>📚 Documentation: Full documentation available at the project repository</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="DocuMind Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quick Start Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

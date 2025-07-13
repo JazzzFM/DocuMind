@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>documents.classification.vector_search &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">documents.classification.vector_search</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for documents.classification.vector_search</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">chromadb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentClassificationError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="VectorSearch">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VectorSearch</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles vector search operations in ChromaDB with improved error handling and features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="VectorSearch.__init__">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">persist_directory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize ChromaDB client and collection.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            collection_name: Name of the ChromaDB collection</span>
+<span class="sd">            persist_directory: Directory to persist ChromaDB data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Use provided values or fall back to settings/environment</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span> <span class="o">=</span> <span class="n">persist_directory</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;CHROMA_PERSIST_DIRECTORY&#39;</span><span class="p">,</span> <span class="s1">&#39;./chroma_db&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span> <span class="o">=</span> <span class="n">collection_name</span> <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s1">&#39;CHROMA_COLLECTION_NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;documents_collection&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Ensure persist directory exists</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="c1"># Initialize ChromaDB client</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initializing ChromaDB client with persist directory: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="p">)</span>
+            
+            <span class="c1"># Get or create collection</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Getting or creating collection: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get_or_create_collection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ChromaDB initialized successfully. Collection count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize ChromaDB: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize vector search: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.search">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedding</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">n_results</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> 
+               <span class="n">document_type_filter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for similar embeddings in ChromaDB.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            embedding: Query embedding vector</span>
+<span class="sd">            n_results: Number of results to return</span>
+<span class="sd">            document_type_filter: Optional filter by document type</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary containing search results with ids, metadatas, distances, and documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Convert numpy array to list if needed</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">embedding</span> <span class="o">=</span> <span class="n">embedding</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            
+            <span class="c1"># Prepare query parameters</span>
+            <span class="n">query_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;query_embeddings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">embedding</span><span class="p">],</span>
+                <span class="s2">&quot;n_results&quot;</span><span class="p">:</span> <span class="n">n_results</span><span class="p">,</span>
+                <span class="s2">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">,</span> <span class="s2">&quot;distances&quot;</span><span class="p">,</span> <span class="s2">&quot;documents&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Add document type filter if specified</span>
+            <span class="k">if</span> <span class="n">document_type_filter</span><span class="p">:</span>
+                <span class="n">query_params</span><span class="p">[</span><span class="s2">&quot;where&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;document_type&quot;</span><span class="p">:</span> <span class="n">document_type_filter</span><span class="p">}</span>
+            
+            <span class="c1"># Perform search</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="o">**</span><span class="n">query_params</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector search returned </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="mi">0</span><span class="si">}</span><span class="s2"> results&quot;</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">results</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector search failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vector search failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.search_by_document_type">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.search_by_document_type">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_by_document_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedding</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> 
+                              <span class="n">document_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">n_results_per_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for similar embeddings grouped by document type.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            embedding: Query embedding vector</span>
+<span class="sd">            document_types: List of document types to search</span>
+<span class="sd">            n_results_per_type: Number of results per document type</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary mapping document types to their search results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results_by_type</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">for</span> <span class="n">doc_type</span> <span class="ow">in</span> <span class="n">document_types</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">n_results_per_type</span><span class="p">,</span> <span class="n">doc_type</span><span class="p">)</span>
+                <span class="n">results_by_type</span><span class="p">[</span><span class="n">doc_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search failed for document type </span><span class="si">{</span><span class="n">doc_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">results_by_type</span><span class="p">[</span><span class="n">doc_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="p">[[]],</span> <span class="s2">&quot;metadatas&quot;</span><span class="p">:</span> <span class="p">[[]],</span> <span class="s2">&quot;distances&quot;</span><span class="p">:</span> <span class="p">[[]],</span> <span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="p">[[]]}</span>
+        
+        <span class="k">return</span> <span class="n">results_by_type</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.upsert">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.upsert">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedding</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+               <span class="n">doc_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">document_text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upsert a document into ChromaDB.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            embedding: Document embedding vector</span>
+<span class="sd">            metadata: Document metadata</span>
+<span class="sd">            doc_id: Unique document identifier</span>
+<span class="sd">            document_text: Optional document text content</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Convert numpy array to list if needed</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">embedding</span> <span class="o">=</span> <span class="n">embedding</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            
+            <span class="c1"># Prepare upsert parameters</span>
+            <span class="n">upsert_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;embeddings&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">embedding</span><span class="p">],</span>
+                <span class="s2">&quot;metadatas&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">metadata</span><span class="p">],</span>
+                <span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">doc_id</span><span class="p">]</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># Add document text if provided</span>
+            <span class="k">if</span> <span class="n">document_text</span><span class="p">:</span>
+                <span class="n">upsert_params</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">document_text</span><span class="p">]</span>
+            
+            <span class="c1"># Perform upsert</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">upsert</span><span class="p">(</span><span class="o">**</span><span class="n">upsert_params</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully upserted document </span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to upsert document </span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.batch_upsert">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.batch_upsert">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_upsert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]],</span> 
+                    <span class="n">metadatas</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">doc_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> 
+                    <span class="n">documents</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Batch upsert multiple documents into ChromaDB.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            embeddings: List of embedding vectors</span>
+<span class="sd">            metadatas: List of metadata dictionaries</span>
+<span class="sd">            doc_ids: List of document IDs</span>
+<span class="sd">            documents: Optional list of document texts</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Number of successfully upserted documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadatas</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All input lists must have the same length&quot;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Convert numpy arrays to lists if needed</span>
+            <span class="n">processed_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">emb</span> <span class="ow">in</span> <span class="n">embeddings</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">emb</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="n">processed_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">processed_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+            
+            <span class="c1"># Prepare batch upsert parameters</span>
+            <span class="n">upsert_params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;embeddings&quot;</span><span class="p">:</span> <span class="n">processed_embeddings</span><span class="p">,</span>
+                <span class="s2">&quot;metadatas&quot;</span><span class="p">:</span> <span class="n">metadatas</span><span class="p">,</span>
+                <span class="s2">&quot;ids&quot;</span><span class="p">:</span> <span class="n">doc_ids</span>
+            <span class="p">}</span>
+            
+            <span class="k">if</span> <span class="n">documents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Documents list must have same length as other parameters&quot;</span><span class="p">)</span>
+                <span class="n">upsert_params</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">documents</span>
+            
+            <span class="c1"># Perform batch upsert</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">upsert</span><span class="p">(</span><span class="o">**</span><span class="n">upsert_params</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully batch upserted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> documents&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Batch upsert failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.delete_document">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.delete_document">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a document from ChromaDB.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            doc_id: Document ID to delete</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">doc_id</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully deleted document </span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to delete document </span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.get_document">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.get_document">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a specific document from ChromaDB.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            doc_id: Document ID to retrieve</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Document data or None if not found</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">doc_id</span><span class="p">],</span> <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">,</span> <span class="s2">&quot;documents&quot;</span><span class="p">,</span> <span class="s2">&quot;embeddings&quot;</span><span class="p">])</span>
+            
+            <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;ids&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;document&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;documents&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;embedding&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;embeddings&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;embeddings&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">}</span>
+            
+            <span class="k">return</span> <span class="kc">None</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to retrieve document </span><span class="si">{</span><span class="n">doc_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.get_collection_stats">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.get_collection_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_collection_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get statistics about the ChromaDB collection.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with collection statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            
+            <span class="c1"># Get sample of documents to analyze document types</span>
+            <span class="n">sample_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">count</span><span class="p">),</span> <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;metadatas&quot;</span><span class="p">])</span>
+            
+            <span class="n">doc_type_counts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">sample_results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">metadata</span> <span class="ow">in</span> <span class="n">sample_results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">]:</span>
+                    <span class="n">doc_type</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;document_type&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+                    <span class="n">doc_type_counts</span><span class="p">[</span><span class="n">doc_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc_type_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">doc_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;total_documents&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                <span class="s2">&quot;collection_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">,</span>
+                <span class="s2">&quot;persist_directory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="p">,</span>
+                <span class="s2">&quot;document_type_distribution&quot;</span><span class="p">:</span> <span class="n">doc_type_counts</span><span class="p">,</span>
+                <span class="s2">&quot;sample_size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">sample_results</span><span class="p">[</span><span class="s1">&#39;metadatas&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="p">}</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get collection stats: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="VectorSearch.reset_collection">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.reset_collection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset (clear) the ChromaDB collection.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if successful, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Delete the collection and recreate it</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">delete_collection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully reset collection </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to reset collection: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Modules Reference &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Module" href="api.html" />
+    <link rel="prev" title="Architecture" href="../architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Modules Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-modules">Core Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documents.html">Documents Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ocr.html">OCR Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="classification.html">Classification Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="llm.html">LLM Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-api">API Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#views">Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-api.serializers">Serializers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#api.serializers.DocumentProcessSerializer"><code class="docutils literal notranslate"><span class="pre">DocumentProcessSerializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.serializers.DocumentSearchSerializer"><code class="docutils literal notranslate"><span class="pre">DocumentSearchSerializer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.serializers.DocumentBatchProcessSerializer"><code class="docutils literal notranslate"><span class="pre">DocumentBatchProcessSerializer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-documents">Documents Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-documents.config_loader">Configuration Loader</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#documents.config_loader.DocumentTypeConfig"><code class="docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.config_loader.ConfigLoader"><code class="docutils literal notranslate"><span class="pre">ConfigLoader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.config_loader.get_config_loader"><code class="docutils literal notranslate"><span class="pre">get_config_loader()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.config_loader.get_document_types"><code class="docutils literal notranslate"><span class="pre">get_document_types()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.config_loader.get_document_type"><code class="docutils literal notranslate"><span class="pre">get_document_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-documents.exceptions">Exceptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#documents.exceptions.DocumentProcessingError"><code class="docutils literal notranslate"><span class="pre">DocumentProcessingError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.exceptions.DocumentClassificationError"><code class="docutils literal notranslate"><span class="pre">DocumentClassificationError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.exceptions.EntityExtractionError"><code class="docutils literal notranslate"><span class="pre">EntityExtractionError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#documents.exceptions.OCRProcessingError"><code class="docutils literal notranslate"><span class="pre">OCRProcessingError</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Modules Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-modules-reference">
+<h1>API Modules Reference<a class="headerlink" href="#api-modules-reference" title="Link to this heading"></a></h1>
+<p>This section provides detailed documentation for all DocuMind modules.</p>
+<section id="core-modules">
+<h2>Core Modules<a class="headerlink" href="#core-modules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#views">Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.serializers">Serializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#rate-limiting">Rate Limiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#response-formats">Response Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#interactive-documentation">Interactive Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#customization">Customization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documents.html">Documents Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#core-components">Core Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#document-processing-pipeline">Document Processing Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#configuration-management">Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#entity-schemas">Entity Schemas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#processing-statistics">Processing Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#caching-and-performance">Caching and Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#extending-the-module">Extending the Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documents.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ocr.html">OCR Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.base">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#factory">Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#tesseract-engine">Tesseract Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.google_vision_engine">Google Vision Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.azure_engine">Azure Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="classification.html">Classification Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#module-documents.classification.classifier">Document Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#module-documents.classification.embedding_generator">Embedding Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#module-documents.classification.keyword_matcher">Keyword Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#module-documents.classification.vector_search">Vector Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#module-documents.classification.feedback_tracker">Feedback Tracker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#classification-process">Classification Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#document-types">Document Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="classification.html#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extraction.html">Extraction Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.base">Base Extractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#llm-extractor">LLM Extractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.prompt_manager">Prompt Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.entity_validator">Entity Validator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#entity-types">Entity Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#prompt-templates">Prompt Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#validation-process">Validation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#statistics-and-monitoring">Statistics and Monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="llm.html">LLM Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#module-documents.llm.base">Base Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#factory">Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#openai-provider">OpenAI Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#usage-example">Usage Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#provider-configuration">Provider Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#request-structure">Request Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#response-structure">Response Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#performance-monitoring">Performance Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#adding-new-providers">Adding New Providers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#caching">Caching</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-api">
+<span id="api-module"></span><h2>API Module<a class="headerlink" href="#module-api" title="Link to this heading"></a></h2>
+<section id="views">
+<h3>Views<a class="headerlink" href="#views" title="Link to this heading"></a></h3>
+</section>
+<section id="module-api.serializers">
+<span id="serializers"></span><h3>Serializers<a class="headerlink" href="#module-api.serializers" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentProcessSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentProcessSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentProcessSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentProcessSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentSearchSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentSearchSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentSearchSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentSearchSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentBatchProcessSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentBatchProcessSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentBatchProcessSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentBatchProcessSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+</section>
+</section>
+<section id="module-documents">
+<span id="documents-module"></span><h2>Documents Module<a class="headerlink" href="#module-documents" title="Link to this heading"></a></h2>
+<section id="module-documents.config_loader">
+<span id="configuration-loader"></span><h3>Configuration Loader<a class="headerlink" href="#module-documents.config_loader" title="Link to this heading"></a></h3>
+<p>Configuration loader for document types and system settings.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">DocumentTypeConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for a single document type.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_required_entities">
+<span class="sig-name descname"><span class="pre">get_required_entities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_required_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_required_entities" title="Link to this definition"></a></dt>
+<dd><p>Get list of required entity names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_optional_entities">
+<span class="sig-name descname"><span class="pre">get_optional_entities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_optional_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_optional_entities" title="Link to this definition"></a></dt>
+<dd><p>Get list of optional entity names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_entity_by_name">
+<span class="sig-name descname"><span class="pre">get_entity_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_entity_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_entity_by_name" title="Link to this definition"></a></dt>
+<dd><p>Get entity configuration by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">ConfigLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Loads and validates document type configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.load_config">
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.load_config" title="Link to this definition"></a></dt>
+<dd><p>Load document type configurations from YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_types">
+<span class="sig-name descname"><span class="pre">get_document_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_types" title="Link to this definition"></a></dt>
+<dd><p>Get all document type configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_type">
+<span class="sig-name descname"><span class="pre">get_document_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_type_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_type" title="Link to this definition"></a></dt>
+<dd><p>Get configuration for a specific document type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_all_keywords">
+<span class="sig-name descname"><span class="pre">get_all_keywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_all_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_all_keywords" title="Link to this definition"></a></dt>
+<dd><p>Get all keywords mapped to document types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_type_by_name">
+<span class="sig-name descname"><span class="pre">get_document_type_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_type_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_type_by_name" title="Link to this definition"></a></dt>
+<dd><p>Get document type key by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.reload_config">
+<span class="sig-name descname"><span class="pre">reload_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.reload_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.reload_config" title="Link to this definition"></a></dt>
+<dd><p>Force reload of configuration from file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_config_loader">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_config_loader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_config_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_config_loader" title="Link to this definition"></a></dt>
+<dd><p>Get the global configuration loader instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.config_loader.ConfigLoader" title="documents.config_loader.ConfigLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigLoader</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_document_types">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_document_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_document_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_document_types" title="Link to this definition"></a></dt>
+<dd><p>Get all document type configurations (convenience function).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_document_type">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_document_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_type_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_document_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_document_type" title="Link to this definition"></a></dt>
+<dd><p>Get configuration for a specific document type (convenience function).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-documents.exceptions">
+<span id="exceptions"></span><h3>Exceptions<a class="headerlink" href="#module-documents.exceptions" title="Link to this heading"></a></h3>
+<dl class="py exception">
+<dt class="sig sig-object py" id="documents.exceptions.DocumentProcessingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.exceptions.</span></span><span class="sig-name descname"><span class="pre">DocumentProcessingError</span></span><a class="reference internal" href="../_modules/documents/exceptions.html#DocumentProcessingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.exceptions.DocumentProcessingError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Custom exception for document processing errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="documents.exceptions.DocumentClassificationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.exceptions.</span></span><span class="sig-name descname"><span class="pre">DocumentClassificationError</span></span><a class="reference internal" href="../_modules/documents/exceptions.html#DocumentClassificationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.exceptions.DocumentClassificationError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.exceptions.DocumentProcessingError" title="documents.exceptions.DocumentProcessingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentProcessingError</span></code></a></p>
+<p>Custom exception for document classification errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="documents.exceptions.EntityExtractionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.exceptions.</span></span><span class="sig-name descname"><span class="pre">EntityExtractionError</span></span><a class="reference internal" href="../_modules/documents/exceptions.html#EntityExtractionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.exceptions.EntityExtractionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.exceptions.DocumentProcessingError" title="documents.exceptions.DocumentProcessingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentProcessingError</span></code></a></p>
+<p>Custom exception for entity extraction errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="documents.exceptions.OCRProcessingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.exceptions.</span></span><span class="sig-name descname"><span class="pre">OCRProcessingError</span></span><a class="reference internal" href="../_modules/documents/exceptions.html#OCRProcessingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.exceptions.OCRProcessingError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.exceptions.DocumentProcessingError" title="documents.exceptions.DocumentProcessingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentProcessingError</span></code></a></p>
+<p>Custom exception for OCR processing errors.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../architecture.html" class="btn btn-neutral float-left" title="Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

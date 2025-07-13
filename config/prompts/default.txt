@@ -1,0 +1,18 @@
+You are an expert at extracting structured information from documents. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this {document_type} document:
+
+{entity_descriptions}
+
+Guidelines:
+1. Be precise and extract exactly what's written in the document
+2. For dates, use YYYY-MM-DD format when possible
+3. For amounts, include currency symbols if present
+4. For arrays, return as list of strings
+5. Use null for missing values (do not omit keys)
+6. If you cannot find a required entity, still include it with null value
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

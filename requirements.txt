@@ -10,6 +10,12 @@ sentence-transformers
 openai
 djangorestframework
 djangorestframework-simplejwt
+django-cors-headers
 pytest
 pytest-django
 drf-spectacular
+python-dateutil
+sphinx
+sphinx-rtd-theme
+sphinx-autodoc-typehints
+sphinxcontrib-django

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>documents.extraction.prompt_manager &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">documents.extraction.prompt_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for documents.extraction.prompt_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Prompt template manager for entity extraction.</span>
+<span class="sd">Manages document-specific prompt templates and provides dynamic prompt generation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.config_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_document_type</span><span class="p">,</span> <span class="n">get_document_types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentClassificationError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PromptTemplate">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PromptTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a prompt template for entity extraction.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="PromptTemplate.__init__">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">document_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize prompt template.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            template_content: Raw template content with placeholders</span>
+<span class="sd">            document_type: Document type this template is for</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_content</span> <span class="o">=</span> <span class="n">template_content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">document_type</span> <span class="o">=</span> <span class="n">document_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">placeholders</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_placeholders</span><span class="p">()</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_placeholders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract placeholder names from template.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+        <span class="n">placeholders</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\{(\w+)\}&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">placeholders</span><span class="p">))</span>
+    
+<div class="viewcode-block" id="PromptTemplate.render">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the template with provided values.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Values to substitute in template</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Rendered prompt string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_content</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">missing_key</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Missing required template parameter: </span><span class="si">{</span><span class="n">missing_key</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="PromptTemplate.get_required_placeholders">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate.get_required_placeholders">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_required_placeholders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of required placeholder names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeholders</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PromptManager">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PromptManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages prompt templates for entity extraction across different document types.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="PromptManager.__init__">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompts_directory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize prompt manager.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            prompts_directory: Directory containing prompt template files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prompts_directory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prompts_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span>
+                <span class="s1">&#39;config&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;prompts&#39;</span>
+            <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">prompts_directory</span> <span class="o">=</span> <span class="n">prompts_directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_templates</span><span class="p">()</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load all prompt templates from the prompts directory.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">prompts_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prompts_directory</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">prompts_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prompts directory not found: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prompts_directory</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            
+            <span class="c1"># Load default template first</span>
+            <span class="n">default_path</span> <span class="o">=</span> <span class="n">prompts_path</span> <span class="o">/</span> <span class="s2">&quot;default.txt&quot;</span>
+            <span class="k">if</span> <span class="n">default_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">default_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loaded default prompt template&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Load document-specific templates</span>
+            <span class="k">for</span> <span class="n">prompt_file</span> <span class="ow">in</span> <span class="n">prompts_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.txt&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">prompt_file</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;default.txt&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>  <span class="c1"># Already loaded</span>
+                
+                <span class="n">document_type</span> <span class="o">=</span> <span class="n">prompt_file</span><span class="o">.</span><span class="n">stem</span>
+                
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">prompt_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">template</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">document_type</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">[</span><span class="n">document_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">template</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded prompt template for: </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load prompt template </span><span class="si">{</span><span class="n">prompt_file</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">)</span><span class="si">}</span><span class="s2"> document-specific prompt templates&quot;</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load prompt templates: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="PromptManager.get_template">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.get_template">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PromptTemplate</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get prompt template for a specific document type.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            document_type: Type of document</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            PromptTemplate instance</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            DocumentClassificationError: If template not found and no default available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Try to get document-specific template</span>
+        <span class="k">if</span> <span class="n">document_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">[</span><span class="n">document_type</span><span class="p">]</span>
+        
+        <span class="c1"># Fall back to default template</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span>
+        
+        <span class="c1"># No templates available</span>
+        <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;No prompt template found for document type &#39;</span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2">&#39; and no default template available&quot;</span>
+        <span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="PromptManager.create_extraction_prompt">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.create_extraction_prompt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_extraction_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">document_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a complete extraction prompt for a document.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            document_text: Text content of the document</span>
+<span class="sd">            document_type: Type of document being processed</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Complete prompt string ready for LLM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Get the appropriate template</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">document_type</span><span class="p">)</span>
+            
+            <span class="c1"># Get document type configuration</span>
+            <span class="n">doc_config</span> <span class="o">=</span> <span class="n">get_document_type</span><span class="p">(</span><span class="n">document_type</span><span class="p">)</span>
+            
+            <span class="c1"># Prepare template variables</span>
+            <span class="n">template_vars</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;document_text&#39;</span><span class="p">:</span> <span class="n">document_text</span><span class="p">,</span>
+                <span class="s1">&#39;document_type&#39;</span><span class="p">:</span> <span class="n">document_type</span>
+            <span class="p">}</span>
+            
+            <span class="c1"># If using default template, we need to build entity descriptions</span>
+            <span class="k">if</span> <span class="n">template</span><span class="o">.</span><span class="n">document_type</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span> <span class="ow">and</span> <span class="n">doc_config</span><span class="p">:</span>
+                <span class="n">entity_descriptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_entity_descriptions</span><span class="p">(</span><span class="n">doc_config</span><span class="o">.</span><span class="n">entities</span><span class="p">)</span>
+                <span class="n">template_vars</span><span class="p">[</span><span class="s1">&#39;entity_descriptions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity_descriptions</span>
+            
+            <span class="c1"># Render the template</span>
+            <span class="n">prompt</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">template_vars</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created extraction prompt for </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="si">}</span><span class="s2"> characters)&quot;</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">prompt</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create extraction prompt for </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create extraction prompt: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_entity_descriptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build entity descriptions for default template.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            entities: List of entity configurations</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Formatted entity descriptions string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+            <span class="n">entity_type</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span>
+            <span class="n">required</span> <span class="o">=</span> <span class="s2">&quot;REQUIRED&quot;</span> <span class="k">if</span> <span class="n">entity</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;OPTIONAL&quot;</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Add type-specific guidance</span>
+            <span class="n">type_guidance</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s1">&#39;date&#39;</span><span class="p">:</span>
+                <span class="n">type_guidance</span> <span class="o">=</span> <span class="s2">&quot; (format: YYYY-MM-DD)&quot;</span>
+            <span class="k">elif</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s1">&#39;amount&#39;</span><span class="p">:</span>
+                <span class="n">type_guidance</span> <span class="o">=</span> <span class="s2">&quot; (include currency symbol if present)&quot;</span>
+            <span class="k">elif</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span>
+                <span class="n">type_guidance</span> <span class="o">=</span> <span class="s2">&quot; (return as array of strings)&quot;</span>
+            
+            <span class="n">descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">required</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">description</span><span class="si">}{</span><span class="n">type_guidance</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">descriptions</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="PromptManager.validate_prompt_coverage">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.validate_prompt_coverage">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_prompt_coverage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate that all configured document types have prompt templates.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Validation report dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">document_types</span> <span class="o">=</span> <span class="n">get_document_types</span><span class="p">()</span>
+            <span class="n">covered_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">configured_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">document_types</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            
+            <span class="n">missing_templates</span> <span class="o">=</span> <span class="n">configured_types</span> <span class="o">-</span> <span class="n">covered_types</span>
+            <span class="n">extra_templates</span> <span class="o">=</span> <span class="n">covered_types</span> <span class="o">-</span> <span class="n">configured_types</span>
+            
+            <span class="n">report</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;total_configured_types&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">configured_types</span><span class="p">),</span>
+                <span class="s2">&quot;total_templates&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">),</span>
+                <span class="s2">&quot;covered_types&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">covered_types</span><span class="p">),</span>
+                <span class="s2">&quot;missing_templates&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">missing_templates</span><span class="p">),</span>
+                <span class="s2">&quot;extra_templates&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">extra_templates</span><span class="p">),</span>
+                <span class="s2">&quot;has_default_template&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;coverage_percentage&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">covered_types</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">configured_types</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">configured_types</span> <span class="k">else</span> <span class="mi">100</span>
+            <span class="p">}</span>
+            
+            <span class="k">if</span> <span class="n">missing_templates</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Document types without prompt templates: </span><span class="si">{</span><span class="n">missing_templates</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">extra_templates</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extra templates found (not in config): </span><span class="si">{</span><span class="n">extra_templates</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">report</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to validate prompt coverage: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+    
+<div class="viewcode-block" id="PromptManager.reload_templates">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.reload_templates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reload_templates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reload all templates from disk.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reloading prompt templates...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_templates</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="PromptManager.create_custom_prompt">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.create_custom_prompt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_custom_prompt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> 
+                           <span class="n">document_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span> 
+                           <span class="n">additional_instructions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a custom extraction prompt without using templates.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            document_text: Text content of the document</span>
+<span class="sd">            entities: List of entities to extract</span>
+<span class="sd">            document_type: Type of document (for context)</span>
+<span class="sd">            additional_instructions: Optional additional instructions</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Custom prompt string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entity_descriptions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_entity_descriptions</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span>
+        
+        <span class="n">instructions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;1. Be precise and extract exactly what&#39;s written in the document&quot;</span><span class="p">)</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;2. For dates, use YYYY-MM-DD format when possible&quot;</span><span class="p">)</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;3. For amounts, include currency symbols if present&quot;</span><span class="p">)</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;4. For arrays, return as list of strings&quot;</span><span class="p">)</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;5. Use null for missing values (do not omit keys)&quot;</span><span class="p">)</span>
+        <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;6. If you cannot find a required entity, still include it with null value&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">additional_instructions</span><span class="p">:</span>
+            <span class="n">instructions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;7. </span><span class="si">{</span><span class="n">additional_instructions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">instructions_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instructions</span><span class="p">)</span>
+        
+        <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;You are an expert at extracting structured information from </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> documents.</span>
+
+<span class="s2">Extract the following entities from the document text:</span>
+
+<span class="si">{</span><span class="n">entity_descriptions</span><span class="si">}</span>
+
+<span class="s2">Guidelines:</span>
+<span class="si">{</span><span class="n">instructions_text</span><span class="si">}</span>
+
+<span class="s2">Document text:</span>
+<span class="si">{</span><span class="n">document_text</span><span class="si">}</span>
+
+<span class="s2">Return ONLY a valid JSON object with the extracted entities:&quot;&quot;&quot;</span>
+        
+        <span class="k">return</span> <span class="n">prompt</span></div>
+
+    
+<div class="viewcode-block" id="PromptManager.get_template_info">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.PromptManager.get_template_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_template_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get information about loaded templates.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;prompts_directory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">prompts_directory</span><span class="p">,</span>
+            <span class="s2">&quot;total_templates&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="p">),</span>
+            <span class="s2">&quot;document_types&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+            <span class="s2">&quot;has_default_template&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;template_placeholders&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">doc_type</span><span class="p">:</span> <span class="n">template</span><span class="o">.</span><span class="n">get_required_placeholders</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">doc_type</span><span class="p">,</span> <span class="n">template</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_templates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<span class="c1"># Global prompt manager instance</span>
+<span class="n">_prompt_manager</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="get_prompt_manager">
+<a class="viewcode-back" href="../../../modules/extraction.html#documents.extraction.prompt_manager.get_prompt_manager">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_prompt_manager</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PromptManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get or create global prompt manager instance.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_prompt_manager</span>
+    
+    <span class="k">if</span> <span class="n">_prompt_manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_prompt_manager</span> <span class="o">=</span> <span class="n">PromptManager</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">_prompt_manager</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

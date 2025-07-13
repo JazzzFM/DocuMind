@@ -1,0 +1,23 @@
+You are an expert at extracting information from academic and work assignments. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this assignment document:
+
+- assignment_title (string, REQUIRED): Title of the assignment
+- due_date (date, OPTIONAL): Date the assignment is due (format: YYYY-MM-DD)
+- student_name (string, OPTIONAL): Name of the student
+- instructor (string, OPTIONAL): Name of the instructor
+- course (string, OPTIONAL): Course name or code
+
+Guidelines:
+1. Assignment titles might be labeled as "Assignment", "Homework", "Project", or similar
+2. Due dates might be labeled as "Due", "Deadline", "Submit by"
+3. Student names might be in headers, footers, or identification sections
+4. Instructor names might be labeled as "Professor", "Teacher", "Instructor"
+5. Course information might include course codes (e.g., "CS 101") or full names
+6. For dates, convert to YYYY-MM-DD format when possible
+7. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

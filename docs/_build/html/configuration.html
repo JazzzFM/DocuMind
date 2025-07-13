@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api_reference.html" />
+    <link rel="prev" title="Quick Start Guide" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment-variables">Environment Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core-settings">Core Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#authentication-security">Authentication &amp; Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#llm-configuration">LLM Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ocr-configuration">OCR Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-database">Vector Database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#caching">Caching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-settings">Processing Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#yaml-configuration-files">YAML Configuration Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#document-types-configuration">Document Types Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#entity-type-definitions">Entity Type Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prompt-templates">Prompt Templates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#django-settings">Django Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core-django-configuration">Core Django Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rest-framework-configuration">REST Framework Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jwt-configuration">JWT Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cache-configuration">Cache Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-settings">Custom Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment-specific-configurations">Environment-Specific Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-configuration">Development Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#production-configuration">Production Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-configuration">Testing Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-best-practices">Configuration Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-management-tools">Configuration Management Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/configuration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<p>DocuMind uses a combination of environment variables, YAML configuration files, and Django settings for configuration.</p>
+<section id="environment-variables">
+<h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Link to this heading"></a></h2>
+<section id="core-settings">
+<h3>Core Settings<a class="headerlink" href="#core-settings" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Django Core Settings</span>
+<span class="nv">SECRET_KEY</span><span class="o">=</span>your-secret-key-here
+<span class="nv">DEBUG</span><span class="o">=</span>False
+<span class="nv">ALLOWED_HOSTS</span><span class="o">=</span>localhost,127.0.0.1,yourdomain.com
+
+<span class="c1"># Database Configuration</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:password@localhost:5432/documind
+<span class="c1"># or for SQLite (development)</span>
+<span class="nv">DATABASE_URL</span><span class="o">=</span>sqlite:///db.sqlite3
+</pre></div>
+</div>
+</section>
+<section id="authentication-security">
+<h3>Authentication &amp; Security<a class="headerlink" href="#authentication-security" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># JWT Token Settings</span>
+<span class="nv">JWT_ACCESS_TOKEN_LIFETIME</span><span class="o">=</span><span class="m">3600</span><span class="w">  </span><span class="c1"># 1 hour in seconds</span>
+<span class="nv">JWT_REFRESH_TOKEN_LIFETIME</span><span class="o">=</span><span class="m">86400</span><span class="w">  </span><span class="c1"># 24 hours in seconds</span>
+
+<span class="c1"># CORS Settings</span>
+<span class="nv">CORS_ALLOWED_ORIGINS</span><span class="o">=</span>https://yourdomain.com,https://app.yourdomain.com
+<span class="nv">CORS_ALLOW_CREDENTIALS</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</section>
+<section id="llm-configuration">
+<h3>LLM Configuration<a class="headerlink" href="#llm-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># LLM Provider Settings</span>
+<span class="nv">LLM_PROVIDER</span><span class="o">=</span>openai
+<span class="nv">OPENAI_API_KEY</span><span class="o">=</span>your-openai-api-key
+<span class="nv">LLM_MODEL</span><span class="o">=</span>gpt-4-turbo-preview
+<span class="nv">LLM_TEMPERATURE</span><span class="o">=</span><span class="m">0</span>.1
+<span class="nv">LLM_MAX_TOKENS</span><span class="o">=</span><span class="m">1000</span>
+
+<span class="c1"># Alternative: Azure OpenAI</span>
+<span class="nv">LLM_PROVIDER</span><span class="o">=</span>azure_openai
+<span class="nv">AZURE_OPENAI_ENDPOINT</span><span class="o">=</span>https://your-resource.openai.azure.com/
+<span class="nv">AZURE_OPENAI_API_KEY</span><span class="o">=</span>your-azure-key
+<span class="nv">AZURE_OPENAI_API_VERSION</span><span class="o">=</span><span class="m">2024</span>-02-15-preview
+</pre></div>
+</div>
+</section>
+<section id="ocr-configuration">
+<h3>OCR Configuration<a class="headerlink" href="#ocr-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># OCR Engine Settings</span>
+<span class="nv">OCR_ENGINE</span><span class="o">=</span>tesseract
+<span class="nv">TESSERACT_CMD</span><span class="o">=</span>/usr/bin/tesseract
+<span class="nv">OCR_LANGUAGES</span><span class="o">=</span>eng,spa,fra
+<span class="nv">OCR_DPI</span><span class="o">=</span><span class="m">300</span>
+<span class="nv">OCR_TIMEOUT_SECONDS</span><span class="o">=</span><span class="m">30</span>
+</pre></div>
+</div>
+</section>
+<section id="vector-database">
+<h3>Vector Database<a class="headerlink" href="#vector-database" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># ChromaDB Settings</span>
+<span class="nv">CHROMA_PERSIST_DIRECTORY</span><span class="o">=</span>./chroma_db
+<span class="nv">CHROMA_COLLECTION_NAME</span><span class="o">=</span>documents
+<span class="nv">CHROMA_DISTANCE_FUNCTION</span><span class="o">=</span>cosine
+
+<span class="c1"># Sentence Transformers</span>
+<span class="nv">EMBEDDING_MODEL</span><span class="o">=</span>all-MiniLM-L6-v2
+<span class="nv">EMBEDDING_CACHE_SIZE</span><span class="o">=</span><span class="m">1000</span>
+</pre></div>
+</div>
+</section>
+<section id="caching">
+<h3>Caching<a class="headerlink" href="#caching" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Redis Cache Settings</span>
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379/1
+<span class="nv">CACHE_DEFAULT_TIMEOUT</span><span class="o">=</span><span class="m">3600</span>
+
+<span class="c1"># Cache Configuration</span>
+<span class="nv">ENABLE_OCR_CACHE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">ENABLE_CLASSIFICATION_CACHE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">ENABLE_EXTRACTION_CACHE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">OCR_CACHE_TIMEOUT</span><span class="o">=</span><span class="m">3600</span>
+<span class="nv">CLASSIFICATION_CACHE_TIMEOUT</span><span class="o">=</span><span class="m">1800</span>
+<span class="nv">EXTRACTION_CACHE_TIMEOUT</span><span class="o">=</span><span class="m">7200</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-settings">
+<h3>Processing Settings<a class="headerlink" href="#processing-settings" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Document Processing</span>
+<span class="nv">MAX_FILE_SIZE_MB</span><span class="o">=</span><span class="m">50</span>
+<span class="nv">SUPPORTED_FILE_TYPES</span><span class="o">=</span>pdf,png,jpg,jpeg
+<span class="nv">MAX_PROCESSING_TIME_SECONDS</span><span class="o">=</span><span class="m">300</span>
+
+<span class="c1"># Batch Processing</span>
+<span class="nv">BATCH_SIZE_LIMIT</span><span class="o">=</span><span class="m">10</span>
+<span class="nv">ENABLE_ASYNC_PROCESSING</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</section>
+<section id="logging">
+<h3>Logging<a class="headerlink" href="#logging" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Logging Configuration</span>
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO
+<span class="nv">LOG_FORMAT</span><span class="o">=</span>json
+<span class="nv">LOG_FILE</span><span class="o">=</span>/var/log/documind/app.log
+<span class="nv">ENABLE_STRUCTURED_LOGGING</span><span class="o">=</span><span class="nb">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="yaml-configuration-files">
+<h2>YAML Configuration Files<a class="headerlink" href="#yaml-configuration-files" title="Link to this heading"></a></h2>
+<section id="document-types-configuration">
+<h3>Document Types Configuration<a class="headerlink" href="#document-types-configuration" title="Link to this heading"></a></h3>
+<p>File: <code class="docutils literal notranslate"><span class="pre">config/document_types.yaml</span></code></p>
+<p>This file defines all supported document types and their entity schemas:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">invoice</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">entities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice_number</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Unique</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">identifier&quot;</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^[A-Z0-9-]+$&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Total</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">amount&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Invoice</span><span class="nv"> </span><span class="s">date&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vendor</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">min_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">      </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Vendor</span><span class="nv"> </span><span class="s">name&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">line_items</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Invoice</span><span class="nv"> </span><span class="s">line</span><span class="nv"> </span><span class="s">items&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_paid</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Payment</span><span class="nv"> </span><span class="s">status&quot;</span>
+<span class="w">  </span><span class="nt">keywords</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bill</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">due</span>
+
+<span class="nt">contract</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">entities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contract_number</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Contract</span><span class="nv"> </span><span class="s">identifier&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parties</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Contract</span><span class="nv"> </span><span class="s">parties&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">effective_date</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Contract</span><span class="nv"> </span><span class="s">effective</span><span class="nv"> </span><span class="s">date&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">expiry_date</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Contract</span><span class="nv"> </span><span class="s">expiry</span><span class="nv"> </span><span class="s">date&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Contract</span><span class="nv"> </span><span class="s">value&quot;</span>
+<span class="w">  </span><span class="nt">keywords</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">contract</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agreement</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terms</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">parties</span>
+</pre></div>
+</div>
+</section>
+<section id="entity-type-definitions">
+<h3>Entity Type Definitions<a class="headerlink" href="#entity-type-definitions" title="Link to this heading"></a></h3>
+<p>Each entity type supports different validation parameters:</p>
+<p><strong>String Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">entity_name</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">255</span>
+<span class="w">  </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^[A-Za-z0-9\\s-]+$&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Entity</span><span class="nv"> </span><span class="s">description&quot;</span>
+</pre></div>
+</div>
+<p><strong>Date Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date_field</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2020-01-01&quot;</span>
+<span class="w">  </span><span class="nt">max_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2030-12-31&quot;</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Date</span><span class="nv"> </span><span class="s">field</span><span class="nv"> </span><span class="s">description&quot;</span>
+</pre></div>
+</div>
+<p><strong>Amount Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount_field</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">max_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000000</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Monetary</span><span class="nv"> </span><span class="s">amount&quot;</span>
+</pre></div>
+</div>
+<p><strong>Number Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number_field</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">decimal_places</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Numeric</span><span class="nv"> </span><span class="s">value&quot;</span>
+</pre></div>
+</div>
+<p><strong>Array Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array_field</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">min_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_items</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;List</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">items&quot;</span>
+</pre></div>
+</div>
+<p><strong>Boolean Type:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean_field</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;True/false</span><span class="nv"> </span><span class="s">value&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="prompt-templates">
+<h3>Prompt Templates<a class="headerlink" href="#prompt-templates" title="Link to this heading"></a></h3>
+<p>Directory: <code class="docutils literal notranslate"><span class="pre">config/prompts/</span></code></p>
+<p>Contains LLM prompt templates for entity extraction:</p>
+<p><strong>default.txt</strong> (fallback template):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>You are an expert document analyst. Extract the following entities from this document:
+
+{entity_definitions}
+
+Guidelines:
+1. Extract information exactly as written
+2. Use null for missing values
+3. Return only valid JSON
+4. Be precise and accurate
+
+Document text:
+{document_text}
+
+Return ONLY a JSON object with the extracted entities:
+</pre></div>
+</div>
+<p><strong>invoice.txt</strong> (specialized for invoices):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>You are an expert at processing invoice documents. Extract the following entities:
+
+{entity_definitions}
+
+Special instructions for invoices:
+- Invoice numbers are typically alphanumeric codes
+- Amounts should include currency symbols
+- Dates should be in YYYY-MM-DD format
+- Vendor names should be complete business names
+
+Document text:
+{document_text}
+
+Return ONLY a JSON object:
+</pre></div>
+</div>
+</section>
+</section>
+<section id="django-settings">
+<h2>Django Settings<a class="headerlink" href="#django-settings" title="Link to this heading"></a></h2>
+<section id="core-django-configuration">
+<h3>Core Django Configuration<a class="headerlink" href="#core-django-configuration" title="Link to this heading"></a></h3>
+<p>File: <code class="docutils literal notranslate"><span class="pre">documind/settings.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Build paths</span>
+<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+<span class="c1"># Security</span>
+<span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">)</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DEBUG&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+<span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;ALLOWED_HOSTS&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1"># Database</span>
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DB_NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;documind&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DB_USER&#39;</span><span class="p">,</span> <span class="s1">&#39;documind&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DB_PASSWORD&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;HOST&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DB_HOST&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;PORT&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DB_PORT&#39;</span><span class="p">,</span> <span class="s1">&#39;5432&#39;</span><span class="p">),</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="rest-framework-configuration">
+<h3>REST Framework Configuration<a class="headerlink" href="#rest-framework-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;DEFAULT_AUTHENTICATION_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework_simplejwt.authentication.JWTAuthentication&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_PERMISSION_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework.permissions.IsAuthenticated&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_THROTTLE_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework.throttling.AnonRateThrottle&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;rest_framework.throttling.UserRateThrottle&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_THROTTLE_RATES&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;anon&#39;</span><span class="p">:</span> <span class="s1">&#39;100/day&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;1000/day&#39;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;DEFAULT_PAGINATION_CLASS&#39;</span><span class="p">:</span> <span class="s1">&#39;rest_framework.pagination.PageNumberPagination&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;PAGE_SIZE&#39;</span><span class="p">:</span> <span class="mi">20</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="jwt-configuration">
+<h3>JWT Configuration<a class="headerlink" href="#jwt-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="n">SIMPLE_JWT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;ACCESS_TOKEN_LIFETIME&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;REFRESH_TOKEN_LIFETIME&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;ROTATE_REFRESH_TOKENS&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;BLACKLIST_AFTER_ROTATION&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;UPDATE_LAST_LOGIN&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;ALGORITHM&#39;</span><span class="p">:</span> <span class="s1">&#39;HS256&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SIGNING_KEY&#39;</span><span class="p">:</span> <span class="n">SECRET_KEY</span><span class="p">,</span>
+    <span class="s1">&#39;VERIFYING_KEY&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;AUTH_HEADER_TYPES&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Bearer&#39;</span><span class="p">,),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cache-configuration">
+<h3>Cache Configuration<a class="headerlink" href="#cache-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CACHES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;BACKEND&#39;</span><span class="p">:</span> <span class="s1">&#39;django_redis.cache.RedisCache&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LOCATION&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;REDIS_URL&#39;</span><span class="p">,</span> <span class="s1">&#39;redis://127.0.0.1:6379/1&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;OPTIONS&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;CLIENT_CLASS&#39;</span><span class="p">:</span> <span class="s1">&#39;django_redis.client.DefaultClient&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-settings">
+<h3>Custom Settings<a class="headerlink" href="#custom-settings" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># DocuMind specific settings</span>
+<span class="n">DOCUMIND_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;DOCUMENT_TYPES_CONFIG&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;document_types.yaml&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;PROMPTS_CONFIG_DIR&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;prompts&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;MAX_FILE_SIZE&#39;</span><span class="p">:</span> <span class="mi">50</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>  <span class="c1"># 50MB</span>
+    <span class="s1">&#39;SUPPORTED_FILE_TYPES&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpeg&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;OCR_SETTINGS&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;tesseract&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;LANGUAGES&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;eng&#39;</span><span class="p">,</span> <span class="s1">&#39;spa&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;DPI&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="s1">&#39;TIMEOUT&#39;</span><span class="p">:</span> <span class="mi">30</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;LLM_SETTINGS&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;PROVIDER&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;LLM_PROVIDER&#39;</span><span class="p">,</span> <span class="s1">&#39;openai&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;MODEL&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;LLM_MODEL&#39;</span><span class="p">,</span> <span class="s1">&#39;gpt-4-turbo-preview&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;TEMPERATURE&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;LLM_TEMPERATURE&#39;</span><span class="p">,</span> <span class="s1">&#39;0.1&#39;</span><span class="p">)),</span>
+        <span class="s1">&#39;MAX_TOKENS&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;LLM_MAX_TOKENS&#39;</span><span class="p">,</span> <span class="s1">&#39;1000&#39;</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-validation">
+<h2>Configuration Validation<a class="headerlink" href="#configuration-validation" title="Link to this heading"></a></h2>
+<p>DocuMind includes configuration validation to ensure proper setup:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.config_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_configuration</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_config</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate DocuMind configuration&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Validate document types configuration</span>
+        <span class="n">validate_configuration</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Configuration is valid&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Configuration error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-specific-configurations">
+<h2>Environment-Specific Configurations<a class="headerlink" href="#environment-specific-configurations" title="Link to this heading"></a></h2>
+<section id="development-configuration">
+<h3>Development Configuration<a class="headerlink" href="#development-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Development settings</span>
+<span class="nv">DEBUG</span><span class="o">=</span>True
+<span class="nv">SECRET_KEY</span><span class="o">=</span>dev-secret-key
+<span class="nv">DATABASE_URL</span><span class="o">=</span>sqlite:///db.sqlite3
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379/1
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>DEBUG
+<span class="nv">ENABLE_PROCESSING_CACHE</span><span class="o">=</span>False
+</pre></div>
+</div>
+</section>
+<section id="production-configuration">
+<h3>Production Configuration<a class="headerlink" href="#production-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Production settings</span>
+<span class="nv">DEBUG</span><span class="o">=</span>False
+<span class="nv">SECRET_KEY</span><span class="o">=</span>secure-production-key
+<span class="nv">DATABASE_URL</span><span class="o">=</span>postgresql://user:pass@prod-db:5432/documind
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://prod-redis:6379/1
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>INFO
+<span class="nv">ENABLE_PROCESSING_CACHE</span><span class="o">=</span>True
+<span class="nv">ALLOWED_HOSTS</span><span class="o">=</span>api.yourdomain.com
+</pre></div>
+</div>
+</section>
+<section id="testing-configuration">
+<h3>Testing Configuration<a class="headerlink" href="#testing-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test settings</span>
+<span class="nv">DEBUG</span><span class="o">=</span>True
+<span class="nv">SECRET_KEY</span><span class="o">=</span>test-secret-key
+<span class="nv">DATABASE_URL</span><span class="o">=</span>sqlite:///:memory:
+<span class="nv">REDIS_URL</span><span class="o">=</span>redis://localhost:6379/15
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>WARNING
+<span class="nv">ENABLE_PROCESSING_CACHE</span><span class="o">=</span>False
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-best-practices">
+<h2>Configuration Best Practices<a class="headerlink" href="#configuration-best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Environment Variables</strong>: Use environment variables for sensitive data</p></li>
+<li><p><strong>Version Control</strong>: Never commit secrets to version control</p></li>
+<li><p><strong>Documentation</strong>: Document all configuration options</p></li>
+<li><p><strong>Validation</strong>: Validate configuration on startup</p></li>
+<li><p><strong>Defaults</strong>: Provide sensible defaults for optional settings</p></li>
+<li><p><strong>Separation</strong>: Separate configuration by environment</p></li>
+</ol>
+</section>
+<section id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Store sensitive values in environment variables</p></li>
+<li><p>Use strong secret keys in production</p></li>
+<li><p>Enable HTTPS in production environments</p></li>
+<li><p>Configure proper CORS settings</p></li>
+<li><p>Implement rate limiting</p></li>
+<li><p>Use secure database connections</p></li>
+<li><p>Regular security updates</p></li>
+</ul>
+</section>
+<section id="configuration-management-tools">
+<h2>Configuration Management Tools<a class="headerlink" href="#configuration-management-tools" title="Link to this heading"></a></h2>
+<p>For complex deployments, consider using:</p>
+<ul class="simple">
+<li><p><strong>Docker Compose</strong>: Environment variable files</p></li>
+<li><p><strong>Kubernetes</strong>: ConfigMaps and Secrets</p></li>
+<li><p><strong>HashiCorp Vault</strong>: Secret management</p></li>
+<li><p><strong>AWS Parameter Store</strong>: Cloud-based configuration</p></li>
+<li><p><strong>Environment-specific .env files</strong>: Local development</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

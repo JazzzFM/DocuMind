@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-endpoints">Authentication Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#token-generation">Token Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#token-refresh">Token Refresh</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#document-processing-endpoints">Document Processing Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#single-document-processing">Single Document Processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#document-search">Document Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-processing">Batch Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#system-management-endpoints">System Management Endpoints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-status">System Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#document-types">Document Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#statistics">Statistics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#error-responses">Error Responses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-error-codes">Common Error Codes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rate-limiting">Rate Limiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-documentation">Interactive Documentation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api_reference.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>DocuMind provides a comprehensive REST API for document processing, search, and management.</p>
+<section id="base-url">
+<h2>Base URL<a class="headerlink" href="#base-url" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>http://localhost:8000/api/v1/
+</pre></div>
+</div>
+</section>
+<section id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Link to this heading"></a></h2>
+<p>All API endpoints require JWT authentication. Include the access token in the Authorization header:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Authorization: Bearer &lt;your_access_token&gt;
+</pre></div>
+</div>
+</section>
+<section id="authentication-endpoints">
+<h2>Authentication Endpoints<a class="headerlink" href="#authentication-endpoints" title="Link to this heading"></a></h2>
+<section id="token-generation">
+<h3>Token Generation<a class="headerlink" href="#token-generation" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/auth/token/</span></code></p>
+<p>Generate JWT access and refresh tokens.</p>
+<p><strong>Request Body:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your_username&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your_password&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;access&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;refresh&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="token-refresh">
+<h3>Token Refresh<a class="headerlink" href="#token-refresh" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/auth/token/refresh/</span></code></p>
+<p>Refresh an access token using a refresh token.</p>
+<p><strong>Request Body:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;refresh&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;access&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="document-processing-endpoints">
+<h2>Document Processing Endpoints<a class="headerlink" href="#document-processing-endpoints" title="Link to this heading"></a></h2>
+<section id="single-document-processing">
+<h3>Single Document Processing<a class="headerlink" href="#single-document-processing" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/documents/process/</span></code></p>
+<p>Process a single document through the complete pipeline.</p>
+<p><strong>Request Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file</span></code> (required): Document file (PDF, PNG, JPG, JPEG)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extract_entities</span></code> (optional): Whether to extract entities (default: true)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">force_ocr</span></code> (optional): Force OCR even if cached (default: false)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">language</span></code> (optional): OCR language hint (default: “eng”)</p></li>
+</ul>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;doc_12345&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invoice&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;extracted_entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;invoice_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2024-001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$1,234.56&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;processing_time_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2300</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ocr_confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.98</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="document-search">
+<h3>Document Search<a class="headerlink" href="#document-search" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/documents/search/</span></code></p>
+<p>Search for documents using vector similarity and filters.</p>
+<p><strong>Query Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">query</span></code> (required): Search query string</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">document_type</span></code> (optional): Filter by document type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date_from</span></code> (optional): Start date filter (YYYY-MM-DD)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">date_to</span></code> (optional): End date filter (YYYY-MM-DD)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">limit</span></code> (optional): Results per page (default: 20)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">offset</span></code> (optional): Pagination offset (default: 0)</p></li>
+</ul>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;total_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;doc_12345&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invoice&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;similarity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.89</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;extracted_entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">...</span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-processing">
+<h3>Batch Processing<a class="headerlink" href="#batch-processing" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/documents/batch/</span></code></p>
+<p>Process multiple documents in batch.</p>
+<p><strong>Request Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code> (required): Array of document files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">async</span></code> (optional): Process asynchronously (default: true)</p></li>
+</ul>
+<p><strong>Response (Async):</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;processing&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;task_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;batch_abc-123&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Batch processing initiated.&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response (Sync):</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;doc_1&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invoice&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="system-management-endpoints">
+<h2>System Management Endpoints<a class="headerlink" href="#system-management-endpoints" title="Link to this heading"></a></h2>
+<section id="system-status">
+<h3>System Status<a class="headerlink" href="#system-status" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/system/status/</span></code></p>
+<p>Get health status of all system components.</p>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;components&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;ocr&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;engine&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TesseractEngine&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;llm&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;vector_search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;collection_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;cache&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="document-types">
+<h3>Document Types<a class="headerlink" href="#document-types" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/system/document-types/</span></code></p>
+<p>Get available document types and their configurations.</p>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;document_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;invoice&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Invoice&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Invoice documents&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invoice_number&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Invoice number&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;keywords&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;invoice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bill&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;payment&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;total_types&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="statistics">
+<h3>Statistics<a class="headerlink" href="#statistics" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/system/statistics/</span></code></p>
+<p>Get system performance statistics.</p>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;statistics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;classification&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;total_classifications&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;accuracy&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.92</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;extraction&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;total_extractions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;success_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.89</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;cache_hit_rate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.65</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;vector_search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;document_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1500</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;collection_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;50MB&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="error-responses">
+<h2>Error Responses<a class="headerlink" href="#error-responses" title="Link to this heading"></a></h2>
+<p>All endpoints return consistent error responses:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR_CODE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Human-readable error message&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Additional error details&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="common-error-codes">
+<h3>Common Error Codes<a class="headerlink" href="#common-error-codes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">INVALID_FILE_TYPE</span></code>: Unsupported file format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTHENTICATION_FAILED</span></code>: Invalid credentials</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TOKEN_EXPIRED</span></code>: JWT token has expired</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OCR_PROCESSING_ERROR</span></code>: OCR processing failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLASSIFICATION_ERROR</span></code>: Document classification failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXTRACTION_ERROR</span></code>: Entity extraction failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VALIDATION_ERROR</span></code>: Request validation failed</p></li>
+</ul>
+</section>
+</section>
+<section id="rate-limiting">
+<h2>Rate Limiting<a class="headerlink" href="#rate-limiting" title="Link to this heading"></a></h2>
+<p>API endpoints are rate limited:</p>
+<ul class="simple">
+<li><p><strong>Anonymous users</strong>: 100 requests per day</p></li>
+<li><p><strong>Authenticated users</strong>: 1000 requests per day</p></li>
+</ul>
+<p>Rate limit headers are included in responses:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 999
+X-RateLimit-Reset: 1640995200
+</pre></div>
+</div>
+</section>
+<section id="interactive-documentation">
+<h2>Interactive Documentation<a class="headerlink" href="#interactive-documentation" title="Link to this heading"></a></h2>
+<p>DocuMind provides interactive API documentation:</p>
+<ul class="simple">
+<li><p><strong>Swagger UI</strong>: <code class="docutils literal notranslate"><span class="pre">http://localhost:8000/api/schema/swagger-ui/</span></code></p></li>
+<li><p><strong>ReDoc</strong>: <code class="docutils literal notranslate"><span class="pre">http://localhost:8000/api/schema/redoc/</span></code></p></li>
+<li><p><strong>OpenAPI Schema</strong>: <code class="docutils literal notranslate"><span class="pre">http://localhost:8000/api/schema/</span></code></p></li>
+</ul>
+<p>The interactive documentation allows you to:</p>
+<ul class="simple">
+<li><p>Explore all available endpoints</p></li>
+<li><p>Test API calls directly from the browser</p></li>
+<li><p>View request/response schemas</p></li>
+<li><p>Understand authentication requirements</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="architecture.html" class="btn btn-neutral float-right" title="Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

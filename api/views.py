@@ -4,12 +4,17 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from documents.ocr.factory import OCRFactory
 from documents.classification.classifier import DocumentClassifier
-from documents.extraction.llm_extractor import LLMExtractor
+from documents.extraction.llm_extractor import get_llm_extractor
 from .serializers import DocumentProcessSerializer, DocumentSearchSerializer, DocumentBatchProcessSerializer
 from documents.classification.vector_search import VectorSearch
 from documents.exceptions import DocumentProcessingError, OCRProcessingError, DocumentClassificationError, EntityExtractionError
+from documents.config_loader import get_document_types
+from documents.llm.factory import LLMFactory
 import os
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_FILE_TYPES = ['.pdf', '.png', '.jpg', '.jpeg']
 
@@ -39,7 +44,7 @@ class DocumentProcessView(APIView):
             try:
                 ocr_engine = OCRFactory.get_engine()
                 classifier = DocumentClassifier()
-                extractor = LLMExtractor()
+                extractor = get_llm_extractor()
 
                 # OCR
                 text = ocr_engine.extract_text(temp_file_path)
@@ -49,7 +54,8 @@ class DocumentProcessView(APIView):
 
                 extracted_entities_data = {}
                 if extract_entities and doc_type != 'unknown':
-                    extracted_entities_data = extractor.extract_entities(doc_type, text)
+                    extraction_result = extractor.extract_entities(doc_type, text)
+                    extracted_entities_data = extraction_result.get('entities', {})
                     classifier.add_document_to_index(file_obj.name, text, doc_type, extracted_entities_data) # Add to ChromaDB
 
                 return Response({
@@ -175,13 +181,14 @@ class DocumentBatchProcessView(APIView):
                     try:
                         ocr_engine = OCRFactory.get_engine()
                         classifier = DocumentClassifier()
-                        extractor = LLMExtractor()
+                        extractor = get_llm_extractor()
 
                         text = ocr_engine.extract_text(temp_file_path)
                         doc_type, confidence = classifier.classify(text)
                         extracted_entities_data = {}
                         if doc_type != 'unknown':
-                            extracted_entities_data = extractor.extract_entities(doc_type, text)
+                            extraction_result = extractor.extract_entities(doc_type, text)
+                            extracted_entities_data = extraction_result.get('entities', {})
                             classifier.add_document_to_index(file_obj.name, text, doc_type, extracted_entities_data)
 
                         results.append({
@@ -213,3 +220,181 @@ class DocumentBatchProcessView(APIView):
                 }, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SystemStatusView(APIView):
+    """
+    Check system status and health of all components.
+    """
+    
+    def get(self, request):
+        try:
+            status_info = {
+                'status': 'healthy',
+                'components': {}
+            }
+            
+            # Check OCR Engine
+            try:
+                ocr_engine = OCRFactory.get_engine()
+                status_info['components']['ocr'] = {
+                    'status': 'healthy',
+                    'engine': ocr_engine.__class__.__name__
+                }
+            except Exception as e:
+                status_info['components']['ocr'] = {
+                    'status': 'error',
+                    'error': str(e)
+                }
+                status_info['status'] = 'degraded'
+            
+            # Check LLM Provider
+            try:
+                llm_factory = LLMFactory()
+                provider = llm_factory.get_provider()
+                # Test provider connection
+                provider_status = provider.test_connection()
+                status_info['components']['llm'] = {
+                    'status': 'healthy' if provider_status else 'error',
+                    'provider': provider.get_provider_name()
+                }
+                if not provider_status:
+                    status_info['status'] = 'degraded'
+            except Exception as e:
+                status_info['components']['llm'] = {
+                    'status': 'error',
+                    'error': str(e)
+                }
+                status_info['status'] = 'degraded'
+            
+            # Check Vector Search
+            try:
+                vector_search = VectorSearch()
+                collection_info = vector_search.get_collection_info()
+                status_info['components']['vector_search'] = {
+                    'status': 'healthy',
+                    'collection_count': collection_info.get('document_count', 0)
+                }
+            except Exception as e:
+                status_info['components']['vector_search'] = {
+                    'status': 'error',
+                    'error': str(e)
+                }
+                status_info['status'] = 'degraded'
+            
+            # Check Cache
+            try:
+                from django.core.cache import cache
+                cache.set('health_check', 'ok', 30)
+                cache_test = cache.get('health_check')
+                status_info['components']['cache'] = {
+                    'status': 'healthy' if cache_test == 'ok' else 'error'
+                }
+                if cache_test != 'ok':
+                    status_info['status'] = 'degraded'
+            except Exception as e:
+                status_info['components']['cache'] = {
+                    'status': 'error',
+                    'error': str(e)
+                }
+                status_info['status'] = 'degraded'
+            
+            return Response(status_info, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'Health check failed: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class DocumentTypesView(APIView):
+    """
+    Get available document types and their configurations.
+    """
+    
+    def get(self, request):
+        try:
+            document_types = get_document_types()
+            
+            # Format response with entity information
+            formatted_types = {}
+            for doc_type, config in document_types.items():
+                formatted_types[doc_type] = {
+                    'name': config.name,
+                    'description': getattr(config, 'description', f'{doc_type.title()} documents'),
+                    'entities': [
+                        {
+                            'name': entity['name'],
+                            'type': entity['type'],
+                            'required': entity.get('required', False),
+                            'description': entity.get('description', '')
+                        }
+                        for entity in config.entities
+                    ],
+                    'keywords': getattr(config, 'keywords', [])
+                }
+            
+            return Response({
+                'status': 'success',
+                'document_types': formatted_types,
+                'total_types': len(document_types)
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'Failed to retrieve document types: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class StatisticsView(APIView):
+    """
+    Get system performance statistics.
+    """
+    
+    def get(self, request):
+        try:
+            stats = {
+                'classification': {},
+                'extraction': {},
+                'vector_search': {}
+            }
+            
+            # Get classification statistics
+            try:
+                classifier = DocumentClassifier()
+                classification_stats = classifier.get_classification_statistics()
+                stats['classification'] = classification_stats
+            except Exception as e:
+                logger.warning(f"Failed to get classification stats: {e}")
+                stats['classification'] = {'error': str(e)}
+            
+            # Get extraction statistics
+            try:
+                extractor = get_llm_extractor()
+                extraction_stats = extractor.get_extraction_statistics()
+                stats['extraction'] = extraction_stats
+            except Exception as e:
+                logger.warning(f"Failed to get extraction stats: {e}")
+                stats['extraction'] = {'error': str(e)}
+            
+            # Get vector search statistics
+            try:
+                vector_search = VectorSearch()
+                vector_stats = vector_search.get_collection_info()
+                stats['vector_search'] = vector_stats
+            except Exception as e:
+                logger.warning(f"Failed to get vector search stats: {e}")
+                stats['vector_search'] = {'error': str(e)}
+            
+            return Response({
+                'status': 'success',
+                'statistics': stats
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'Failed to retrieve statistics: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,0 +1,22 @@
+You are an expert at extracting information from forms and applications. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this form document:
+
+- form_title (string, REQUIRED): Title of the form
+- form_number (string, OPTIONAL): Form number or ID
+- date_completed (date, OPTIONAL): Date the form was completed (format: YYYY-MM-DD)
+- applicant_name (string, OPTIONAL): Name of the person filling out the form
+
+Guidelines:
+1. Form titles are usually at the top and might include words like "Application", "Form", "Request"
+2. Form numbers might be labeled as "Form #", "ID", "Reference Number"
+3. Look for completion dates, submission dates, or signature dates
+4. Applicant names might be in signature sections or labeled fields
+5. For dates, convert to YYYY-MM-DD format when possible
+6. Extract names as they appear (don't reformat)
+7. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

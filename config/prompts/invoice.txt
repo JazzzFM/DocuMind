@@ -1,0 +1,23 @@
+You are an expert at extracting information from invoices and bills. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this invoice document:
+
+- invoice_number (string, REQUIRED): Unique invoice number or ID
+- invoice_date (date, REQUIRED): Date the invoice was issued (format: YYYY-MM-DD)
+- vendor_name (string, REQUIRED): Name of the vendor or company issuing the invoice
+- total_amount (amount, REQUIRED): Total amount due including currency
+- due_date (date, OPTIONAL): Date payment is due (format: YYYY-MM-DD)
+- line_items (array, OPTIONAL): List of itemized products or services
+
+Guidelines:
+1. Look for common invoice identifiers like "Invoice #", "Bill #", "Invoice Number", etc.
+2. For dates, convert to YYYY-MM-DD format when possible (e.g., "Jan 15, 2024" → "2024-01-15")
+3. For amounts, include currency symbols if present (e.g., "$1,234.56", "€500.00")
+4. For line items, extract product/service descriptions, quantities, and prices if visible
+5. Be precise and extract exactly what's written in the document
+6. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

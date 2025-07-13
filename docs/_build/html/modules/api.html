@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Module &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Documents Module" href="documents.html" />
+    <link rel="prev" title="API Modules Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Modules Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#core-modules">Core Modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">API Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#views">Views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-api.serializers">Serializers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#authentication">Authentication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-endpoints">API Endpoints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rate-limiting">Rate Limiting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#response-formats">Response Formats</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interactive-documentation">Interactive Documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#customization">Customization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="documents.html">Documents Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ocr.html">OCR Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="classification.html">Classification Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="llm.html">LLM Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-api">API Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-documents">Documents Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Modules Reference</a></li>
+      <li class="breadcrumb-item active">API Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-module">
+<h1>API Module<a class="headerlink" href="#api-module" title="Link to this heading"></a></h1>
+<p>The API module provides the REST API endpoints for DocuMind using Django REST Framework.</p>
+<section id="views">
+<h2>Views<a class="headerlink" href="#views" title="Link to this heading"></a></h2>
+</section>
+<section id="module-api.serializers">
+<span id="serializers"></span><h2>Serializers<a class="headerlink" href="#module-api.serializers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentProcessSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentProcessSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentProcessSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentProcessSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentSearchSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentSearchSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentSearchSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentSearchSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.serializers.DocumentBatchProcessSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.serializers.</span></span><span class="sig-name descname"><span class="pre">DocumentBatchProcessSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/serializers.html#DocumentBatchProcessSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.serializers.DocumentBatchProcessSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd></dl>
+
+</section>
+<section id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Link to this heading"></a></h2>
+<p>The API uses JWT (JSON Web Token) authentication provided by Django REST Framework SimpleJWT.</p>
+<section id="token-generation">
+<h3>Token Generation<a class="headerlink" href="#token-generation" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework_simplejwt.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenObtainPairView</span>
+
+<span class="c1"># POST /api/v1/auth/token/</span>
+<span class="p">{</span>
+    <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;your_username&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;your_password&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="token-usage">
+<h3>Token Usage<a class="headerlink" href="#token-usage" title="Link to this heading"></a></h3>
+<p>Include the access token in the Authorization header:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="err">Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-endpoints">
+<h2>API Endpoints<a class="headerlink" href="#api-endpoints" title="Link to this heading"></a></h2>
+<section id="document-processing">
+<h3>Document Processing<a class="headerlink" href="#document-processing" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/documents/process/</span></code></p>
+<p>Process a single document through the complete pipeline.</p>
+<p><strong>Parameters:</strong>
+- <code class="docutils literal notranslate"><span class="pre">file</span></code> (file): Document to process (PDF, PNG, JPG, JPEG)
+- <code class="docutils literal notranslate"><span class="pre">extract_entities</span></code> (boolean): Whether to extract entities (default: true)
+- <code class="docutils literal notranslate"><span class="pre">force_ocr</span></code> (boolean): Force OCR processing (default: false)
+- <code class="docutils literal notranslate"><span class="pre">language</span></code> (string): OCR language hint (default: “eng”)</p>
+<p><strong>Response:</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;document_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;document.pdf&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;invoice&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;extracted_entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;invoice_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INV-2024-001&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;$1,234.56&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;processing_time_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2300</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ocr_confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.98</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="document-search">
+<h3>Document Search<a class="headerlink" href="#document-search" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/documents/search/</span></code></p>
+<p>Search documents using vector similarity.</p>
+<p><strong>Query Parameters:</strong>
+- <code class="docutils literal notranslate"><span class="pre">query</span></code> (string): Search query
+- <code class="docutils literal notranslate"><span class="pre">document_type</span></code> (string): Filter by document type
+- <code class="docutils literal notranslate"><span class="pre">date_from</span></code> (date): Start date filter
+- <code class="docutils literal notranslate"><span class="pre">date_to</span></code> (date): End date filter
+- <code class="docutils literal notranslate"><span class="pre">limit</span></code> (integer): Results per page (default: 20)
+- <code class="docutils literal notranslate"><span class="pre">offset</span></code> (integer): Pagination offset (default: 0)</p>
+</section>
+<section id="batch-processing">
+<h3>Batch Processing<a class="headerlink" href="#batch-processing" title="Link to this heading"></a></h3>
+<p><strong>POST</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/documents/batch/</span></code></p>
+<p>Process multiple documents in batch.</p>
+<p><strong>Parameters:</strong>
+- <code class="docutils literal notranslate"><span class="pre">files</span></code> (array): Array of document files
+- <code class="docutils literal notranslate"><span class="pre">async</span></code> (boolean): Process asynchronously (default: true)</p>
+</section>
+<section id="system-endpoints">
+<h3>System Endpoints<a class="headerlink" href="#system-endpoints" title="Link to this heading"></a></h3>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/system/status/</span></code></p>
+<p>Get system health status.</p>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/system/document-types/</span></code></p>
+<p>Get available document types configuration.</p>
+<p><strong>GET</strong> <code class="docutils literal notranslate"><span class="pre">/api/v1/system/statistics/</span></code></p>
+<p>Get system performance statistics.</p>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<p>The API returns consistent error responses:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR_CODE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Human-readable error message&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Additional error details&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="common-error-codes">
+<h3>Common Error Codes<a class="headerlink" href="#common-error-codes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">INVALID_FILE_TYPE</span></code>: Unsupported file format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AUTHENTICATION_FAILED</span></code>: Invalid credentials</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TOKEN_EXPIRED</span></code>: JWT token has expired</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OCR_PROCESSING_ERROR</span></code>: OCR processing failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CLASSIFICATION_ERROR</span></code>: Document classification failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXTRACTION_ERROR</span></code>: Entity extraction failed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VALIDATION_ERROR</span></code>: Request validation failed</p></li>
+</ul>
+</section>
+</section>
+<section id="rate-limiting">
+<h2>Rate Limiting<a class="headerlink" href="#rate-limiting" title="Link to this heading"></a></h2>
+<p>API endpoints implement rate limiting:</p>
+<ul class="simple">
+<li><p><strong>Anonymous users</strong>: 100 requests per day</p></li>
+<li><p><strong>Authenticated users</strong>: 1000 requests per day</p></li>
+</ul>
+<p>Rate limit information is included in response headers:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="err">X-RateLimit-Limit: 1000</span>
+<span class="err">X-RateLimit-Remaining: 999</span>
+<span class="err">X-RateLimit-Reset: 1640995200</span>
+</pre></div>
+</div>
+</section>
+<section id="response-formats">
+<h2>Response Formats<a class="headerlink" href="#response-formats" title="Link to this heading"></a></h2>
+<p>All API responses follow a consistent format:</p>
+<section id="success-response">
+<h3>Success Response<a class="headerlink" href="#success-response" title="Link to this heading"></a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;success&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;value&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;processing_time_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;cache_hit&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="error-response">
+<h3>Error Response<a class="headerlink" href="#error-response" title="Link to this heading"></a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ERROR_CODE&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Descriptive error message&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;field_errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;field_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Field-specific error&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="interactive-documentation">
+<h2>Interactive Documentation<a class="headerlink" href="#interactive-documentation" title="Link to this heading"></a></h2>
+<p>The API provides interactive documentation through:</p>
+<ul class="simple">
+<li><p><strong>Swagger UI</strong>: Available at <code class="docutils literal notranslate"><span class="pre">/api/schema/swagger-ui/</span></code></p></li>
+<li><p><strong>ReDoc</strong>: Available at <code class="docutils literal notranslate"><span class="pre">/api/schema/redoc/</span></code></p></li>
+<li><p><strong>OpenAPI Schema</strong>: Available at <code class="docutils literal notranslate"><span class="pre">/api/schema/</span></code></p></li>
+</ul>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>The API module includes comprehensive tests:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run API tests</span>
+<span class="n">python</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="n">api</span><span class="o">.</span><span class="n">tests</span>
+
+<span class="c1"># Run with coverage</span>
+<span class="n">coverage</span> <span class="n">run</span> <span class="o">--</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;.&#39;</span> <span class="n">manage</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="n">api</span><span class="o">.</span><span class="n">tests</span>
+<span class="n">coverage</span> <span class="n">report</span>
+</pre></div>
+</div>
+</section>
+<section id="customization">
+<h2>Customization<a class="headerlink" href="#customization" title="Link to this heading"></a></h2>
+<p>To extend the API:</p>
+<ol class="arabic simple">
+<li><p><strong>Add New Endpoints</strong>: Create view classes inheriting from DRF views</p></li>
+<li><p><strong>Custom Serializers</strong>: Define serializers for request/response validation</p></li>
+<li><p><strong>Authentication</strong>: Implement custom authentication backends</p></li>
+<li><p><strong>Permissions</strong>: Define custom permission classes</p></li>
+<li><p><strong>Throttling</strong>: Configure custom rate limiting rules</p></li>
+</ol>
+<section id="example-custom-view">
+<h3>Example Custom View<a class="headerlink" href="#example-custom-view" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.response</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsAuthenticated</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomDocumentView</span><span class="p">(</span><span class="n">APIView</span><span class="p">):</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">IsAuthenticated</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="c1"># Custom document processing logic</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">({</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Custom processing completed&quot;</span>
+        <span class="p">})</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>API configuration is managed through Django settings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># API Settings</span>
+<span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;DEFAULT_AUTHENTICATION_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework_simplejwt.authentication.JWTAuthentication&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_PERMISSION_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework.permissions.IsAuthenticated&#39;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_THROTTLE_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;rest_framework.throttling.AnonRateThrottle&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;rest_framework.throttling.UserRateThrottle&#39;</span>
+    <span class="p">],</span>
+    <span class="s1">&#39;DEFAULT_THROTTLE_RATES&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;anon&#39;</span><span class="p">:</span> <span class="s1">&#39;100/day&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;1000/day&#39;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Modules Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="documents.html" class="btn btn-neutral float-right" title="Documents Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

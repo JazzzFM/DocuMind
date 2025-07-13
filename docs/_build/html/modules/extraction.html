@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extraction Module &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="LLM Module" href="llm.html" />
+    <link rel="prev" title="Classification Module" href="classification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Modules Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#core-modules">Core Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="documents.html">Documents Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ocr.html">OCR Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="classification.html">Classification Module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Extraction Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.base">Base Extractor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#llm-extractor">LLM Extractor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.prompt_manager">Prompt Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.entity_validator">Entity Validator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#entity-types">Entity Types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prompt-templates">Prompt Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validation-process">Validation Process</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#statistics-and-monitoring">Statistics and Monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="llm.html">LLM Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-api">API Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-documents">Documents Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Modules Reference</a></li>
+      <li class="breadcrumb-item active">Extraction Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/extraction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="extraction-module">
+<h1>Extraction Module<a class="headerlink" href="#extraction-module" title="Link to this heading"></a></h1>
+<p>The extraction module handles entity extraction from documents using Large Language Models (LLMs).</p>
+<section id="module-documents.extraction.base">
+<span id="base-extractor"></span><h2>Base Extractor<a class="headerlink" href="#module-documents.extraction.base" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.base.BaseEntityExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.base.</span></span><span class="sig-name descname"><span class="pre">BaseEntityExtractor</span></span><a class="reference internal" href="../_modules/documents/extraction/base.html#BaseEntityExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.base.BaseEntityExtractor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract base class for entity extractors.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.base.BaseEntityExtractor.extract_entities">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_entities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/base.html#BaseEntityExtractor.extract_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.base.BaseEntityExtractor.extract_entities" title="Link to this definition"></a></dt>
+<dd><p>Extracts entities from a given text based on document type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="llm-extractor">
+<h2>LLM Extractor<a class="headerlink" href="#llm-extractor" title="Link to this heading"></a></h2>
+</section>
+<section id="module-documents.extraction.prompt_manager">
+<span id="prompt-manager"></span><h2>Prompt Manager<a class="headerlink" href="#module-documents.extraction.prompt_manager" title="Link to this heading"></a></h2>
+<p>Prompt template manager for entity extraction.
+Manages document-specific prompt templates and provides dynamic prompt generation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptTemplate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.prompt_manager.</span></span><span class="sig-name descname"><span class="pre">PromptTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptTemplate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a prompt template for entity extraction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptTemplate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptTemplate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptTemplate.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize prompt template.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template_content</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Raw template content with placeholders</p></li>
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Document type this template is for</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptTemplate.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptTemplate.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptTemplate.render" title="Link to this definition"></a></dt>
+<dd><p>Render the template with provided values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – Values to substitute in template</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Rendered prompt string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptTemplate.get_required_placeholders">
+<span class="sig-name descname"><span class="pre">get_required_placeholders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptTemplate.get_required_placeholders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptTemplate.get_required_placeholders" title="Link to this definition"></a></dt>
+<dd><p>Get list of required placeholder names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.prompt_manager.</span></span><span class="sig-name descname"><span class="pre">PromptManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompts_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages prompt templates for entity extraction across different document types.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompts_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize prompt manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prompts_directory</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Directory containing prompt template files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.get_template">
+<span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.get_template"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.get_template" title="Link to this definition"></a></dt>
+<dd><p>Get prompt template for a specific document type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Type of document</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.extraction.prompt_manager.PromptTemplate" title="documents.extraction.prompt_manager.PromptTemplate"><code class="xref py py-class docutils literal notranslate"><span class="pre">PromptTemplate</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PromptTemplate instance</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="index.html#documents.exceptions.DocumentClassificationError" title="documents.exceptions.DocumentClassificationError"><strong>DocumentClassificationError</strong></a> – If template not found and no default available</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.create_extraction_prompt">
+<span class="sig-name descname"><span class="pre">create_extraction_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.create_extraction_prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.create_extraction_prompt" title="Link to this definition"></a></dt>
+<dd><p>Create a complete extraction prompt for a document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document_text</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Text content of the document</p></li>
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Type of document being processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Complete prompt string ready for LLM</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.validate_prompt_coverage">
+<span class="sig-name descname"><span class="pre">validate_prompt_coverage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.validate_prompt_coverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.validate_prompt_coverage" title="Link to this definition"></a></dt>
+<dd><p>Validate that all configured document types have prompt templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Validation report dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.reload_templates">
+<span class="sig-name descname"><span class="pre">reload_templates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.reload_templates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.reload_templates" title="Link to this definition"></a></dt>
+<dd><p>Reload all templates from disk.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.create_custom_prompt">
+<span class="sig-name descname"><span class="pre">create_custom_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'document'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_instructions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.create_custom_prompt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.create_custom_prompt" title="Link to this definition"></a></dt>
+<dd><p>Create a custom extraction prompt without using templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document_text</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Text content of the document</p></li>
+<li><p><strong>entities</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span>) – List of entities to extract</p></li>
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Type of document (for context)</p></li>
+<li><p><strong>additional_instructions</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Optional additional instructions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Custom prompt string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.PromptManager.get_template_info">
+<span class="sig-name descname"><span class="pre">get_template_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#PromptManager.get_template_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.PromptManager.get_template_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about loaded templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.extraction.prompt_manager.get_prompt_manager">
+<span class="sig-prename descclassname"><span class="pre">documents.extraction.prompt_manager.</span></span><span class="sig-name descname"><span class="pre">get_prompt_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/prompt_manager.html#get_prompt_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.prompt_manager.get_prompt_manager" title="Link to this definition"></a></dt>
+<dd><p>Get or create global prompt manager instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.extraction.prompt_manager.PromptManager" title="documents.extraction.prompt_manager.PromptManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">PromptManager</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-documents.extraction.entity_validator">
+<span id="entity-validator"></span><h2>Entity Validator<a class="headerlink" href="#module-documents.extraction.entity_validator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.entity_validator.</span></span><span class="sig-name descname"><span class="pre">ValidationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_applied</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#ValidationResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Result of entity validation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.is_valid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.error_message">
+<span class="sig-name descname"><span class="pre">error_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.error_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.original_value">
+<span class="sig-name descname"><span class="pre">original_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.original_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.validation_applied">
+<span class="sig-name descname"><span class="pre">validation_applied</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.validation_applied" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationResult.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_applied</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#documents.extraction.entity_validator.ValidationResult.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.entity_validator.</span></span><span class="sig-name descname"><span class="pre">ValidationRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#ValidationRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a validation rule for an entity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.entity_name">
+<span class="sig-name descname"><span class="pre">entity_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.entity_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.entity_type">
+<span class="sig-name descname"><span class="pre">entity_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.entity_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.required">
+<span class="sig-name descname"><span class="pre">required</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.required" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.pattern" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.min_length">
+<span class="sig-name descname"><span class="pre">min_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.min_length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.max_length">
+<span class="sig-name descname"><span class="pre">max_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.max_length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.min_value">
+<span class="sig-name descname"><span class="pre">min_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.min_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.max_value">
+<span class="sig-name descname"><span class="pre">max_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a><span class="pre">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a><span class="pre">,</span> <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a><span class="pre">]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.max_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.ValidationRule.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entity_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#documents.extraction.entity_validator.ValidationRule.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.entity_validator.</span></span><span class="sig-name descname"><span class="pre">EntityValidator</span></span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Advanced entity validator with comprehensive validation and normalization capabilities.
+Handles type-specific validation, format normalization, and error reporting.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the entity validator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator.validate_entities">
+<span class="sig-name descname"><span class="pre">validate_entities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator.validate_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator.validate_entities" title="Link to this definition"></a></dt>
+<dd><p>Validate all entities for a document type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extracted_entities</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary of extracted entities</p></li>
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Type of document being validated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.extraction.entity_validator.ValidationResult" title="documents.extraction.entity_validator.ValidationResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValidationResult</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping entity names to ValidationResult objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator.get_validation_summary">
+<span class="sig-name descname"><span class="pre">get_validation_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator.get_validation_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator.get_validation_summary" title="Link to this definition"></a></dt>
+<dd><p>Get a summary of validation results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator.get_statistics">
+<span class="sig-name descname"><span class="pre">get_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator.get_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator.get_statistics" title="Link to this definition"></a></dt>
+<dd><p>Get overall validation statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.entity_validator.EntityValidator.reset_statistics">
+<span class="sig-name descname"><span class="pre">reset_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/entity_validator.html#EntityValidator.reset_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.entity_validator.EntityValidator.reset_statistics" title="Link to this definition"></a></dt>
+<dd><p>Reset validation statistics.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.extraction.llm_extractor</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_llm_extractor</span>
+
+<span class="c1"># Get the LLM extractor instance</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">get_llm_extractor</span><span class="p">()</span>
+
+<span class="c1"># Extract entities from a document</span>
+<span class="n">document_text</span> <span class="o">=</span> <span class="s2">&quot;Invoice #INV-001 dated 2024-01-15 for $1,234.56&quot;</span>
+<span class="n">document_type</span> <span class="o">=</span> <span class="s2">&quot;invoice&quot;</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract_entities</span><span class="p">(</span><span class="n">document_type</span><span class="p">,</span> <span class="n">document_text</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracted entities:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">entity_name</span><span class="p">,</span> <span class="n">entity_value</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;entities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">entity_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">entity_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation summary: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;validation_summary&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="entity-types">
+<h2>Entity Types<a class="headerlink" href="#entity-types" title="Link to this heading"></a></h2>
+<p>The system supports various entity types with automatic validation:</p>
+<section id="string-entities">
+<h3>String Entities<a class="headerlink" href="#string-entities" title="Link to this heading"></a></h3>
+<p>Basic text fields with optional pattern validation:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vendor_name</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</pre></div>
+</div>
+</section>
+<section id="date-entities">
+<h3>Date Entities<a class="headerlink" href="#date-entities" title="Link to this heading"></a></h3>
+<p>Date fields with automatic format normalization:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice_date</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Date</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">issued&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="amount-entities">
+<h3>Amount Entities<a class="headerlink" href="#amount-entities" title="Link to this heading"></a></h3>
+<p>Monetary amounts with currency detection:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_amount</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Total</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">amount&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="number-entities">
+<h3>Number Entities<a class="headerlink" href="#number-entities" title="Link to this heading"></a></h3>
+<p>Numeric values with range validation:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quantity</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+</pre></div>
+</div>
+</section>
+<section id="array-entities">
+<h3>Array Entities<a class="headerlink" href="#array-entities" title="Link to this heading"></a></h3>
+<p>Lists of items:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">line_items</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;List</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">line</span><span class="nv"> </span><span class="s">items&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="boolean-entities">
+<h3>Boolean Entities<a class="headerlink" href="#boolean-entities" title="Link to this heading"></a></h3>
+<p>True/false values:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_paid</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Whether</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">paid&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="prompt-templates">
+<h2>Prompt Templates<a class="headerlink" href="#prompt-templates" title="Link to this heading"></a></h2>
+<p>Entity extraction uses document-specific prompt templates located in <code class="docutils literal notranslate"><span class="pre">config/prompts/</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">default.txt</span></code>: Fallback template for all document types</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">invoice.txt</span></code>: Specialized template for invoices</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.txt</span></code>: Specialized template for contracts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">form.txt</span></code>: Specialized template for forms</p></li>
+<li><p>And more…</p></li>
+</ul>
+<section id="custom-prompt-example">
+<h3>Custom Prompt Example<a class="headerlink" href="#custom-prompt-example" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>You are an expert at extracting information from invoice documents.
+
+Extract the following entities from this invoice document:
+
+- invoice_number (string, REQUIRED): The unique invoice identifier
+- amount (amount, REQUIRED): Total amount due including currency symbol
+- date (date, REQUIRED): Invoice date in YYYY-MM-DD format
+
+Guidelines:
+1. Be precise and extract exactly what&#39;s written
+2. Use null for missing values
+3. Return only valid JSON
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:
+</pre></div>
+</div>
+</section>
+</section>
+<section id="validation-process">
+<h2>Validation Process<a class="headerlink" href="#validation-process" title="Link to this heading"></a></h2>
+<p>Entity validation follows these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Type Validation</strong>: Ensure extracted value matches expected type</p></li>
+<li><p><strong>Format Normalization</strong>: Convert to standard formats (dates, amounts)</p></li>
+<li><p><strong>Range Checking</strong>: Validate against min/max constraints</p></li>
+<li><p><strong>Pattern Matching</strong>: Check against regex patterns if specified</p></li>
+<li><p><strong>Required Field Validation</strong>: Ensure all required fields are present</p></li>
+</ol>
+</section>
+<section id="statistics-and-monitoring">
+<h2>Statistics and Monitoring<a class="headerlink" href="#statistics-and-monitoring" title="Link to this heading"></a></h2>
+<p>The extraction system provides comprehensive statistics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get extraction statistics</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">get_extraction_statistics</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total extractions: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_extractions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success rate: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;success_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cache hit rate: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;cache_hit_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get validation statistics</span>
+<span class="n">validation_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;validation_statistics&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation success rate: </span><span class="si">{</span><span class="n">validation_stats</span><span class="p">[</span><span class="s1">&#39;successful_validations&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">validation_stats</span><span class="p">[</span><span class="s1">&#39;total_validations&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classification.html" class="btn btn-neutral float-left" title="Classification Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="llm.html" class="btn btn-neutral float-right" title="LLM Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

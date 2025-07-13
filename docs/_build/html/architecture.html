@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Modules Reference" href="modules/index.html" />
+    <link rel="prev" title="API Reference" href="api_reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-overview">System Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#document-processing-pipeline">Document Processing Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#factory-pattern-implementation">Factory Pattern Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#data-flow-architecture">Data Flow Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#document-upload-flow">Document Upload Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-flow">Search Flow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#storage-architecture">Storage Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#multi-database-strategy">Multi-Database Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#database-schema">Database Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scalability-architecture">Scalability Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#horizontal-scaling">Horizontal Scaling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kubernetes-deployment">Kubernetes Deployment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-optimization">Performance Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#caching-strategy">Caching Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-optimization">Processing Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-architecture">Security Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authentication-authorization">Authentication &amp; Authorization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-security">Data Security</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#monitoring-and-observability">Monitoring and Observability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#application-monitoring">Application Monitoring</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment-architecture">Deployment Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#production-deployment">Production Deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#high-availability-setup">High Availability Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-architecture">Development Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#local-development">Local Development</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/architecture.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h1>
+<p>DocuMind is built with a modular, microservices-ready architecture that separates concerns and enables scalability.</p>
+<section id="system-overview">
+<h2>System Overview<a class="headerlink" href="#system-overview" title="Link to this heading"></a></h2>
+<p>DocuMind follows a layered architecture pattern with clear separation between:</p>
+<ul class="simple">
+<li><p><strong>API Layer</strong>: REST API endpoints using Django REST Framework</p></li>
+<li><p><strong>Processing Layer</strong>: Document processing pipeline with OCR, classification, and extraction</p></li>
+<li><p><strong>Storage Layer</strong>: Vector database (ChromaDB) and relational database (PostgreSQL)</p></li>
+<li><p><strong>Integration Layer</strong>: External services (LLM providers, caching)</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                        API Layer                            │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ Auth API    │  │ Document    │  │ System Management   │  │
+│  │ (JWT)       │  │ Processing  │  │ API                 │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                    Processing Layer                         │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ OCR Engine  │  │ Document    │  │ Entity Extraction   │  │
+│  │ (Tesseract) │  │ Classifier  │  │ (LLM)               │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                     Storage Layer                           │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ PostgreSQL  │  │ ChromaDB    │  │ Redis Cache         │  │
+│  │ (Metadata)  │  │ (Vectors)   │  │ (Sessions/Cache)    │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<section id="document-processing-pipeline">
+<h3>Document Processing Pipeline<a class="headerlink" href="#document-processing-pipeline" title="Link to this heading"></a></h3>
+<p>The document processing pipeline is the heart of DocuMind:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DocumentProcessor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ocr_engine</span> <span class="o">=</span> <span class="n">OCRFactory</span><span class="p">()</span><span class="o">.</span><span class="n">get_engine</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">HybridClassifier</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span> <span class="o">=</span> <span class="n">get_llm_extractor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validator</span> <span class="o">=</span> <span class="n">EntityValidator</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_content</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="c1"># 1. Extract text via OCR</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ocr_engine</span><span class="o">.</span><span class="n">extract_text</span><span class="p">(</span><span class="n">file_content</span><span class="p">)</span>
+
+        <span class="c1"># 2. Classify document type</span>
+        <span class="n">doc_type</span><span class="p">,</span> <span class="n">confidence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">classify</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 3. Extract entities using LLM</span>
+        <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractor</span><span class="o">.</span><span class="n">extract_entities</span><span class="p">(</span><span class="n">doc_type</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 4. Validate extracted entities</span>
+        <span class="n">validated_entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validator</span><span class="o">.</span><span class="n">validate_all</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="n">doc_type</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;document_type&#39;</span><span class="p">:</span> <span class="n">doc_type</span><span class="p">,</span>
+            <span class="s1">&#39;confidence&#39;</span><span class="p">:</span> <span class="n">confidence</span><span class="p">,</span>
+            <span class="s1">&#39;extracted_entities&#39;</span><span class="p">:</span> <span class="n">validated_entities</span><span class="p">,</span>
+            <span class="s1">&#39;raw_text&#39;</span><span class="p">:</span> <span class="n">text</span>
+        <span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="factory-pattern-implementation">
+<h3>Factory Pattern Implementation<a class="headerlink" href="#factory-pattern-implementation" title="Link to this heading"></a></h3>
+<p>DocuMind uses the Factory pattern for pluggable components:</p>
+<p><strong>OCR Factory:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">OCRFactory</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_engine</span><span class="p">(</span><span class="n">engine_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseOCREngine</span><span class="p">:</span>
+        <span class="n">engine_type</span> <span class="o">=</span> <span class="n">engine_type</span> <span class="ow">or</span> <span class="n">settings</span><span class="o">.</span><span class="n">OCR_ENGINE</span>
+
+        <span class="k">if</span> <span class="n">engine_type</span> <span class="o">==</span> <span class="s1">&#39;tesseract&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TesseractEngine</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">engine_type</span> <span class="o">==</span> <span class="s1">&#39;aws_textract&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AWSTextractEngine</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown OCR engine: </span><span class="si">{</span><span class="n">engine_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>LLM Factory:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">LLMFactory</span><span class="p">:</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_provider</span><span class="p">(</span><span class="n">provider_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseLLMProvider</span><span class="p">:</span>
+        <span class="n">provider_type</span> <span class="o">=</span> <span class="n">provider_type</span> <span class="ow">or</span> <span class="n">settings</span><span class="o">.</span><span class="n">LLM_PROVIDER</span>
+
+        <span class="k">if</span> <span class="n">provider_type</span> <span class="o">==</span> <span class="s1">&#39;openai&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OpenAIProvider</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">provider_type</span> <span class="o">==</span> <span class="s1">&#39;azure_openai&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AzureOpenAIProvider</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown LLM provider: </span><span class="si">{</span><span class="n">provider_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="data-flow-architecture">
+<h2>Data Flow Architecture<a class="headerlink" href="#data-flow-architecture" title="Link to this heading"></a></h2>
+<section id="document-upload-flow">
+<h3>Document Upload Flow<a class="headerlink" href="#document-upload-flow" title="Link to this heading"></a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant P as Processor
+    participant O as OCR
+    participant CL as Classifier
+    participant E as Extractor
+    participant V as Validator
+    participant DB as Database
+
+    C-&gt;&gt;A: POST /documents/process/
+    A-&gt;&gt;P: process_document()
+    P-&gt;&gt;O: extract_text()
+    O--&gt;&gt;P: raw_text
+    P-&gt;&gt;CL: classify(text)
+    CL--&gt;&gt;P: document_type, confidence
+    P-&gt;&gt;E: extract_entities()
+    E--&gt;&gt;P: raw_entities
+    P-&gt;&gt;V: validate_entities()
+    V--&gt;&gt;P: validated_entities
+    P-&gt;&gt;DB: store_results()
+    P--&gt;&gt;A: processing_result
+    A--&gt;&gt;C: JSON response
+</pre></div>
+</div>
+</section>
+<section id="search-flow">
+<h3>Search Flow<a class="headerlink" href="#search-flow" title="Link to this heading"></a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant S as Search Engine
+    participant V as Vector DB
+    participant R as Relational DB
+
+    C-&gt;&gt;A: GET /documents/search/
+    A-&gt;&gt;S: search(query)
+    S-&gt;&gt;V: similarity_search()
+    V--&gt;&gt;S: similar_documents
+    S-&gt;&gt;R: get_metadata()
+    R--&gt;&gt;S: document_metadata
+    S--&gt;&gt;A: search_results
+    A--&gt;&gt;C: JSON response
+</pre></div>
+</div>
+</section>
+</section>
+<section id="storage-architecture">
+<h2>Storage Architecture<a class="headerlink" href="#storage-architecture" title="Link to this heading"></a></h2>
+<section id="multi-database-strategy">
+<h3>Multi-Database Strategy<a class="headerlink" href="#multi-database-strategy" title="Link to this heading"></a></h3>
+<p>DocuMind uses multiple storage systems optimized for different data types:</p>
+<p><strong>PostgreSQL (Relational Data):</strong>
+- User authentication and sessions
+- Document metadata and processing history
+- System configuration and audit logs
+- Structured relationships between entities</p>
+<p><strong>ChromaDB (Vector Data):</strong>
+- Document embeddings for similarity search
+- Semantic search capabilities
+- High-dimensional vector storage
+- Fast similarity queries</p>
+<p><strong>Redis (Cache):</strong>
+- Session storage
+- Processing result caching
+- Rate limiting counters
+- Temporary data storage</p>
+</section>
+<section id="database-schema">
+<h3>Database Schema<a class="headerlink" href="#database-schema" title="Link to this heading"></a></h3>
+<p><strong>PostgreSQL Tables:</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Users and authentication</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">auth_user</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">username</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">254</span><span class="p">),</span>
+<span class="w">    </span><span class="n">date_joined</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Document processing history</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">documents_processing_log</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">auth_user</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">filename</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">document_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">confidence</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span>
+<span class="w">    </span><span class="n">processing_time_ms</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="c1">-- Extracted entities</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">documents_extracted_entity</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">processing_log_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">documents_processing_log</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<span class="w">    </span><span class="n">entity_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">entity_value</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">entity_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<span class="w">    </span><span class="n">confidence</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span>
+<span class="w">    </span><span class="n">is_valid</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">TRUE</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p><strong>ChromaDB Collections:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Document embeddings collection</span>
+<span class="n">collection</span> <span class="o">=</span> <span class="n">chroma_client</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;documents&quot;</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Document text embeddings&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Store document embedding</span>
+<span class="n">collection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">documents</span><span class="o">=</span><span class="p">[</span><span class="n">document_text</span><span class="p">],</span>
+    <span class="n">metadatas</span><span class="o">=</span><span class="p">[{</span>
+        <span class="s2">&quot;document_id&quot;</span><span class="p">:</span> <span class="n">doc_id</span><span class="p">,</span>
+        <span class="s2">&quot;document_type&quot;</span><span class="p">:</span> <span class="n">doc_type</span><span class="p">,</span>
+        <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+        <span class="s2">&quot;processed_at&quot;</span><span class="p">:</span> <span class="n">timestamp</span>
+    <span class="p">}],</span>
+    <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="scalability-architecture">
+<h2>Scalability Architecture<a class="headerlink" href="#scalability-architecture" title="Link to this heading"></a></h2>
+<section id="horizontal-scaling">
+<h3>Horizontal Scaling<a class="headerlink" href="#horizontal-scaling" title="Link to this heading"></a></h3>
+<p>DocuMind is designed for horizontal scaling:</p>
+<p><strong>API Layer Scaling:</strong>
+- Stateless Django applications
+- Load balancer distribution
+- Auto-scaling based on CPU/memory usage</p>
+<p><strong>Processing Layer Scaling:</strong>
+- Asynchronous task processing with Celery
+- Distributed task queues
+- Worker node auto-scaling</p>
+<p><strong>Storage Layer Scaling:</strong>
+- PostgreSQL read replicas
+- ChromaDB distributed deployment
+- Redis clustering</p>
+</section>
+<section id="kubernetes-deployment">
+<h3>Kubernetes Deployment<a class="headerlink" href="#kubernetes-deployment" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># API Deployment</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documind-api</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documind-api</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api</span>
+<span class="w">        </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documind:latest</span>
+<span class="w">        </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512Mi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;250m&quot;</span>
+<span class="w">          </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1Gi&quot;</span>
+<span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;500m&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-optimization">
+<h2>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Link to this heading"></a></h2>
+<section id="caching-strategy">
+<h3>Caching Strategy<a class="headerlink" href="#caching-strategy" title="Link to this heading"></a></h3>
+<p>Multi-level caching for optimal performance:</p>
+<p><strong>Level 1 - Application Cache:</strong>
+- In-memory caching of configuration
+- Frequently accessed document types
+- User session data</p>
+<p><strong>Level 2 - Redis Cache:</strong>
+- OCR processing results
+- Classification outcomes
+- LLM extraction responses</p>
+<p><strong>Level 3 - Database Query Cache:</strong>
+- PostgreSQL query result caching
+- ChromaDB search result caching</p>
+</section>
+<section id="processing-optimization">
+<h3>Processing Optimization<a class="headerlink" href="#processing-optimization" title="Link to this heading"></a></h3>
+<p><strong>Asynchronous Processing:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">celery</span><span class="w"> </span><span class="kn">import</span> <span class="n">shared_task</span>
+
+<span class="nd">@shared_task</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_document_async</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Asynchronous document processing&quot;&quot;&quot;</span>
+    <span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Store results</span>
+    <span class="n">ProcessingLog</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span>
+        <span class="n">document_type</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;document_type&#39;</span><span class="p">],</span>
+        <span class="n">confidence</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p><strong>Batch Processing:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">process_documents_batch</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process documents in batches&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">batch</span> <span class="o">=</span> <span class="n">file_list</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
+
+        <span class="c1"># Process batch in parallel</span>
+        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">process_document</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">batch</span>
+            <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="k">yield</span> <span class="n">result</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="security-architecture">
+<h2>Security Architecture<a class="headerlink" href="#security-architecture" title="Link to this heading"></a></h2>
+<section id="authentication-authorization">
+<h3>Authentication &amp; Authorization<a class="headerlink" href="#authentication-authorization" title="Link to this heading"></a></h3>
+<p><strong>JWT-based Authentication:</strong>
+- Stateless token authentication
+- Role-based access control
+- Token refresh mechanism
+- Secure token storage</p>
+<p><strong>API Security:</strong>
+- Rate limiting per user/IP
+- Input validation and sanitization
+- CORS configuration
+- HTTPS enforcement</p>
+</section>
+<section id="data-security">
+<h3>Data Security<a class="headerlink" href="#data-security" title="Link to this heading"></a></h3>
+<p><strong>Encryption:</strong>
+- Database encryption at rest
+- TLS encryption in transit
+- Secure file storage
+- Encrypted backup systems</p>
+<p><strong>Privacy:</strong>
+- Data anonymization options
+- GDPR compliance features
+- User data deletion
+- Audit logging</p>
+</section>
+</section>
+<section id="monitoring-and-observability">
+<h2>Monitoring and Observability<a class="headerlink" href="#monitoring-and-observability" title="Link to this heading"></a></h2>
+<section id="application-monitoring">
+<h3>Application Monitoring<a class="headerlink" href="#application-monitoring" title="Link to this heading"></a></h3>
+<p><strong>Health Checks:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">health_check</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;System health check&quot;&quot;&quot;</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;database&#39;</span><span class="p">:</span> <span class="n">check_database_connection</span><span class="p">(),</span>
+        <span class="s1">&#39;redis&#39;</span><span class="p">:</span> <span class="n">check_redis_connection</span><span class="p">(),</span>
+        <span class="s1">&#39;chromadb&#39;</span><span class="p">:</span> <span class="n">check_vector_db_connection</span><span class="p">(),</span>
+        <span class="s1">&#39;llm_provider&#39;</span><span class="p">:</span> <span class="n">check_llm_provider</span><span class="p">(),</span>
+        <span class="s1">&#39;ocr_engine&#39;</span><span class="p">:</span> <span class="n">check_ocr_engine</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="n">overall_status</span> <span class="o">=</span> <span class="s1">&#39;healthy&#39;</span> <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
+        <span class="n">status</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;healthy&#39;</span>
+        <span class="k">for</span> <span class="n">status</span> <span class="ow">in</span> <span class="n">components</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+    <span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;unhealthy&#39;</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="n">overall_status</span><span class="p">,</span>
+        <span class="s1">&#39;components&#39;</span><span class="p">:</span> <span class="n">components</span><span class="p">,</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Performance Metrics:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">PerformanceTracker</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">track_processing_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">duration</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track operation performance&quot;&quot;&quot;</span>
+        <span class="n">metrics</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;documind.processing.</span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s1">.duration&#39;</span><span class="p">,</span>
+            <span class="n">duration</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">operation</span><span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">track_success_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">success</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Track operation success rates&quot;&quot;&quot;</span>
+        <span class="n">metrics</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;documind.processing.</span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s1">.count&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;operation&#39;</span><span class="p">:</span> <span class="n">operation</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="n">success</span><span class="p">}</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="deployment-architecture">
+<h2>Deployment Architecture<a class="headerlink" href="#deployment-architecture" title="Link to this heading"></a></h2>
+<section id="production-deployment">
+<h3>Production Deployment<a class="headerlink" href="#production-deployment" title="Link to this heading"></a></h3>
+<p><strong>Container Orchestration:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># docker-compose.prod.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">documind-api:latest</span>
+<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">      </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1G</span>
+<span class="w">          </span><span class="nt">cpus</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0.5&#39;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL=postgresql://user:pass@db:5432/documind</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REDIS_URL=redis://redis:6379</span>
+
+<span class="w">  </span><span class="nt">db</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:15</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres_data:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES_DB=documind</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES_USER=documind</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES_PASSWORD=secure_password</span>
+
+<span class="w">  </span><span class="nt">redis</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis:7-alpine</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redis_data:/data</span>
+
+<span class="w">  </span><span class="nt">nginx</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:alpine</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;443:443&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./nginx.conf:/etc/nginx/nginx.conf</span>
+</pre></div>
+</div>
+</section>
+<section id="high-availability-setup">
+<h3>High Availability Setup<a class="headerlink" href="#high-availability-setup" title="Link to this heading"></a></h3>
+<p><strong>Load Balancing:</strong>
+- Nginx reverse proxy
+- Health check endpoints
+- Automatic failover
+- Session persistence</p>
+<p><strong>Database High Availability:</strong>
+- PostgreSQL streaming replication
+- Automatic backup systems
+- Point-in-time recovery
+- Connection pooling</p>
+<p><strong>Disaster Recovery:</strong>
+- Multi-region deployment
+- Automated backups
+- Database replication
+- Configuration backup</p>
+</section>
+</section>
+<section id="development-architecture">
+<h2>Development Architecture<a class="headerlink" href="#development-architecture" title="Link to this heading"></a></h2>
+<section id="local-development">
+<h3>Local Development<a class="headerlink" href="#local-development" title="Link to this heading"></a></h3>
+<p><strong>Docker Development Environment:</strong></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># docker-compose.dev.yml</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">web</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.:/app</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8000:8000&quot;</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG=True</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABASE_URL=sqlite:///db.sqlite3</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python manage.py runserver 0.0.0.0:8000</span>
+</pre></div>
+</div>
+<p><strong>Testing Architecture:</strong>
+- Isolated test databases
+- Mock external services
+- Comprehensive test coverage
+- CI/CD integration</p>
+<p>This architecture provides a solid foundation for scaling DocuMind from a single-node deployment to a distributed, enterprise-grade system while maintaining performance, security, and reliability.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api_reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules/index.html" class="btn btn-neutral float-right" title="API Modules Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+You are an expert at extracting information from legal contracts and agreements. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this contract document:
+
+- contract_title (string, REQUIRED): Title or subject of the contract
+- effective_date (date, REQUIRED): Date the contract becomes effective (format: YYYY-MM-DD)
+- party_a (string, REQUIRED): First party to the contract
+- party_b (string, REQUIRED): Second party to the contract
+- expiration_date (date, OPTIONAL): Date the contract expires (format: YYYY-MM-DD)
+- contract_value (amount, OPTIONAL): Total value of the contract
+
+Guidelines:
+1. Look for contract titles in headers, "AGREEMENT FOR", "CONTRACT FOR", etc.
+2. Effective dates might be labeled as "Effective Date", "Start Date", "Commencement Date"
+3. Parties are often labeled as "Party A/B", "Contractor/Client", "Vendor/Customer", etc.
+4. Extract the full legal names of organizations or individual names
+5. For dates, convert to YYYY-MM-DD format when possible
+6. For contract values, include currency if specified
+7. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

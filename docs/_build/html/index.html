@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DocuMind Documentation &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">DocuMind Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documind-documentation">
+<h1>DocuMind Documentation<a class="headerlink" href="#documind-documentation" title="Link to this heading"></a></h1>
+<img alt="Python" src="https://img.shields.io/badge/Python-3.9+-blue.svg" />
+<img alt="Django" src="https://img.shields.io/badge/Django-4.2+-green.svg" />
+<img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+<p><strong>DocuMind</strong> is an AI-powered document classification and entity extraction system that transforms unstructured documents into structured, actionable data using state-of-the-art OCR, vector embeddings, and LLMs.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Multi-Format OCR</strong>: Processes PDF, PNG, JPG with advanced preprocessing</p></li>
+<li><p><strong>Intelligent Classification</strong>: 90%+ accuracy using hybrid vector + keyword approach</p></li>
+<li><p><strong>Smart Entity Extraction</strong>: LLM-powered extraction with 85%+ precision</p></li>
+<li><p><strong>High Performance</strong>: ≤3 seconds end-to-end processing</p></li>
+<li><p><strong>Modular Architecture</strong>: Extensible design for easy customization</p></li>
+<li><p><strong>Production Ready</strong>: Docker, Kubernetes, comprehensive testing</p></li>
+</ul>
+</section>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the repository</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/documind.git
+<span class="nb">cd</span><span class="w"> </span>documind
+
+<span class="c1"># Start with Docker</span>
+docker-compose<span class="w"> </span>-f<span class="w"> </span>docker-compose.prod.yml<span class="w"> </span>up<span class="w"> </span>-d
+
+<span class="c1"># Access the API</span>
+curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:8000/api/v1/auth/token/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;: &quot;admin&quot;, &quot;password&quot;: &quot;password&quot;}&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="system-architecture">
+<h2>System Architecture<a class="headerlink" href="#system-architecture" title="Link to this heading"></a></h2>
+<p>DocuMind follows a modular architecture with clear separation of concerns:</p>
+</section>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#quick-start-with-docker">Quick Start with Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#local-development-setup">Local Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#production-installation">Production Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#kubernetes-deployment">Kubernetes Deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#support">Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#installation">1. Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#get-api-token">2. Get API Token</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#process-your-first-document">3. Process Your First Document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#search-documents">4. Search Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#check-system-status">5. Check System Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#interactive-api-documentation">6. Interactive API Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#python-client-example">7. Python Client Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#supported-document-types">8. Supported Document Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#batch-processing">9. Batch Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">10. Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#common-use-cases">Common Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#yaml-configuration-files">YAML Configuration Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#django-settings">Django Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-validation">Configuration Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-specific-configurations">Environment-Specific Configurations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-best-practices">Configuration Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#security-considerations">Security Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#configuration-management-tools">Configuration Management Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#base-url">Base URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#authentication-endpoints">Authentication Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#document-processing-endpoints">Document Processing Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#system-management-endpoints">System Management Endpoints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#error-responses">Error Responses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#rate-limiting">Rate Limiting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference.html#interactive-documentation">Interactive Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#system-overview">System Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#core-components">Core Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#data-flow-architecture">Data Flow Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#storage-architecture">Storage Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#scalability-architecture">Scalability Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#performance-optimization">Performance Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#security-architecture">Security Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#monitoring-and-observability">Monitoring and Observability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#deployment-architecture">Deployment Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html#development-architecture">Development Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">API Modules Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/index.html#core-modules">Core Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/index.html#module-api">API Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/index.html#module-documents">Documents Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

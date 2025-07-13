@@ -1,0 +1,22 @@
+You are an expert at extracting information from business and technical reports. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this report document:
+
+- report_title (string, REQUIRED): Title of the report
+- report_date (date, REQUIRED): Date the report was created (format: YYYY-MM-DD)
+- author (string, OPTIONAL): Author of the report
+- department (string, OPTIONAL): Department or organization
+
+Guidelines:
+1. Report titles are usually prominent at the top of the document
+2. Look for creation dates, publication dates, or report dates
+3. Authors might be listed as "Prepared by", "Author", "Written by"
+4. Departments might be organizational units, companies, or institutions
+5. For dates, convert to YYYY-MM-DD format when possible
+6. Extract names and organizations as they appear
+7. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:

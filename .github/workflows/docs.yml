@@ -1,0 +1,118 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**'
+      - 'documind/**/*.py'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - 'documind/**/*.py'
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'docs/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install sphinx sphinx-rtd-theme sphinx-autodoc-typehints sphinxcontrib-django
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y tesseract-ocr
+        
+    - name: Set up Django environment
+      run: |
+        cd documind
+        cp .env.example .env
+        echo "SECRET_KEY=test-secret-key" >> .env
+        echo "DEBUG=True" >> .env
+        echo "DATABASE_URL=sqlite:///test.db" >> .env
+        python manage.py collectstatic --noinput
+        
+    - name: Build documentation
+      run: |
+        cd docs
+        make html SPHINXOPTS="-W"
+        
+    - name: Check for warnings
+      run: |
+        cd docs
+        if [ -s _build/html/.doctrees/environment.pickle ]; then
+          echo "Documentation built successfully"
+        else
+          echo "Documentation build failed"
+          exit 1
+        fi
+        
+    - name: Test documentation links
+      run: |
+        cd docs
+        make linkcheck
+        
+    - name: Upload documentation artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation-html
+        path: docs/_build/html/
+        
+  deploy-docs:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download documentation artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: documentation-html
+        path: docs/_build/html/
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html/
+        cname: docs.documind.ai  # Optional: custom domain
+        
+  notify-docs-update:
+    needs: [build-docs, deploy-docs]
+    runs-on: ubuntu-latest
+    if: always() && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Notify documentation update
+      run: |
+        if [ "${{ needs.deploy-docs.result }}" == "success" ]; then
+          echo "📚 Documentation successfully updated and deployed!"
+          echo "View at: https://yourusername.github.io/documind/"
+        else
+          echo "❌ Documentation deployment failed"
+        fi

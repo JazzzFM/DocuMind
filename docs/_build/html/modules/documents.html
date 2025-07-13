@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documents Module &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OCR Module" href="ocr.html" />
+    <link rel="prev" title="API Module" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../architecture.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Modules Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#core-modules">Core Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Documents Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core-components">Core Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#document-processing-pipeline">Document Processing Pipeline</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-management">Configuration Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#entity-schemas">Entity Schemas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#processing-statistics">Processing Statistics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caching-and-performance">Caching and Performance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extending-the-module">Extending the Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ocr.html">OCR Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="classification.html">Classification Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="llm.html">LLM Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-api">API Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#module-documents">Documents Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Modules Reference</a></li>
+      <li class="breadcrumb-item active">Documents Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/modules/documents.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documents-module">
+<h1>Documents Module<a class="headerlink" href="#documents-module" title="Link to this heading"></a></h1>
+<p>The documents module is the core of DocuMind, providing document processing, classification, and entity extraction capabilities.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The documents module contains several sub-modules:</p>
+<ul class="simple">
+<li><p><strong>OCR</strong>: Text extraction from images and PDFs</p></li>
+<li><p><strong>Classification</strong>: Document type classification using hybrid approach</p></li>
+<li><p><strong>Extraction</strong>: Entity extraction using LLMs</p></li>
+<li><p><strong>LLM</strong>: Large Language Model integration layer</p></li>
+<li><p><strong>Storage</strong>: Vector database and document storage</p></li>
+</ul>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<section id="document-processor">
+<h3>Document Processor<a class="headerlink" href="#document-processor" title="Link to this heading"></a></h3>
+</section>
+<section id="module-documents.config_loader">
+<span id="configuration-loader"></span><h3>Configuration Loader<a class="headerlink" href="#module-documents.config_loader" title="Link to this heading"></a></h3>
+<p>Configuration loader for document types and system settings.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">DocumentTypeConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for a single document type.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_required_entities">
+<span class="sig-name descname"><span class="pre">get_required_entities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_required_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_required_entities" title="Link to this definition"></a></dt>
+<dd><p>Get list of required entity names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_optional_entities">
+<span class="sig-name descname"><span class="pre">get_optional_entities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_optional_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_optional_entities" title="Link to this definition"></a></dt>
+<dd><p>Get list of optional entity names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.DocumentTypeConfig.get_entity_by_name">
+<span class="sig-name descname"><span class="pre">get_entity_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#DocumentTypeConfig.get_entity_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.DocumentTypeConfig.get_entity_by_name" title="Link to this definition"></a></dt>
+<dd><p>Get entity configuration by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">ConfigLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Loads and validates document type configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.load_config">
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.load_config" title="Link to this definition"></a></dt>
+<dd><p>Load document type configurations from YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="index.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_types">
+<span class="sig-name descname"><span class="pre">get_document_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_types" title="Link to this definition"></a></dt>
+<dd><p>Get all document type configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="index.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_type">
+<span class="sig-name descname"><span class="pre">get_document_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_type_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_type" title="Link to this definition"></a></dt>
+<dd><p>Get configuration for a specific document type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="index.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_all_keywords">
+<span class="sig-name descname"><span class="pre">get_all_keywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_all_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_all_keywords" title="Link to this definition"></a></dt>
+<dd><p>Get all keywords mapped to document types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.get_document_type_by_name">
+<span class="sig-name descname"><span class="pre">get_document_type_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.get_document_type_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.get_document_type_by_name" title="Link to this definition"></a></dt>
+<dd><p>Get document type key by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.config_loader.ConfigLoader.reload_config">
+<span class="sig-name descname"><span class="pre">reload_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#ConfigLoader.reload_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.ConfigLoader.reload_config" title="Link to this definition"></a></dt>
+<dd><p>Force reload of configuration from file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_config_loader">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_config_loader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_config_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_config_loader" title="Link to this definition"></a></dt>
+<dd><p>Get the global configuration loader instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="index.html#documents.config_loader.ConfigLoader" title="documents.config_loader.ConfigLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigLoader</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_document_types">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_document_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_document_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_document_types" title="Link to this definition"></a></dt>
+<dd><p>Get all document type configurations (convenience function).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="index.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.config_loader.get_document_type">
+<span class="sig-prename descclassname"><span class="pre">documents.config_loader.</span></span><span class="sig-name descname"><span class="pre">get_document_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_type_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/config_loader.html#get_document_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.config_loader.get_document_type" title="Link to this definition"></a></dt>
+<dd><p>Get configuration for a specific document type (convenience function).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="index.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="document-processing-pipeline">
+<h2>Document Processing Pipeline<a class="headerlink" href="#document-processing-pipeline" title="Link to this heading"></a></h2>
+<p>The document processing pipeline follows these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>OCR Processing</strong>: Extract text from document images</p></li>
+<li><p><strong>Classification</strong>: Determine document type using hybrid approach</p></li>
+<li><p><strong>Entity Extraction</strong>: Extract structured entities using LLMs</p></li>
+<li><p><strong>Validation</strong>: Validate extracted entities against schemas</p></li>
+<li><p><strong>Storage</strong>: Store results in vector database</p></li>
+</ol>
+<section id="pipeline-example">
+<h3>Pipeline Example<a class="headerlink" href="#pipeline-example" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span>
+
+<span class="c1"># Initialize processor</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">()</span>
+
+<span class="c1"># Process a document</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;invoice.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span>
+        <span class="n">file_content</span><span class="o">=</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+        <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;invoice.pdf&#39;</span><span class="p">,</span>
+        <span class="n">extract_entities</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Document Type: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;document_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confidence: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entities: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;extracted_entities&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-management">
+<h2>Configuration Management<a class="headerlink" href="#configuration-management" title="Link to this heading"></a></h2>
+<p>Document types and their entity schemas are configured via YAML files:</p>
+<section id="document-types-configuration">
+<h3>Document Types Configuration<a class="headerlink" href="#document-types-configuration" title="Link to this heading"></a></h3>
+<p>Located at <code class="docutils literal notranslate"><span class="pre">config/document_types.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">invoice</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">entities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice_number</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Unique</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">identifier&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Total</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">amount&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Invoice</span><span class="nv"> </span><span class="s">date&quot;</span>
+<span class="w">  </span><span class="nt">keywords</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bill</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payment</span>
+</pre></div>
+</div>
+</section>
+<section id="loading-configuration">
+<h3>Loading Configuration<a class="headerlink" href="#loading-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.config_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_document_types</span>
+
+<span class="c1"># Load all document types</span>
+<span class="n">document_types</span> <span class="o">=</span> <span class="n">load_document_types</span><span class="p">()</span>
+
+<span class="c1"># Access specific type</span>
+<span class="n">invoice_config</span> <span class="o">=</span> <span class="n">document_types</span><span class="p">[</span><span class="s1">&#39;invoice&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invoice entities: </span><span class="si">{</span><span class="n">invoice_config</span><span class="o">.</span><span class="n">entities</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="entity-schemas">
+<h2>Entity Schemas<a class="headerlink" href="#entity-schemas" title="Link to this heading"></a></h2>
+<p>The system supports various entity types with validation:</p>
+<section id="string-entities">
+<h3>String Entities<a class="headerlink" href="#string-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vendor_name</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">max_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">  </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^[A-Za-z0-9\\s&amp;.-]+$&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="date-entities">
+<h3>Date Entities<a class="headerlink" href="#date-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">invoice_date</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Date</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">issued&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="amount-entities">
+<h3>Amount Entities<a class="headerlink" href="#amount-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">total_amount</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">amount</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Total</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">amount</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">currency&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="number-entities">
+<h3>Number Entities<a class="headerlink" href="#number-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">line_count</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">number</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">min_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">max_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+</pre></div>
+</div>
+</section>
+<section id="array-entities">
+<h3>Array Entities<a class="headerlink" href="#array-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">line_items</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;List</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">invoice</span><span class="nv"> </span><span class="s">line</span><span class="nv"> </span><span class="s">items&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="boolean-entities">
+<h3>Boolean Entities<a class="headerlink" href="#boolean-entities" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">is_paid</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Payment</span><span class="nv"> </span><span class="s">status&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="processing-statistics">
+<h2>Processing Statistics<a class="headerlink" href="#processing-statistics" title="Link to this heading"></a></h2>
+<p>The documents module tracks comprehensive processing statistics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span>
+
+<span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">()</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">get_processing_statistics</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total documents processed: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;total_processed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classification accuracy: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;classification_accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extraction success rate: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;extraction_success_rate&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average processing time: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;avg_processing_time_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="document-type-distribution">
+<h3>Document Type Distribution<a class="headerlink" href="#document-type-distribution" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get document type statistics</span>
+<span class="n">type_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;document_types&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">doc_type</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">type_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">doc_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> documents&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-performance">
+<h3>Processing Performance<a class="headerlink" href="#processing-performance" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Performance metrics</span>
+<span class="n">performance</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;performance&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OCR average time: </span><span class="si">{</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;ocr_avg_time_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classification average time: </span><span class="si">{</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;classification_avg_time_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extraction average time: </span><span class="si">{</span><span class="n">performance</span><span class="p">[</span><span class="s1">&#39;extraction_avg_time_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="error-handling">
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<p>The documents module implements comprehensive error handling:</p>
+<section id="processing-errors">
+<h3>Processing Errors<a class="headerlink" href="#processing-errors" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">file_content</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">OCRProcessingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OCR failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ClassificationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classification failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ExtractionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entity extraction failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-exceptions">
+<h3>Custom Exceptions<a class="headerlink" href="#custom-exceptions" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DocumentProcessingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for document processing errors&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OCRProcessingError</span><span class="p">(</span><span class="n">DocumentProcessingError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when OCR processing fails&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationError</span><span class="p">(</span><span class="n">DocumentProcessingError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when document classification fails&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="caching-and-performance">
+<h2>Caching and Performance<a class="headerlink" href="#caching-and-performance" title="Link to this heading"></a></h2>
+<p>The documents module implements multiple levels of caching:</p>
+<section id="ocr-caching">
+<h3>OCR Caching<a class="headerlink" href="#ocr-caching" title="Link to this heading"></a></h3>
+<p>OCR results are cached based on document hash to avoid reprocessing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># OCR cache configuration</span>
+<span class="n">OCR_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">3600</span>  <span class="c1"># 1 hour</span>
+<span class="n">OCR_CACHE_KEY_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;ocr:&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="classification-caching">
+<h3>Classification Caching<a class="headerlink" href="#classification-caching" title="Link to this heading"></a></h3>
+<p>Classification results are cached for similar documents:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Classification cache configuration</span>
+<span class="n">CLASSIFICATION_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">1800</span>  <span class="c1"># 30 minutes</span>
+<span class="n">CLASSIFICATION_CACHE_KEY_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;classification:&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="extraction-caching">
+<h3>Extraction Caching<a class="headerlink" href="#extraction-caching" title="Link to this heading"></a></h3>
+<p>LLM extraction results are cached to reduce API costs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extraction cache configuration</span>
+<span class="n">EXTRACTION_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">7200</span>  <span class="c1"># 2 hours</span>
+<span class="n">EXTRACTION_CACHE_KEY_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;extraction:&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>The documents module includes comprehensive tests:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all document tests</span>
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>documents.tests
+
+<span class="c1"># Run specific test modules</span>
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>documents.tests.test_processor
+python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>documents.tests.test_config_loader
+</pre></div>
+</div>
+<section id="unit-tests">
+<h3>Unit Tests<a class="headerlink" href="#unit-tests" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentProcessor</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DocumentProcessorTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">DocumentProcessor</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_pdf_document</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test_files/sample_invoice.pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+                <span class="s1">&#39;sample_invoice.pdf&#39;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">],</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;document_type&#39;</span><span class="p">],</span> <span class="s1">&#39;invoice&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">],</span> <span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-tests">
+<h3>Integration Tests<a class="headerlink" href="#integration-tests" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">DocumentPipelineIntegrationTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test complete document processing pipeline&quot;&quot;&quot;</span>
+        <span class="c1"># Test OCR -&gt; Classification -&gt; Extraction workflow</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="extending-the-module">
+<h2>Extending the Module<a class="headerlink" href="#extending-the-module" title="Link to this heading"></a></h2>
+<p>To extend the documents module:</p>
+<ol class="arabic simple">
+<li><p><strong>Add Document Types</strong>: Update <code class="docutils literal notranslate"><span class="pre">config/document_types.yaml</span></code></p></li>
+<li><p><strong>Custom Processors</strong>: Inherit from base processor classes</p></li>
+<li><p><strong>New Entity Types</strong>: Extend the entity validation system</p></li>
+<li><p><strong>Custom Validators</strong>: Create custom validation functions</p></li>
+</ol>
+<section id="adding-new-document-types">
+<h3>Adding New Document Types<a class="headerlink" href="#adding-new-document-types" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add to config/document_types.yaml</span>
+<span class="nt">purchase_order</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">entities</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">po_number</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">supplier</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">items</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">keywords</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">purchase order</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PO</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">procurement</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-entity-validators">
+<h3>Custom Entity Validators<a class="headerlink" href="#custom-entity-validators" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">documents.extraction.entity_validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_validator</span>
+
+<span class="nd">@register_validator</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_email</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom email validation&quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+    <span class="n">email_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$&#39;</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">email_pattern</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ValidationResult</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">is_valid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ValidationResult</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">is_valid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">error_message</span><span class="o">=</span><span class="s2">&quot;Invalid email format&quot;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Environment variables for the documents module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Document processing settings</span>
+<span class="nv">DOCUMENT_TYPES_CONFIG_PATH</span><span class="o">=</span>config/document_types.yaml
+<span class="nv">PROMPTS_CONFIG_PATH</span><span class="o">=</span>config/prompts/
+
+<span class="c1"># Processing timeouts</span>
+<span class="nv">OCR_TIMEOUT_SECONDS</span><span class="o">=</span><span class="m">30</span>
+<span class="nv">CLASSIFICATION_TIMEOUT_SECONDS</span><span class="o">=</span><span class="m">10</span>
+<span class="nv">EXTRACTION_TIMEOUT_SECONDS</span><span class="o">=</span><span class="m">60</span>
+
+<span class="c1"># Cache settings</span>
+<span class="nv">ENABLE_PROCESSING_CACHE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nv">CACHE_TIMEOUT_SECONDS</span><span class="o">=</span><span class="m">3600</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api.html" class="btn btn-neutral float-left" title="API Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ocr.html" class="btn btn-neutral float-right" title="OCR Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

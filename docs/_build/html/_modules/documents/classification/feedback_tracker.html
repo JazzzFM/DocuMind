@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>documents.classification.feedback_tracker &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">documents.classification.feedback_tracker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for documents.classification.feedback_tracker</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classification feedback and statistics tracking system.</span>
+<span class="sd">Tracks user corrections and classification performance metrics.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">asdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.classification.classifier</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentClassificationError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ClassificationFeedback">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedback">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationFeedback</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents user feedback on a classification result.&quot;&quot;&quot;</span>
+    <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">original_classification</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">corrected_classification</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">original_confidence</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">user_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">feedback_timestamp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">notes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedback_timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feedback_timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="ClassificationStats">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationStats">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationStats</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregated classification statistics.&quot;&quot;&quot;</span>
+    <span class="n">total_classifications</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">correct_classifications</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">document_type_stats</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="n">confidence_distribution</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">processing_time_stats</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">last_updated</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<div class="viewcode-block" id="ClassificationFeedbackTracker">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClassificationFeedbackTracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tracks classification feedback and provides performance statistics.</span>
+<span class="sd">    Supports automatic retraining signals and performance monitoring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.__init__">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DocumentClassifier</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the feedback tracker.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            classifier: Optional DocumentClassifier instance for retraining</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache_timeout</span> <span class="o">=</span> <span class="mi">3600</span>  <span class="c1"># 1 hour cache timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_cache_key</span> <span class="o">=</span> <span class="s2">&quot;classification_stats&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback_cache_prefix</span> <span class="o">=</span> <span class="s2">&quot;classification_feedback&quot;</span></div>
+
+        
+<div class="viewcode-block" id="ClassificationFeedbackTracker.submit_feedback">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.submit_feedback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">ClassificationFeedback</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submit user feedback on a classification result.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            feedback: ClassificationFeedback instance</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if feedback was recorded successfully</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Store feedback in cache for quick access</span>
+            <span class="n">feedback_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_cache_prefix</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">feedback_data</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+            
+            <span class="c1"># Get existing feedback list or create new one</span>
+            <span class="n">existing_feedback</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feedback_key</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">existing_feedback</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feedback_data</span><span class="p">)</span>
+            
+            <span class="c1"># Store updated feedback list</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">feedback_key</span><span class="p">,</span> <span class="n">existing_feedback</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_timeout</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span>  <span class="c1"># 24 hours</span>
+            
+            <span class="c1"># Update global feedback statistics</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_feedback_stats</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+            
+            <span class="c1"># If classifier is available, trigger reindex with correct classification</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="ow">and</span> <span class="n">feedback</span><span class="o">.</span><span class="n">corrected_classification</span> <span class="o">!=</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_document_index</span><span class="p">(</span><span class="n">feedback</span><span class="p">)</span>
+            
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Feedback recorded for document </span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="si">}</span><span class="s2">: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">original_classification</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">corrected_classification</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to submit feedback: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_feedback_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">ClassificationFeedback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update aggregated feedback statistics.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stats_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_cache_key</span><span class="si">}</span><span class="s2">_feedback&quot;</span>
+            <span class="n">feedback_stats</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">stats_key</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s2">&quot;total_feedback&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;corrections_by_type&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;accuracy_by_type&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;common_misclassifications&quot;</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">})</span>
+            
+            <span class="c1"># Update total feedback count</span>
+            <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;total_feedback&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Track corrections by document type</span>
+            <span class="n">original_type</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">original_classification</span>
+            <span class="n">corrected_type</span> <span class="o">=</span> <span class="n">feedback</span><span class="o">.</span><span class="n">corrected_classification</span>
+            
+            <span class="k">if</span> <span class="n">original_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">]:</span>
+                <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">][</span><span class="n">original_type</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            
+            <span class="k">if</span> <span class="n">corrected_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">][</span><span class="n">original_type</span><span class="p">]:</span>
+                <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">][</span><span class="n">original_type</span><span class="p">][</span><span class="n">corrected_type</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">][</span><span class="n">original_type</span><span class="p">][</span><span class="n">corrected_type</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Track common misclassifications</span>
+            <span class="k">if</span> <span class="n">original_type</span> <span class="o">!=</span> <span class="n">corrected_type</span><span class="p">:</span>
+                <span class="n">misclass_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">original_type</span><span class="si">}</span><span class="s2">_as_</span><span class="si">{</span><span class="n">corrected_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">misclass_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;common_misclassifications&quot;</span><span class="p">]:</span>
+                    <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;common_misclassifications&quot;</span><span class="p">][</span><span class="n">misclass_key</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;common_misclassifications&quot;</span><span class="p">][</span><span class="n">misclass_key</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Update cache</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">stats_key</span><span class="p">,</span> <span class="n">feedback_stats</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cache_timeout</span> <span class="o">*</span> <span class="mi">24</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update feedback stats: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_document_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback</span><span class="p">:</span> <span class="n">ClassificationFeedback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update document index with corrected classification.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">:</span>
+                <span class="k">return</span>
+                
+            <span class="c1"># Get document from vector store</span>
+            <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">vector_search</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">document</span> <span class="ow">and</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;document&#39;</span><span class="p">):</span>
+                <span class="c1"># Re-index with correct classification</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">add_document_to_index</span><span class="p">(</span>
+                    <span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="p">,</span>
+                    <span class="n">document</span><span class="p">[</span><span class="s1">&#39;document&#39;</span><span class="p">],</span>
+                    <span class="n">feedback</span><span class="o">.</span><span class="n">corrected_classification</span><span class="p">,</span>
+                    <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updated index for document </span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="si">}</span><span class="s2"> with correct classification&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update index for document </span><span class="si">{</span><span class="n">feedback</span><span class="o">.</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update document index: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.get_document_feedback">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.get_document_feedback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_document_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ClassificationFeedback</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get all feedback for a specific document.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            document_id: Document identifier</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List of ClassificationFeedback instances</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">feedback_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">feedback_cache_prefix</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">feedback_data</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feedback_key</span><span class="p">,</span> <span class="p">[])</span>
+            
+            <span class="k">return</span> <span class="p">[</span><span class="n">ClassificationFeedback</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">feedback_data</span><span class="p">]</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get feedback for document </span><span class="si">{</span><span class="n">document_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span></div>
+
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.get_feedback_statistics">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.get_feedback_statistics">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get comprehensive feedback statistics.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with feedback statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stats_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_cache_key</span><span class="si">}</span><span class="s2">_feedback&quot;</span>
+            <span class="n">feedback_stats</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">stats_key</span><span class="p">,</span> <span class="p">{})</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">feedback_stats</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;total_feedback&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;corrections_by_type&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                    <span class="s2">&quot;accuracy_by_type&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                    <span class="s2">&quot;common_misclassifications&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                    <span class="s2">&quot;last_updated&quot;</span><span class="p">:</span> <span class="kc">None</span>
+                <span class="p">}</span>
+            
+            <span class="c1"># Calculate accuracy by type</span>
+            <span class="n">accuracy_by_type</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">doc_type</span><span class="p">,</span> <span class="n">corrections</span> <span class="ow">in</span> <span class="n">feedback_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;corrections_by_type&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">total_for_type</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">corrections</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="n">correct_for_type</span> <span class="o">=</span> <span class="n">corrections</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">doc_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Same type = correct</span>
+                
+                <span class="k">if</span> <span class="n">total_for_type</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">accuracy_by_type</span><span class="p">[</span><span class="n">doc_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">correct_for_type</span> <span class="o">/</span> <span class="n">total_for_type</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">accuracy_by_type</span><span class="p">[</span><span class="n">doc_type</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            
+            <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;accuracy_by_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">accuracy_by_type</span>
+            <span class="n">feedback_stats</span><span class="p">[</span><span class="s2">&quot;last_updated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            
+            <span class="k">return</span> <span class="n">feedback_stats</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get feedback statistics: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.get_classification_performance">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.get_classification_performance">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_classification_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get classification performance metrics over a time period.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            days: Number of days to analyze</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Performance metrics dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># This would typically query a database for classification logs</span>
+            <span class="c1"># For now, we&#39;ll return cached statistics</span>
+            <span class="n">feedback_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feedback_statistics</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">:</span>
+                <span class="n">system_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">get_classification_statistics</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">system_stats</span> <span class="o">=</span> <span class="p">{}</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;time_period_days&quot;</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span>
+                <span class="s2">&quot;feedback_metrics&quot;</span><span class="p">:</span> <span class="n">feedback_stats</span><span class="p">,</span>
+                <span class="s2">&quot;system_metrics&quot;</span><span class="p">:</span> <span class="n">system_stats</span><span class="p">,</span>
+                <span class="s2">&quot;recommendations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_recommendations</span><span class="p">(</span><span class="n">feedback_stats</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get classification performance: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_recommendations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feedback_stats</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate recommendations based on feedback statistics.&quot;&quot;&quot;</span>
+        <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">total_feedback</span> <span class="o">=</span> <span class="n">feedback_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;total_feedback&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">accuracy_by_type</span> <span class="o">=</span> <span class="n">feedback_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;accuracy_by_type&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">common_misclassifications</span> <span class="o">=</span> <span class="n">feedback_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;common_misclassifications&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            
+            <span class="c1"># Recommend action if we have enough feedback</span>
+            <span class="k">if</span> <span class="n">total_feedback</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Collect more user feedback to improve classification accuracy&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Identify document types with low accuracy</span>
+            <span class="k">for</span> <span class="n">doc_type</span><span class="p">,</span> <span class="n">accuracy</span> <span class="ow">in</span> <span class="n">accuracy_by_type</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">accuracy</span> <span class="o">&lt;</span> <span class="mf">0.8</span> <span class="ow">and</span> <span class="n">total_feedback</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Consider reviewing and expanding keywords for &#39;</span><span class="si">{</span><span class="n">doc_type</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;document type (current accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="p">)</span>
+            
+            <span class="c1"># Identify common misclassifications</span>
+            <span class="k">if</span> <span class="n">common_misclassifications</span><span class="p">:</span>
+                <span class="n">most_common</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">common_misclassifications</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">most_common</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># More than 2 occurrences</span>
+                    <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Common misclassification: </span><span class="si">{</span><span class="n">most_common</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">most_common</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> occurrences). Consider refining classification rules.&quot;</span>
+                    <span class="p">)</span>
+            
+            <span class="c1"># Recommend retraining if accuracy is consistently low</span>
+            <span class="n">overall_accuracy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">accuracy_by_type</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">accuracy_by_type</span><span class="p">)</span> <span class="k">if</span> <span class="n">accuracy_by_type</span> <span class="k">else</span> <span class="mf">1.0</span>
+            <span class="k">if</span> <span class="n">overall_accuracy</span> <span class="o">&lt;</span> <span class="mf">0.85</span> <span class="ow">and</span> <span class="n">total_feedback</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;Overall classification accuracy is below 85%. &quot;</span>
+                    <span class="s2">&quot;Consider retraining the model with feedback data.&quot;</span>
+                <span class="p">)</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to generate recommendations: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Unable to generate recommendations due to insufficient data&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">recommendations</span>
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.clear_feedback_data">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.clear_feedback_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_feedback_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">days_old</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear old feedback data.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            days_old: Clear feedback older than this many days. If None, clear all.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True if successful</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">days_old</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Clear all feedback statistics</span>
+                <span class="n">stats_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_cache_key</span><span class="si">}</span><span class="s2">_feedback&quot;</span>
+                <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">stats_key</span><span class="p">)</span>
+                
+                <span class="c1"># Note: Individual document feedback would need database cleanup</span>
+                <span class="c1"># This is a simplified implementation using cache</span>
+                
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleared all feedback data&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># This would require database implementation for proper time-based cleanup</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Time-based feedback cleanup not implemented with cache-only storage&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            
+            <span class="k">return</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to clear feedback data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="ClassificationFeedbackTracker.export_feedback_data">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.export_feedback_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_feedback_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export feedback data for analysis or backup.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary containing all feedback data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">feedback_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feedback_statistics</span><span class="p">()</span>
+            <span class="n">performance_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_classification_performance</span><span class="p">()</span>
+            
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;export_timestamp&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span>
+                <span class="s2">&quot;feedback_statistics&quot;</span><span class="p">:</span> <span class="n">feedback_stats</span><span class="p">,</span>
+                <span class="s2">&quot;performance_metrics&quot;</span><span class="p">:</span> <span class="n">performance_metrics</span><span class="p">,</span>
+                <span class="s2">&quot;data_format_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span>
+            <span class="p">}</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to export feedback data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+</div>
+
+
+
+<span class="c1"># Global feedback tracker instance</span>
+<span class="n">_feedback_tracker</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="get_feedback_tracker">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.feedback_tracker.get_feedback_tracker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_feedback_tracker</span><span class="p">(</span><span class="n">classifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DocumentClassifier</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClassificationFeedbackTracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get or create global feedback tracker instance.&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_feedback_tracker</span>
+    
+    <span class="k">if</span> <span class="n">_feedback_tracker</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_feedback_tracker</span> <span class="o">=</span> <span class="n">ClassificationFeedbackTracker</span><span class="p">(</span><span class="n">classifier</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">_feedback_tracker</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

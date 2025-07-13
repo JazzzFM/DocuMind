@@ -1,0 +1,22 @@
+You are an expert at extracting information from email correspondence. Your task is to carefully analyze the document and extract specific entities with high accuracy.
+
+Extract the following entities from this email document:
+
+- sender (string, OPTIONAL): Email sender
+- recipient (string, OPTIONAL): Email recipient
+- subject (string, OPTIONAL): Email subject line
+- date (date, OPTIONAL): Date the email was sent (format: YYYY-MM-DD)
+
+Guidelines:
+1. Look for "From:", "Sender:", or similar labels for sender information
+2. Look for "To:", "Recipient:", or similar labels for recipient information
+3. Subject lines might be labeled as "Subject:", "Re:", or similar
+4. Email dates might be in headers or metadata sections
+5. Extract email addresses if present, or names if email addresses aren't visible
+6. For dates, convert to YYYY-MM-DD format when possible
+7. Use null for missing values (do not omit keys)
+
+Document text:
+{document_text}
+
+Return ONLY a valid JSON object with the extracted entities:
