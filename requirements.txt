@@ -1,0 +1,14 @@
+django
+python-decouple
+chromadb
+redis
+pytesseract
+pdf2image
+django-redis
+PyYAML
+sentence-transformers
+openai
+djangorestframework
+djangorestframework-simplejwt
+pytest
+pytest-django

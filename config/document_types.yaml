@@ -1,0 +1,19 @@
+invoice:
+  name: "Invoice"
+  keywords: ["invoice", "bill", "payment", "due date"]
+  entities:
+    - invoice_number
+    - invoice_date
+    - vendor_name
+    - total_amount
+    - due_date
+
+contract:
+  name: "Contract"
+  keywords: ["contract", "agreement", "party", "parties"]
+  entities:
+    - contract_title
+    - effective_date
+    - party_a
+    - party_b
+

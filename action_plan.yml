@@ -1,0 +1,603 @@
+project:
+  name: "DocuMind - Document Classification & Entity Extraction System"
+  version: "1.0.0"
+  start_date: "2024-01-15"
+  end_date: "2024-02-15"
+  
+phases:
+  - phase: "1. Project Setup & Infrastructure"
+    objective: "Establish project foundation with Django, dependencies, and development environment"
+    status: "completed"
+    tasks:
+      - task_id: "SETUP-001"
+        description: "Initialize Django project structure"
+        acceptance_criteria:
+          - "Django project created with proper app structure"
+          - "Settings configured for development and production"
+          - "Requirements.txt with all dependencies"
+          - "Docker and docker-compose files created"
+        validation:
+          - "Run: django-admin startproject documind"
+          - "Run: python manage.py runserver (should start without errors)"
+          - "Docker build completes successfully"
+        status: "completed"
+        
+      - task_id: "SETUP-002"
+        description: "Configure environment variables and settings"
+        acceptance_criteria:
+          - ".env.example file with all required variables"
+          - "Settings.py configured with environment variables"
+          - "Separate settings for dev/test/prod"
+          - "Logging configuration implemented"
+        validation:
+          - "All settings load from environment variables"
+          - "No hardcoded secrets in codebase"
+          - "Logs directory created and writable"
+        status: "completed"
+        
+      - task_id: "SETUP-003"
+        description: "Set up database and migrations"
+        acceptance_criteria:
+          - "PostgreSQL configured (SQLite for dev)"
+          - "Initial models created"
+          - "Migrations run successfully"
+          - "Admin interface accessible"
+        validation:
+          - "Run: python manage.py migrate"
+          - "Run: python manage.py createsuperuser"
+          - "Access admin at http://localhost:8000/admin"
+        status: "completed"
+        
+      - task_id: "SETUP-004"
+        description: "Initialize ChromaDB and Redis"
+        acceptance_criteria:
+          - "ChromaDB client configured and tested"
+          - "Redis connection established"
+          - "Persistence directories created"
+          - "Connection error handling implemented"
+        validation:
+          - "ChromaDB collection created successfully"
+          - "Redis ping returns PONG"
+          - "Test vector insertion and retrieval"
+        status: "completed"
+
+  - phase: "2. OCR Module Development"
+    objective: "Implement robust OCR functionality with multiple engine support"
+    status: "completed"
+    tasks:
+      - task_id: "OCR-001"
+        description: "Create base OCR engine interface"
+        acceptance_criteria:
+          - "Abstract base class with standard interface"
+          - "Caching mechanism implemented"
+          - "Error handling and logging"
+          - "Support for PDF, PNG, JPG formats"
+        validation:
+          - "Unit tests for base class"
+          - "Cache hit/miss logging works"
+          - "File format validation works"
+        status: "completed"
+        
+      - task_id: "OCR-002"
+        description: "Implement Tesseract OCR engine"
+        acceptance_criteria:
+          - "Text extraction from images and PDFs"
+          - "Image preprocessing (deskew, denoise)"
+          - "Confidence scores calculated"
+          - "Parallel page processing for PDFs"
+        validation:
+          - "Process test documents with > 90% accuracy"
+          - "Handle rotated/noisy scans"
+          - "Performance: < 1 second per page"
+        status: "completed"
+        
+      - task_id: "OCR-003"
+        description: "Create OCR engine factory"
+        acceptance_criteria:
+          - "Dynamic engine selection"
+          - "Fallback mechanism for failures"
+          - "Engine registration system"
+          - "Configuration from settings"
+        validation:
+          - "Switch between engines without code changes"
+          - "Graceful handling of unavailable engines"
+          - "Unit tests with mock engines"
+        status: "completed"
+        
+      - task_id: "OCR-004"
+        description: "Implement OCR result caching"
+        acceptance_criteria:
+          - "File hash-based caching"
+          - "Configurable TTL"
+          - "Cache invalidation mechanism"
+          - "Redis integration"
+        validation:
+          - "Second OCR of same file returns cached result"
+          - "Cache metrics logged"
+          - "Performance improvement verified"
+        status: "completed"
+
+  - phase: "3. Document Classification Engine"
+    objective: "Build accurate document type classification using embeddings and keywords"
+    status: "completed"
+    tasks:
+      - task_id: "CLASS-001"
+        description: "Design document type configuration system"
+        acceptance_criteria:
+          - "YAML configuration for document types"
+          - "Keywords and entities defined per type"
+          - "Dynamic loading of configurations"
+          - "Validation of configuration format"
+        validation:
+          - "Load 5 default document types"
+          - "Add new type without code changes"
+          - "Invalid config raises clear errors"
+        status: "completed"
+        
+      - task_id: "CLASS-002"
+        description: "Implement embedding generation"
+        acceptance_criteria:
+          - "Sentence transformer integration"
+          - "Batch embedding generation"
+          - "Normalized embeddings"
+          - "GPU support (optional)"
+        validation:
+          - "Generate embeddings for test documents"
+          - "Embeddings are deterministic"
+          - "Performance: < 100ms per document"
+        status: "completed"
+        
+      - task_id: "CLASS-003"
+        description: "Build hybrid classification system"
+        acceptance_criteria:
+          - "Embedding similarity search in ChromaDB"
+          - "Keyword matching algorithm"
+          - "Score combination (60% embedding, 40% keyword)"
+          - "Confidence threshold handling"
+        validation:
+          - "Classification accuracy ≥ 90%"
+          - "Test with 100+ sample documents"
+          - "Unknown documents handled correctly"
+        status: "completed"
+        
+      - task_id: "CLASS-004"
+        description: "Implement classification feedback loop"
+        acceptance_criteria:
+          - "User correction mechanism"
+          - "Update document type in ChromaDB"
+          - "Retrain embeddings periodically"
+          - "Track classification statistics"
+        validation:
+          - "Corrections reflected in future classifications"
+          - "Statistics API returns accurate metrics"
+          - "Accuracy improves over time"
+        status: "completed"
+
+  - phase: "4. Entity Extraction System"
+    objective: "Extract relevant entities using LLM with high precision"
+    status: "completed"
+    tasks:
+      - task_id: "EXTRACT-001"
+        description: "Create LLM provider abstraction"
+        acceptance_criteria:
+          - "Base interface for LLM providers"
+          - "OpenAI implementation"
+          - "Retry logic with exponential backoff"
+          - "Token counting and limits"
+        validation:
+          - "Successful API calls to OpenAI"
+          - "Retry on rate limits"
+          - "Timeout handling works"
+        status: "completed"
+        
+      - task_id: "EXTRACT-002"
+        description: "Design prompt templates"
+        acceptance_criteria:
+          - "Document-specific prompt templates"
+          - "JSON output format enforced"
+          - "Entity validation rules included"
+          - "Examples in prompts"
+        validation:
+          - "LLM returns valid JSON 95%+ of time"
+          - "All requested entities extracted"
+          - "No hallucination of values"
+        status: "completed"
+        
+      - task_id: "EXTRACT-003"
+        description: "Implement entity validation"
+        acceptance_criteria:
+          - "Date format validation (ISO 8601)"
+          - "Amount format validation"
+          - "Required vs optional fields"
+          - "Type checking for each entity"
+        validation:
+          - "Invalid dates corrected or rejected"
+          - "Amounts include currency symbols"
+          - "Lists properly structured"
+        status: "completed"
+        
+      - task_id: "EXTRACT-004"
+        description: "Add extraction caching"
+        acceptance_criteria:
+          - "Cache LLM responses"
+          - "1-hour default TTL"
+          - "Cache key includes document type"
+          - "Cache hit rate monitoring"
+        validation:
+          - "Repeated extractions use cache"
+          - "Different document types cached separately"
+          - "Cache metrics in logs"
+        status: "completed"
+
+  - phase: "5. Django Management Command"
+    objective: "Create robust batch processing command for dataset ingestion"
+    status: "completed"
+    tasks:
+      - task_id: "CMD-001"
+        description: "Implement process_documents command"
+        acceptance_criteria:
+          - "Accepts directory input"
+          - "Configurable batch size"
+          - "Progress tracking with tqdm"
+          - "Error handling per document"
+        validation:
+          - "Process 100 documents successfully"
+          - "Continue on individual failures"
+          - "Clear progress indication"
+        status: "completed"
+        
+      - task_id: "CMD-002"
+        description: "Add parallel processing"
+        acceptance_criteria:
+          - "ThreadPoolExecutor for parallelization"
+          - "Configurable worker count"
+          - "Thread-safe operations"
+          - "Resource limit handling"
+        validation:
+          - "4x speedup with 4 workers"
+          - "No race conditions"
+          - "Memory usage stays reasonable"
+        status: "completed"
+        
+      - task_id: "CMD-003"
+        description: "Implement result reporting"
+        acceptance_criteria:
+          - "CSV output option"
+          - "Summary statistics"
+          - "Error logging"
+          - "Processing time tracking"
+        validation:
+          - "CSV contains all processed documents"
+          - "Summary shows type distribution"
+          - "Failed documents listed with reasons"
+        status: "completed"
+        
+      - task_id: "CMD-004"
+        description: "Add ChromaDB integration"
+        acceptance_criteria:
+          - "Upsert documents to vector store"
+          - "Metadata includes all relevant info"
+          - "Duplicate handling"
+          - "Index optimization"
+        validation:
+          - "All documents searchable in ChromaDB"
+          - "Metadata queries work"
+          - "No duplicate documents"
+        status: "completed"
+
+  - phase: "6. REST API Development"
+    objective: "Build performant API endpoints with proper authentication"
+    status: "completed"
+    tasks:
+      - task_id: "API-001"
+        description: "Set up DRF and JWT authentication"
+        acceptance_criteria:
+          - "JWT token generation endpoint"
+          - "Token refresh mechanism"
+          - "Permission classes configured"
+          - "CORS properly configured"
+        validation:
+          - "Obtain and use JWT token"
+          - "Unauthorized requests rejected"
+          - "Token refresh works"
+        status: "completed"
+        
+      - task_id: "API-002"
+        description: "Create document processing endpoint"
+        acceptance_criteria:
+          - "File upload handling"
+          - "Async processing option"
+          - "Structured JSON response"
+          - "< 3 second response time"
+        validation:
+          - "Upload and process test documents"
+          - "Response includes all entities"
+          - "Performance meets KPI"
+        status: "completed"
+        
+      - task_id: "API-003"
+        description: "Implement search endpoint"
+        acceptance_criteria:
+          - "Query parameter handling"
+          - "Document type filtering"
+          - "Pagination support"
+          - "Relevance sorting"
+        validation:
+          - "Search returns relevant documents"
+          - "Filters work correctly"
+          - "Pagination maintains consistency"
+        status: "completed"
+        
+      - task_id: "API-004"
+        description: "Add batch processing endpoint"
+        acceptance_criteria:
+          - "Multiple file upload"
+          - "Background job creation"
+          - "Progress tracking endpoint"
+          - "Result retrieval"
+        validation:
+          - "Upload 10 files simultaneously"
+          - "Track processing progress"
+          - "Retrieve results when complete"
+        status: "completed"
+
+  - phase: "7. Testing & Quality Assurance"
+    objective: "Achieve 85%+ test coverage with comprehensive test suite"
+    status: "pending"
+    tasks:
+      - task_id: "TEST-001"
+        description: "Write unit tests for OCR module"
+        acceptance_criteria:
+          - "Test each OCR engine"
+          - "Mock external services"
+          - "Edge case handling"
+          - "95% coverage for OCR module"
+        validation:
+          - "Run: pytest documents/tests/test_ocr.py"
+          - "All tests pass"
+          - "Coverage report generated"
+        status: "pending"
+        
+      - task_id: "TEST-002"
+        description: "Write unit tests for classification"
+        acceptance_criteria:
+          - "Test embedding generation"
+          - "Test classification logic"
+          - "Mock ChromaDB calls"
+          - "90% coverage"
+        validation:
+          - "Classification tests pass"
+          - "Performance benchmarks included"
+          - "Accuracy metrics verified"
+        status: "pending"
+        
+      - task_id: "TEST-003"
+        description: "Write integration tests"
+        acceptance_criteria:
+          - "End-to-end document processing"
+          - "API endpoint testing"
+          - "Database transaction tests"
+          - "Error scenario coverage"
+        validation:
+          - "Full pipeline tests pass"
+          - "API tests with test client"
+          - "Rollback handling verified"
+        status: "pending"
+        
+      - task_id: "TEST-004"
+        description: "Performance and load testing"
+        acceptance_criteria:
+          - "Locust test scripts"
+          - "5 concurrent users handled"
+          - "Response time < 3 seconds"
+          - "Memory leak detection"
+        validation:
+          - "Load tests pass KPIs"
+          - "No memory leaks detected"
+          - "CPU usage acceptable"
+        status: "pending"
+
+  - phase: "8. Documentation & Deployment"
+    objective: "Create comprehensive documentation and production-ready deployment"
+    status: "pending"
+    tasks:
+      - task_id: "DOC-001"
+        description: "Write comprehensive README"
+        acceptance_criteria:
+          - "Architecture diagrams"
+          - "Setup instructions"
+          - "API documentation"
+          - "Troubleshooting guide"
+        validation:
+          - "New developer can set up in < 30 minutes"
+          - "All features documented"
+          - "Examples provided"
+        status: "pending"
+        
+      - task_id: "DOC-002"
+        description: "Create API documentation"
+        acceptance_criteria:
+          - "OpenAPI/Swagger spec"
+          - "Request/response examples"
+          - "Error code documentation"
+          - "Rate limit information"
+        validation:
+          - "Swagger UI accessible"
+          - "All endpoints documented"
+          - "Try-it-out functionality works"
+        status: "pending"
+        
+      - task_id: "DEPLOY-001"
+        description: "Dockerize application"
+        acceptance_criteria:
+          - "Multi-stage Dockerfile"
+          - "Docker-compose for services"
+          - "Environment variable handling"
+          - "Health checks configured"
+        validation:
+          - "Docker build successful"
+          - "All services start properly"
+          - "Connects to all dependencies"
+        status: "pending"
+        
+      - task_id: "DEPLOY-002"
+        description: "Create deployment scripts"
+        acceptance_criteria:
+          - "Kubernetes manifests (optional)"
+          - "CI/CD pipeline config"
+          - "Database migration handling"
+          - "Monitoring setup"
+        validation:
+          - "Deployment completes successfully"
+          - "Rollback mechanism works"
+          - "Logs aggregated properly"
+        status: "pending"
+
+  - phase: "9. Optimization & Polish"
+    objective: "Optimize performance and add finishing touches"
+    status: "pending"
+    tasks:
+      - task_id: "OPT-001"
+        description: "Performance optimization"
+        acceptance_criteria:
+          - "Database query optimization"
+          - "Caching strategy refined"
+          - "Async processing where beneficial"
+          - "Resource pooling"
+        validation:
+          - "< 3 second processing time"
+          - "Reduced database queries"
+          - "Memory usage optimized"
+        status: "pending"
+        
+      - task_id: "OPT-002"
+        description: "Security hardening"
+        acceptance_criteria:
+          - "Input validation on all endpoints"
+          - "File type verification"
+          - "Rate limiting configured"
+          - "Security headers set"
+        validation:
+          - "OWASP scan passes"
+          - "No SQL injection vulnerabilities"
+          - "File upload restrictions work"
+        status: "pending"
+        
+      - task_id: "OPT-003"
+        description: "Error handling improvements"
+        acceptance_criteria:
+          - "Graceful degradation"
+          - "User-friendly error messages"
+          - "Retry mechanisms"
+          - "Circuit breakers"
+        validation:
+          - "System stays up when services fail"
+          - "Clear error messages returned"
+          - "Automatic recovery works"
+        status: "pending"
+        
+      - task_id: "OPT-004"
+        description: "Final testing and demo prep"
+        acceptance_criteria:
+          - "Demo dataset prepared"
+          - "All KPIs validated"
+          - "Performance benchmarks documented"
+          - "Known issues documented"
+        validation:
+          - "Demo runs smoothly"
+          - "All acceptance criteria met"
+          - "Ready for production"
+        status: "pending"
+
+deliverables:
+  - name: "Source Code Repository"
+    description: "Complete Git repository with all code"
+    acceptance_criteria:
+      - "Clean commit history"
+      - "Proper .gitignore"
+      - "No secrets in repository"
+      
+  - name: "Documentation"
+    description: "Comprehensive documentation package"
+    acceptance_criteria:
+      - "README with setup instructions"
+      - "API documentation"
+      - "Architecture documentation"
+      - "Deployment guide"
+      
+  - name: "Test Suite"
+    description: "Complete test coverage"
+    acceptance_criteria:
+      - "85%+ code coverage"
+      - "Unit and integration tests"
+      - "Performance test scripts"
+      
+  - name: "Docker Package"
+    description: "Containerized application"
+    acceptance_criteria:
+      - "Docker images built"
+      - "Docker-compose configuration"
+      - "Environment configuration"
+      
+  - name: "Demo Materials"
+    description: "Demonstration resources"
+    acceptance_criteria:
+      - "Sample documents"
+      - "Demo script"
+      - "Performance metrics"
+
+success_metrics:
+  functional:
+    - metric: "Document Classification Accuracy"
+      target: "≥ 90%"
+      measurement: "Correct classifications / Total documents"
+      
+    - metric: "Entity Extraction Precision"
+      target: "≥ 85%"
+      measurement: "Correct entities / Total extracted entities"
+      
+    - metric: "OCR Accuracy"
+      target: "≥ 95% on clean scans"
+      measurement: "Character accuracy rate"
+      
+  performance:
+    - metric: "Processing Speed"
+      target: "≤ 3 seconds per document"
+      measurement: "End-to-end processing time"
+      
+    - metric: "Concurrent Requests"
+      target: "≥ 5 simultaneous requests"
+      measurement: "Load test results"
+      
+    - metric: "API Response Time"
+      target: "< 100ms for cached results"
+      measurement: "Average response time"
+      
+  quality:
+    - metric: "Test Coverage"
+      target: "≥ 85%"
+      measurement: "Coverage report"
+      
+    - metric: "Code Quality"
+      target: "A rating on code climate"
+      measurement: "Static analysis tools"
+      
+    - metric: "Documentation Completeness"
+      target: "100% API endpoints documented"
+      measurement: "Documentation review"
+
+risk_mitigation:
+  - risk: "LLM API Rate Limits"
+    mitigation: "Implement caching and retry logic"
+    
+  - risk: "OCR Accuracy on Poor Quality Scans"
+    mitigation: "Image preprocessing and multiple engine fallback"
+    
+  - risk: "Classification Accuracy Below Target"
+    mitigation: "Hybrid approach with embeddings and keywords"
+    
+  - risk: "Performance Degradation Under Load"
+    mitigation: "Horizontal scaling and caching strategy"
+    
+  - risk: "Development Timeline Overrun"
+    mitigation: "Prioritize core features, defer nice-to-haves"
