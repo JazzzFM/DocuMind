@@ -1,19 +1,222 @@
 invoice:
   name: "Invoice"
-  keywords: ["invoice", "bill", "payment", "due date"]
+  description: "Commercial invoice or bill for goods/services"
+  keywords: ["invoice", "bill", "payment", "due date", "amount", "vendor", "pay", "total"]
+  confidence_threshold: 0.8
   entities:
-    - invoice_number
-    - invoice_date
-    - vendor_name
-    - total_amount
-    - due_date
+    - name: invoice_number
+      type: string
+      required: true
+      description: "Unique invoice number or ID"
+    - name: invoice_date
+      type: date
+      required: true
+      description: "Date the invoice was issued"
+    - name: vendor_name
+      type: string
+      required: true
+      description: "Name of the vendor or company issuing the invoice"
+    - name: total_amount
+      type: amount
+      required: true
+      description: "Total amount due including currency"
+    - name: due_date
+      type: date
+      required: false
+      description: "Date payment is due"
+    - name: line_items
+      type: array
+      required: false
+      description: "List of itemized products or services"
 
 contract:
   name: "Contract"
-  keywords: ["contract", "agreement", "party", "parties"]
+  description: "Legal agreement between parties"
+  keywords: ["contract", "agreement", "party", "parties", "terms", "conditions", "signed"]
+  confidence_threshold: 0.8
   entities:
-    - contract_title
-    - effective_date
-    - party_a
-    - party_b
+    - name: contract_title
+      type: string
+      required: true
+      description: "Title or subject of the contract"
+    - name: effective_date
+      type: date
+      required: true
+      description: "Date the contract becomes effective"
+    - name: party_a
+      type: string
+      required: true
+      description: "First party to the contract"
+    - name: party_b
+      type: string
+      required: true
+      description: "Second party to the contract"
+    - name: expiration_date
+      type: date
+      required: false
+      description: "Date the contract expires"
+    - name: contract_value
+      type: amount
+      required: false
+      description: "Total value of the contract"
 
+form:
+  name: "Form"
+  description: "Application form or questionnaire"
+  keywords: ["form", "application", "questionnaire", "field", "submit", "signature"]
+  confidence_threshold: 0.75
+  entities:
+    - name: form_title
+      type: string
+      required: true
+      description: "Title of the form"
+    - name: form_number
+      type: string
+      required: false
+      description: "Form number or ID"
+    - name: date_completed
+      type: date
+      required: false
+      description: "Date the form was completed"
+    - name: applicant_name
+      type: string
+      required: false
+      description: "Name of the person filling out the form"
+
+report:
+  name: "Report"
+  description: "Business or technical report"
+  keywords: ["report", "analysis", "summary", "findings", "recommendation", "conclusion"]
+  confidence_threshold: 0.75
+  entities:
+    - name: report_title
+      type: string
+      required: true
+      description: "Title of the report"
+    - name: report_date
+      type: date
+      required: true
+      description: "Date the report was created"
+    - name: author
+      type: string
+      required: false
+      description: "Author of the report"
+    - name: department
+      type: string
+      required: false
+      description: "Department or organization"
+
+assignment:
+  name: "Assignment"
+  description: "Academic or work assignment"
+  keywords: ["assignment", "homework", "task", "due", "submit", "grade"]
+  confidence_threshold: 0.75
+  entities:
+    - name: assignment_title
+      type: string
+      required: true
+      description: "Title of the assignment"
+    - name: due_date
+      type: date
+      required: false
+      description: "Date the assignment is due"
+    - name: student_name
+      type: string
+      required: false
+      description: "Name of the student"
+    - name: instructor
+      type: string
+      required: false
+      description: "Name of the instructor"
+    - name: course
+      type: string
+      required: false
+      description: "Course name or code"
+
+advertisement:
+  name: "Advertisement"
+  description: "Marketing or advertising material"
+  keywords: ["sale", "discount", "offer", "buy", "promotion", "limited time", "special"]
+  confidence_threshold: 0.7
+  entities:
+    - name: product_service
+      type: string
+      required: false
+      description: "Product or service being advertised"
+    - name: price
+      type: amount
+      required: false
+      description: "Advertised price"
+    - name: discount
+      type: string
+      required: false
+      description: "Discount or promotion details"
+    - name: company
+      type: string
+      required: false
+      description: "Advertising company"
+
+budget:
+  name: "Budget"
+  description: "Financial budget or expense report"
+  keywords: ["budget", "expense", "cost", "financial", "allocation", "spend"]
+  confidence_threshold: 0.8
+  entities:
+    - name: budget_period
+      type: string
+      required: false
+      description: "Time period for the budget"
+    - name: total_budget
+      type: amount
+      required: false
+      description: "Total budget amount"
+    - name: department
+      type: string
+      required: false
+      description: "Department or division"
+    - name: categories
+      type: array
+      required: false
+      description: "Budget categories and amounts"
+
+email:
+  name: "Email"
+  description: "Email correspondence"
+  keywords: ["email", "from", "to", "subject", "dear", "regards", "sincerely"]
+  confidence_threshold: 0.8
+  entities:
+    - name: sender
+      type: string
+      required: false
+      description: "Email sender"
+    - name: recipient
+      type: string
+      required: false
+      description: "Email recipient"
+    - name: subject
+      type: string
+      required: false
+      description: "Email subject line"
+    - name: date
+      type: date
+      required: false
+      description: "Date the email was sent"
+
+file_folder:
+  name: "File Folder"
+  description: "File folder or directory listing"
+  keywords: ["folder", "directory", "file", "document", "contents", "list"]
+  confidence_threshold: 0.7
+  entities:
+    - name: folder_name
+      type: string
+      required: false
+      description: "Name of the folder"
+    - name: creation_date
+      type: date
+      required: false
+      description: "Date the folder was created"
+    - name: file_count
+      type: number
+      required: false
+      description: "Number of files in the folder"

@@ -47,6 +47,8 @@
 
 ### High-Level Architecture
 
+This diagram illustrates the multi-layered architecture of DocuMind, designed for scalability and clear separation of concerns. Clients interact with the system through an API Gateway, which handles routing and authentication. The Application Layer, powered by Django and Celery, orchestrates the core processing pipeline. This pipeline consists of modular components for OCR, Classification, and Extraction, which in turn interface with specialized data stores (PostgreSQL for metadata, ChromaDB for vectors) and external AI services. This design ensures the system is robust, maintainable, and capable of handling complex document processing workflows efficiently.
+
 ```mermaid
 graph TB
     subgraph "Client Layer"
@@ -111,7 +113,10 @@ graph TB
     style OCR_API fill:#9467bd
 ```
 
+
 ### Data Flow Architecture
+
+The following sequence diagram details the step-by-step journey of a document through the system. It begins with the client uploading a file and traces the process through initial validation, OCR (with options for internal or external engines), classification using vector and keyword matching, and finally, entity extraction via an LLM. This flow highlights the key interactions between the API, the processing modules, the databases, and external services, providing a clear picture of the end-to-end workflow.
 
 ```mermaid
 sequenceDiagram
@@ -157,6 +162,8 @@ sequenceDiagram
 ```
 
 ### Component Architecture
+
+This diagram provides a detailed look at the internal structure of the core processing modules. It showcases the use of abstraction (e.g., `BaseOCREngine`, `BaseLLMProvider`) and factories to create a modular and extensible system. Each major function—OCR, Classification, and Extraction—is encapsulated in its own module with clear dependencies. This design makes it easy to swap implementations (e.g., changing OCR engines or LLM providers) or add new functionality without impacting other parts of the system.
 
 ```mermaid
 graph LR
@@ -229,6 +236,8 @@ graph LR
 ```
 
 ### Deployment Architecture
+
+This diagram outlines the production deployment strategy using Kubernetes for container orchestration. It illustrates how the application is containerized into API and Worker pods for scalability and resilience. The architecture relies on managed services for its data layer (e.g., AWS RDS, ElastiCache) to ensure high availability and durability. Furthermore, it incorporates a comprehensive monitoring and logging stack (Prometheus, Grafana, Loki, Sentry) to provide deep visibility into the system's health and performance, which is critical for maintaining a production-grade service.
 
 ```mermaid
 graph TB
@@ -311,7 +320,7 @@ graph TB
 
 ## 🚀 Quick Start
 
-This section provides the fastest way to get DocuMind up and running using Docker, which is the recommended approach for ease of setup and consistency.
+This section provides the fastest way to get DocuMind up and running. For ease of setup and a consistent environment that mirrors production, we strongly recommend using Docker.
 
 ### Using Docker (Recommended)
 
@@ -403,7 +412,7 @@ curl -X POST http://localhost:8000/api/v1/documents/process/ \
 
 ## 🛠️ Installation
 
-This section details how to set up DocuMind for local development without Docker. This requires manual installation of system dependencies.
+This section details how to set up DocuMind for local development *without* Docker. This approach is intended for developers who need to work directly on the codebase, debug specific components, or prefer not to use containerization for their development environment. It requires manual installation of all system dependencies.
 
 ### Prerequisites
 
@@ -789,10 +798,10 @@ DocuMind is engineered for high performance and accuracy, adhering to the follow
 
 | Metric                         | Target                                                              | Measurement Method                                                                 |
 | :----------------------------- | :------------------------------------------------------------------ | :--------------------------------------------------------------------------------- |
-| **Document Classification Accuracy** | ≥ 90%                                                               | Correct classifications / Total documents (on a diverse test dataset)              |
-| **Entity Extraction Precision**    | ≥ 85%                                                               | Correctly extracted entities / Total extracted entities (on a test dataset)        |
-| **OCR Robustness & Accuracy**      | ≥ 95% character accuracy on clean scans; graceful handling of noisy/rotated scans | Character Error Rate (CER) on diverse test set; qualitative assessment on noisy scans |
-| **Multi-format Support**       | PDF, PNG, JPG at a minimum                                          | Successful processing of all specified file formats                                |
+| **Document Classification Accuracy** | ≥ 90%                                                               | Correct classifications / Total documents (on the `docs-sm/` dataset)              |
+| **Entity Extraction Precision**    | ≥ 85%                                                               | Correctly extracted entities / Total extracted entities (on the `docs-sm/` dataset)        |
+| **OCR Robustness & Accuracy**      | ≥ 95% character accuracy on clean scans; graceful handling of noisy/rotated scans | Character Error Rate (CER) on the `docs-sm/` dataset; qualitative assessment on noisy scans |
+| **Multi-format Support**       | PDF, PNG, JPG at a minimum                                          | Successful processing of all specified file formats in `docs-sm/`                  |
 
 ### Performance & Scalability Metrics
 
@@ -856,196 +865,182 @@ graph LR
 
 ## 🔧 Development Guide
 
-This section provides guidelines for developers looking to contribute to or extend DocuMind.
+This guide provides a complete workflow for developers contributing to DocuMind, from understanding the project structure to submitting high-quality code.
 
-### Project Structure
+### 1. Understanding the Project Structure
 
-DocuMind follows a modular and organized project structure to ensure maintainability and scalability:
+DocuMind follows a modular structure to ensure maintainability and scalability. Here is a high-level overview:
 
 ```
 documind/
-├── api/                    # Django REST Framework application for API endpoints
+├── api/                    # Django REST Framework app for all API endpoints
 │   ├── serializers.py      # Data serialization and validation
 │   ├── urls.py             # API URL routing
 │   └── views.py            # API view logic
 ├── documents/              # Core document processing application
-│   ├── classification/    # Document classification logic (embeddings, keywords)
-│   ├── extraction/        # Entity extraction modules (LLM integration, validation)
-│   ├── llm/               # LLM provider integrations and abstractions
-│   ├── management/        # Django management commands (e.g., process_documents)
-│   ├── ocr/               # OCR engines and interfaces (Tesseract, Google Vision, Azure)
-│   ├── exceptions.py      # Custom exceptions for document processing
-│   └── models.py          # Database models for document metadata
-├── config/                 # Configuration files for document types, prompts, etc.
+│   ├── classification/     # Document classification logic
+│   ├── extraction/         # Entity extraction modules
+│   ├── llm/                # LLM provider integrations
+│   ├── management/         # Django management commands
+│   ├── ocr/                # OCR engine integrations
+│   └── models.py           # Database models for document metadata
+├── config/                 # System-wide configuration files
 │   ├── document_types.yaml # Defines document types, keywords, and entities
-│   └── prompts/            # LLM prompt templates for various document types
-├── docs-sm/                # Sample small dataset for testing and development
-├── k8s/                    # Kubernetes manifests for deployment
-├── tests/                  # Comprehensive test suite (unit, integration, performance)
-│   ├── integration/       # End-to-end integration tests
-│   ├── unit/              # Unit tests for individual components
-│   └── fixtures/          # Test data and sample documents
+│   └── prompts/            # LLM prompt templates
+├── docs-sm/                # Sample dataset for testing and development
+├── tests/                  # The comprehensive test suite
+│   ├── integration/        # End-to-end integration tests
+│   └── unit/               # Unit tests for individual components
 ├── .env.example            # Example environment variables file
-├── .gitignore              # Git ignore rules
-├── action_plan.yml         # Project development plan and task tracking
-├── challenge_requirements.txt # Original challenge requirements
-├── docker-compose.prod.yml # Docker Compose configuration for production
-├── Dockerfile              # Dockerfile for building the application image
-├── locustfile.py           # Locust load testing script
+├── docker-compose.prod.yml # Docker Compose for production
+├── Dockerfile              # Application Dockerfile
 ├── pytest.ini              # Pytest configuration
-├── README.md               # Project README and documentation
 └── requirements.txt        # Python dependencies
 ```
 
-### Adding New Document Types
+### 2. Contributor Workflow: From Code to Commit
 
-DocuMind is designed to be easily extensible. To add support for a new document type:
+Follow these steps to contribute effectively:
 
-1.  **Update Configuration** (`config/document_types.yaml`):
-    Define the new document type, its associated keywords for classification, and the entities you wish to extract. This YAML file drives the classification and extraction logic.
+**Step A: Set Up Your Environment**
 
-    ```yaml
-    medical_record:
-      name: "Medical Record"
-      keywords: ["patient", "diagnosis", "medication", "doctor", "hospital"]
-      entities:
-        - name: patient_name
-          type: string
-          description: "Full name of the patient"
-          required: true
-        - name: date_of_birth
-          type: date
-          format: "YYYY-MM-DD"
-          description: "Patient's date of birth"
-          required: false
-        - name: diagnosis
-          type: string
-          description: "Primary medical diagnosis"
-          required: true
-        - name: medications
-          type: array
-          items: string
-          description: "List of prescribed medications"
-          required: false
-        - name: doctor_name
-          type: string
-          description: "Name of the attending physician"
-          required: true
-    ```
+Start by setting up your local development environment, either with Docker (recommended for consistency) or by following the manual installation guide.
 
-2.  **Create LLM Prompt Template** (`config/prompts/medical_record.txt`):
-    Develop a specific prompt template for the LLM to guide the entity extraction process for this new document type. This prompt should clearly instruct the LLM on what entities to extract and in what format.
+**Step B: Create a New Branch**
 
-    ```
-    You are an expert medical document analyst. Extract the following information from the provided medical record:
-
-    Patient Name: <patient_name>
-    Date of Birth (YYYY-MM-DD): <date_of_birth>
-    Diagnosis: <diagnosis>
-    Medications (comma-separated list): <medications>
-    Doctor Name: <doctor_name>
-
-    Ensure the output is in JSON format with keys matching the entity names. If an entity is not found, use null.
-
-    Document Text:
-    """
-    {document_text}
-    """
-    ```
-
-3.  **Add Test Cases** (`tests/fixtures/sample_documents/medical_record/`):
-    Provide sample documents (PDF, PNG, JPG) for the new document type, along with expected classification and extracted entities. These will be used for testing and validation.
-
-4.  **Update Documentation (Optional)**:
-    If the new document type introduces significant changes or requires specific usage instructions, update relevant sections of the documentation.
-
-### Testing
-
-DocuMind emphasizes comprehensive testing to ensure reliability and performance. The project includes unit, integration, and performance tests.
-
+Create a descriptive branch for your feature or bugfix:
 ```bash
-# Run all tests in the project
-pytest
-
-# Run tests and generate a code coverage report (HTML output)
-pytest --cov=documents --cov-report=html
-
-# Run unit tests for a specific module (e.g., OCR)
-pytest tests/unit/test_ocr.py -v
-
-# Run all integration tests
-pytest tests/integration/ -v
-
-# Run performance tests using Locust (requires Locust to be installed and running)
-# locust -f locustfile.py --host=http://localhost:8000
+git checkout -b feature/add-new-document-type
+# or
+git checkout -b bugfix/fix-ocr-parsing-error
 ```
 
-### Code Style and Quality
+**Step C: Implement Your Changes**
 
-To maintain code consistency and quality, DocuMind uses several tools:
+Write your code, following the project's architectural principles. For example, if you are adding a new document type, you would:
 
--   **Black**: An uncompromising Python code formatter.
--   **isort**: A Python utility to sort imports alphabetically and automatically separate them into sections.
--   **flake8**: A wrapper around PyFlakes, pycodestyle, and McCabe complexity checker.
--   **mypy**: A static type checker for Python.
+1.  **Update Configuration** (`config/document_types.yaml`): Define the new document type, its keywords, and the entities to be extracted.
+    ```yaml
+    # Example for a new "receipt" type
+    receipt:
+      name: "Receipt"
+      keywords: ["receipt", "purchase", "cash", "credit"]
+      entities:
+        - name: store_name
+          type: string
+          description: "Name of the store"
+        - name: transaction_date
+          type: date
+          description: "Date of the transaction"
+    ```
+2.  **Add a Prompt Template** (`config/prompts/receipt.txt`): Create a new prompt file to guide the LLM in extracting entities for receipts.
+3.  **Add Test Documents**: Place sample receipt images/PDFs in a new directory under `tests/fixtures/sample_documents/`.
 
-It is recommended to run these tools before committing your changes:
+**Step D: Write and Run Tests**
+
+DocuMind requires comprehensive testing. Ensure you add or update tests for your changes.
 
 ```bash
-# Format code using Black
+# Run all tests
+pytest
+
+# Run tests for a specific module and generate coverage
+pytest --cov=documents/ocr tests/unit/test_ocr.py
+```
+
+**Step E: Ensure Code Quality**
+
+Before committing, run the following tools to ensure your code meets our quality standards. This prevents CI failures and maintains a clean codebase.
+
+```bash
+# Format code with Black
 black .
 
-# Sort imports using isort
+# Sort imports with isort
 isort .
 
-# Lint code using flake8
+# Lint with flake8
 flake8
 
-# Perform static type checking with mypy
+# Check static types with mypy
 mypy documents/ api/
 ```
 
-These checks are also integrated into the CI/CD pipeline to ensure all contributions adhere to the project's quality standards.
+**Step F: Commit and Push**
+
+Commit your changes with a clear, conventional commit message and open a Pull Request.
+
+```bash
+git commit -m "feat: Add support for receipt document type"
+git push origin feature/add-new-document-type
+```
+
+### 3. Testing Philosophy
+
+Our testing strategy is built on three pillars:
+-   **Unit Tests**: Isolate and test individual functions and classes. External services (LLMs, databases) are mocked.
+-   **Integration Tests**: Verify that different components work together correctly in an end-to-end process. These tests use live services like a test database and ChromaDB.
+-   **Performance Tests**: Use Locust (`locustfile.py`) to load-test the API and ensure it meets performance KPIs under concurrent load.
+
+By following this guide, you can contribute high-quality, well-tested code that aligns with the project's standards.
 
 ## 🚀 Deployment
 
-DocuMind is designed for flexible deployment, supporting both Docker-based and Kubernetes-orchestrated environments.
+DocuMind is designed for flexible deployment. This guide covers deploying with Docker (for single-server setups) and provides a roadmap for Kubernetes.
+
+### Production Readiness Checklist
+
+Before deploying to a live environment, ensure you have:
+
+-   **Set `DEBUG=False`**: In your `.env` file, switch `DEBUG` to `False` to disable verbose error pages.
+-   **Configured a Strong `SECRET_KEY`**: Replace the default key with a long, randomly generated string.
+-   **Set `ALLOWED_HOSTS`**: Configure this with your production domain name(s).
+-   **Configured a Production Database**: Use a robust database like PostgreSQL (e.g., AWS RDS) instead of SQLite.
+-   **Set Up Centralized Logging**: Ensure logs are being sent to a service like Loki, CloudWatch, or an ELK stack for monitoring.
 
 ### Docker Deployment
 
-For production deployments using Docker, it's recommended to use the optimized `Dockerfile.prod` and `docker-compose.prod.yml`.
+For production deployments, use the `docker-compose.prod.yml` file, which is optimized for performance and security.
 
 ```bash
-# Build the production-optimized Docker image
-docker build -t documind:latest -f Dockerfile.prod .
+# 1. Build the production-optimized Docker image
+docker-compose -f docker-compose.prod.yml build
 
-# Run the application using Docker Compose in production mode
+# 2. Run the application in detached mode
+# Ensure your production .env file is present and configured
 docker-compose -f docker-compose.prod.yml up -d
+
+# 3. Run database migrations securely
+docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --no-input
 ```
 
-This setup will bring up the Django application, ChromaDB, and Redis, configured for a production environment.
+This setup will launch the Django application, ChromaDB, and Redis, configured for a production environment.
 
 ### Kubernetes Deployment
 
-For large-scale, highly available deployments, Kubernetes is the recommended orchestration platform. The `k8s/` directory contains example manifests.
+For large-scale, highly available deployments, Kubernetes is the recommended platform. The manifests in the `k8s/` directory provide a starting point.
+
+**Key Considerations for Kubernetes:**
+
+-   **Secrets Management**: Do NOT store secrets in environment variables directly in your manifests. Use a secure solution like Kubernetes Secrets, HashiCorp Vault, or a cloud provider's secret manager.
+-   **Persistent Volumes**: Configure Persistent Volume Claims (PVCs) for your database (PostgreSQL) and vector store (ChromaDB) to ensure data is not lost when pods restart.
+-   **Ingress Controller**: Set up an Ingress controller (like Nginx or Traefik) to manage external access to the API and terminate TLS.
+-   **Horizontal Scaling**: Use a Horizontal Pod Autoscaler (HPA) to automatically scale your API and worker pods based on CPU or memory usage.
 
 ```bash
-# Create a dedicated namespace for DocuMind (optional but recommended)
+# Example deployment steps (adapt to your cluster and CI/CD process)
+
+# 1. Create a dedicated namespace
 kubectl create namespace documind
 
-# Apply configuration maps and secrets (ensure secrets are managed securely, e.g., with Vault or AWS Secrets Manager)
-# kubectl apply -f k8s/configmap.yaml
-# kubectl apply -f k8s/secrets.yaml
+# 2. Create secrets securely (example)
+kubectl create secret generic documind-secrets --from-env-file=.env -n documind
 
-# Apply the core deployment and service manifests
-kubectl apply -f k8s/deployment.yaml -n documind
-kubectl apply -f k8s/service.yaml -n documind
+# 3. Apply the manifests
+kubectl apply -f k8s/ -n documind
 
-# (Optional) Apply ingress if you have an Ingress Controller configured
-# kubectl apply -f k8s/ingress.yaml -n documind
-
-# Scale the API deployment for higher concurrency
-kubectl scale deployment documind-api --replicas=5 -n documind
+# 4. Scale the API deployment for higher concurrency
+kubectl scale deployment documind-api --replicas=3 -n documind
 ```
 
 ### Environment Variables

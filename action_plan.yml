@@ -102,8 +102,8 @@ phases:
           - "Handles rotated or noisy scans gracefully (OCR robustness KPI)"
           - "Performance: < 1 second per page for typical documents"
         validation:
-          - "Process test documents with ≥ 90% accuracy (OCR robustness KPI)"
-          - "Verify handling of rotated/noisy scans with acceptable accuracy"
+          - "Process test documents from `docs-sm/` with ≥ 90% accuracy (OCR robustness KPI)"
+          - "Verify handling of rotated/noisy scans from `docs-sm/` with acceptable accuracy"
           - "Measure performance against the < 1 second per page target"
         status: "completed"
         
@@ -187,8 +187,8 @@ phases:
           - "Implementation of a confidence threshold for classification decisions"
           - "Accurate identification of document types (≥ 90% accuracy)"
         validation:
-          - "Achieve document classification accuracy of ≥ 90% on a test dataset"
-          - "Test with 100+ sample documents covering all defined document types"
+          - "Achieve document classification accuracy of ≥ 90% on the `docs-sm/` dataset"
+          - "Test with all sample documents from the `docs-sm/` directory, covering all defined types"
           - "Verify correct handling and classification of 'unknown' or low-confidence documents"
         status: "pending"
         
@@ -232,10 +232,10 @@ phases:
           - "Provision of few-shot examples within prompts to guide LLM behavior"
           - "Target ≥ 85% accuracy in extracting relevant fields using LLMs"
         validation:
-          - "LLM consistently returns valid JSON output (≥ 95% of the time)"
-          - "All requested entities are extracted for various document types"
+          - "LLM consistently returns valid JSON output (≥ 95% of the time) for documents in `docs-sm/`"
+          - "All requested entities are extracted for various document types from the `docs-sm/` dataset"
           - "Minimize hallucination of values by the LLM"
-          - "Achieve entity extraction precision of ≥ 85% on test data"
+          - "Achieve entity extraction precision of ≥ 85% on the `docs-sm/` test data"
         status: "pending"
         
       - task_id: "EXTRACT-003"
@@ -292,7 +292,7 @@ phases:
           - "Graceful error handling for individual document processing failures"
           - "Processes each document through the full pipeline (OCR, Classification, Extraction)"
         validation:
-          - "Successfully process a large number of documents (e.g., 100+) from `docs-sm/`"
+          - "Successfully process all documents from `docs-sm/`"
           - "Command continues processing even if individual documents fail"
           - "Clear progress indication is displayed during execution"
           - "Verify that all pipeline steps are executed for each document"
@@ -426,9 +426,9 @@ phases:
           - "Thorough testing of edge cases and error handling within the OCR module"
           - "Target ≥ 95% code coverage for the OCR module"
         validation:
-          - "Run: `pytest documents/tests/unit/test_ocr.py` and ensure all tests pass"
+          - "Run: `pytest documents/tests/unit/test_ocr.py` and ensure all tests pass using data from `docs-sm/`"
           - "Generate coverage report and verify ≥ 95% coverage for the OCR module"
-          - "Confirm that tests cover various image formats and preprocessing scenarios"
+          - "Confirm that tests cover various image formats and preprocessing scenarios present in `docs-sm/`"
         status: "pending"
         
       - task_id: "TEST-002"
@@ -441,9 +441,9 @@ phases:
           - "Mocking of ChromaDB calls and LLM API interactions"
           - "Target ≥ 90% code coverage for classification and extraction modules"
         validation:
-          - "Run: `pytest documents/tests/unit/test_classification.py` and `test_extraction.py`"
-          - "Verify that classification tests pass and accuracy metrics are within target"
-          - "Ensure entity extraction tests cover all defined entities and validation rules"
+          - "Run: `pytest documents/tests/unit/test_classification.py` and `test_extraction.py` using data from `docs-sm/`"
+          - "Verify that classification tests pass and accuracy metrics are within target for the `docs-sm/` dataset"
+          - "Ensure entity extraction tests cover all defined entities and validation rules for the `docs-sm/` dataset"
           - "Generate coverage report and verify ≥ 90% coverage for these modules"
         status: "pending"
         
@@ -455,8 +455,8 @@ phases:
           - "Database transaction tests to ensure data integrity"
           - "Comprehensive error scenario coverage for integrated components"
         validation:
-          - "Run: `pytest tests/integration/` and ensure all integration tests pass"
-          - "API tests use a test client to simulate requests and verify responses"
+          - "Run: `pytest tests/integration/` and ensure all integration tests pass using data from `docs-sm/`"
+          - "API tests use a test client to simulate requests and verify responses for documents in `docs-sm/`"
           - "Confirm that database rollbacks and error handling work correctly in integrated flows"
         status: "pending"
         
@@ -468,7 +468,7 @@ phases:
           - "Average response time for document processing endpoint is ≤ 3 seconds"
           - "Monitoring for memory leaks and excessive resource consumption during load"
         validation:
-          - "Execute Locust tests and verify that performance KPIs are met"
+          - "Execute Locust tests using documents from `docs-sm/` and verify that performance KPIs are met"
           - "Monitor system resources (CPU, memory) during load tests to identify bottlenecks"
           - "Analyze response times and error rates under various load conditions"
         status: "pending"
@@ -604,9 +604,9 @@ phases:
           - "Identification and documentation of any known issues or limitations"
           - "Solution is ready for client review and demonstration"
         validation:
-          - "The demo runs smoothly and showcases all key features"
-          - "All acceptance criteria and KPIs are met and verifiable"
-          - "Performance benchmarks are clearly presented and reproducible"
+          - "The demo runs smoothly and showcases all key features using documents from `docs-sm/`"
+          - "All acceptance criteria and KPIs are met and verifiable with the `docs-sm/` dataset"
+          - "Performance benchmarks are clearly presented and reproducible with the `docs-sm/` dataset"
           - "Known issues are documented and communicated"
         status: "pending"
 
