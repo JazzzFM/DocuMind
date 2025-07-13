@@ -10,8 +10,8 @@ class VectorSearch:
 
     def search(self, embedding, n_results: int = 5):
         """Searches for similar embeddings in ChromaDB."""
-        return self.collection.query(query_embeddings=[embedding.tolist()], n_results=n_results)
+        return self.collection.query(query_embeddings=[embedding], n_results=n_results, include=["metadatas", "distances"])
 
     def upsert(self, embedding, metadata, doc_id):
         """Upserts a document into ChromaDB."""
-        self.collection.upsert(embeddings=[embedding.tolist()], metadatas=[metadata], ids=[doc_id])
+        self.collection.upsert(embeddings=[embedding], metadatas=[metadata], ids=[doc_id])

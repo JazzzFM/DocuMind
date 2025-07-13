@@ -2,6 +2,9 @@ import pytest
 from unittest.mock import MagicMock, patch
 from documents.ocr.base import BaseOCREngine
 from documents.ocr.tesseract_engine import TesseractEngine
+from documents.ocr.google_vision_engine import GoogleVisionEngine
+from documents.ocr.azure_engine import AzureEngine
+from documents.ocr.factory import OCRFactory
 from django.core.cache import cache
 import os
 
@@ -77,19 +80,58 @@ class TestTesseractEngine:
         os.remove(test_image_path)
 
     @patch('pytesseract.image_to_string')
-    @patch('pdf2image.convert_from_path')
-    def test_extract_text_pdf(self, mock_convert_from_path, mock_image_to_string):
+    @patch('documents.ocr.tesseract_engine.convert_from_path') # Patch convert_from_path within tesseract_engine
+    @patch('documents.ocr.base.BaseOCREngine.get_file_hash', return_value="dummy_hash")
+    def test_extract_text_pdf(self, mock_get_file_hash, mock_convert_from_path, mock_image_to_string):
         mock_image_to_string.return_value = "PDF Page Text"
         mock_convert_from_path.return_value = [MagicMock(), MagicMock()]
 
         engine = TesseractEngine()
         test_pdf_path = "test_document.pdf"
-        with open(test_pdf_path, 'w') as f: # Create dummy file
-            f.write("dummy pdf content")
+        # No need to create a dummy file, as get_file_hash is mocked
 
         text = engine.extract_text(test_pdf_path)
         mock_convert_from_path.assert_called_once_with(test_pdf_path)
         assert mock_image_to_string.call_count == 2 # Called for each page
         assert text == "PDF Page TextPDF Page Text"
 
-        os.remove(test_pdf_path)
+class TestGoogleVisionEngine:
+    @patch('documents.ocr.google_vision_engine.GoogleVisionEngine._extract_text')
+    @patch('documents.ocr.base.BaseOCREngine.get_file_hash', return_value="dummy_hash")
+    def test_extract_text(self, mock_get_file_hash, mock_extract_text):
+        mock_extract_text.return_value = "Text extracted by Google Vision"
+        engine = GoogleVisionEngine()
+        text = engine.extract_text("dummy_path.jpg")
+        mock_extract_text.assert_called_once_with("dummy_path.jpg")
+        assert text == "Text extracted by Google Vision"
+
+class TestAzureEngine:
+    @patch('documents.ocr.azure_engine.AzureEngine._extract_text')
+    @patch('documents.ocr.base.BaseOCREngine.get_file_hash', return_value="dummy_hash")
+    def test_extract_text(self, mock_get_file_hash, mock_extract_text):
+        mock_extract_text.return_value = "Text extracted by Azure"
+        engine = AzureEngine()
+        text = engine.extract_text("dummy_path.pdf")
+        mock_extract_text.assert_called_once_with("dummy_path.pdf")
+        assert text == "Text extracted by Azure"
+
+class TestOCRFactory:
+    @patch('django.conf.settings.OCR_ENGINE', 'tesseract')
+    def test_get_tesseract_engine(self):
+        engine = OCRFactory.get_engine()
+        assert isinstance(engine, TesseractEngine)
+
+    @patch('django.conf.settings.OCR_ENGINE', 'google_vision')
+    def test_get_google_vision_engine(self):
+        engine = OCRFactory.get_engine()
+        assert isinstance(engine, GoogleVisionEngine)
+
+    @patch('django.conf.settings.OCR_ENGINE', 'azure')
+    def test_get_azure_engine(self):
+        engine = OCRFactory.get_engine()
+        assert isinstance(engine, AzureEngine)
+
+    @patch('django.conf.settings.OCR_ENGINE', 'unknown')
+    def test_get_unknown_engine_raises_error(self):
+        with pytest.raises(ValueError, match="Unknown OCR engine: unknown"):
+            OCRFactory.get_engine()
