@@ -65,8 +65,8 @@
 <li class="toctree-l3"><a class="reference internal" href="extraction.html">Extraction Module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">LLM Module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.llm.base">Base Provider</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#factory">Factory</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#openai-provider">OpenAI Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.llm.factory">Factory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.llm.openai_provider">OpenAI Provider</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#provider-configuration">Provider Configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#request-structure">Request Structure</a></li>
@@ -324,11 +324,273 @@
 </dd></dl>
 
 </section>
-<section id="factory">
-<h2>Factory<a class="headerlink" href="#factory" title="Link to this heading"></a></h2>
+<section id="module-documents.llm.factory">
+<span id="factory"></span><h2>Factory<a class="headerlink" href="#module-documents.llm.factory" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.llm.factory.</span></span><span class="sig-name descname"><span class="pre">LLMProviderRegistry</span></span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Registry for managing multiple LLM providers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.register_provider">
+<span class="sig-name descname"><span class="pre">register_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">provider</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.register_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.register_provider" title="Link to this definition"></a></dt>
+<dd><p>Register a new LLM provider.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.get_provider">
+<span class="sig-name descname"><span class="pre">get_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.get_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.get_provider" title="Link to this definition"></a></dt>
+<dd><p>Get a specific provider by name or the default provider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="#documents.llm.base.BaseLLMProvider" title="documents.llm.base.BaseLLMProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMProvider</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.get_available_providers">
+<span class="sig-name descname"><span class="pre">get_available_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.get_available_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.get_available_providers" title="Link to this definition"></a></dt>
+<dd><p>Get list of available provider names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.set_default_provider">
+<span class="sig-name descname"><span class="pre">set_default_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.set_default_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.set_default_provider" title="Link to this definition"></a></dt>
+<dd><p>Set the default provider.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMProviderRegistry.get_all_providers_info">
+<span class="sig-name descname"><span class="pre">get_all_providers_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMProviderRegistry.get_all_providers_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMProviderRegistry.get_all_providers_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about all registered providers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.llm.factory.</span></span><span class="sig-name descname"><span class="pre">LLMFactory</span></span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Enhanced factory for creating and managing LLM providers with fallback support.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.initialize">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initialize the factory with available providers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.get_provider">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.get_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.get_provider" title="Link to this definition"></a></dt>
+<dd><p>Get an LLM provider instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>provider_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Optional specific provider name. If None, returns default.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.llm.base.BaseLLMProvider" title="documents.llm.base.BaseLLMProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMProvider</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LLM provider instance</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="index.html#documents.exceptions.DocumentClassificationError" title="documents.exceptions.DocumentClassificationError"><strong>DocumentClassificationError</strong></a> – If no providers are available</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.get_best_provider">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_best_provider</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.get_best_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.get_best_provider" title="Link to this definition"></a></dt>
+<dd><p>Get the best available provider based on performance and availability.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.llm.base.BaseLLMProvider" title="documents.llm.base.BaseLLMProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMProvider</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Best available LLM provider</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.get_provider_for_task">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_provider_for_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.get_provider_for_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.get_provider_for_task" title="Link to this definition"></a></dt>
+<dd><p>Get the best provider for a specific task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Task type (e.g., ‘entity_extraction’, ‘classification’, ‘summarization’)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.llm.base.BaseLLMProvider" title="documents.llm.base.BaseLLMProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMProvider</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Best provider for the task</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.list_providers">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.list_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.list_providers" title="Link to this definition"></a></dt>
+<dd><p>Get list of all available provider names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.get_providers_info">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_providers_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.get_providers_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.get_providers_info" title="Link to this definition"></a></dt>
+<dd><p>Get detailed information about all providers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.test_provider">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_provider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.test_provider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.test_provider" title="Link to this definition"></a></dt>
+<dd><p>Test a specific provider’s connectivity and functionality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>provider_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name of the provider to test</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Test results dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.factory.LLMFactory.test_all_providers">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">test_all_providers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/factory.html#LLMFactory.test_all_providers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.factory.LLMFactory.test_all_providers" title="Link to this definition"></a></dt>
+<dd><p>Test all registered providers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="openai-provider">
-<h2>OpenAI Provider<a class="headerlink" href="#openai-provider" title="Link to this heading"></a></h2>
+<section id="module-documents.llm.openai_provider">
+<span id="openai-provider"></span><h2>OpenAI Provider<a class="headerlink" href="#module-documents.llm.openai_provider" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.llm.openai_provider.</span></span><span class="sig-name descname"><span class="pre">OpenAIProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.llm.base.BaseLLMProvider" title="documents.llm.base.BaseLLMProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseLLMProvider</span></code></a></p>
+<p>OpenAI LLM provider implementation with enhanced error handling and retry logic.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize OpenAI provider.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Optional model name override</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.get_completion">
+<span class="sig-name descname"><span class="pre">get_completion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.get_completion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.get_completion" title="Link to this definition"></a></dt>
+<dd><p>Get completion from OpenAI with retry logic and comprehensive error handling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.llm.base.LLMRequest" title="documents.llm.base.LLMRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMRequest</span></code></a></span>) – LLMRequest containing prompt and parameters</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.llm.base.LLMResponse" title="documents.llm.base.LLMResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMResponse</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LLMResponse with generated content and metadata</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.is_available">
+<span class="sig-name descname"><span class="pre">is_available</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.is_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.is_available" title="Link to this definition"></a></dt>
+<dd><p>Check if the OpenAI provider is available and configured properly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if provider is ready to use</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.get_provider_name">
+<span class="sig-name descname"><span class="pre">get_provider_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.get_provider_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.get_provider_name" title="Link to this definition"></a></dt>
+<dd><p>Get the provider name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Provider name string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.get_provider_info">
+<span class="sig-name descname"><span class="pre">get_provider_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.get_provider_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.get_provider_info" title="Link to this definition"></a></dt>
+<dd><p>Get information about the OpenAI provider and its configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with provider information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.llm.openai_provider.OpenAIProvider.test_connection">
+<span class="sig-name descname"><span class="pre">test_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/llm/openai_provider.html#OpenAIProvider.test_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.llm.openai_provider.OpenAIProvider.test_connection" title="Link to this definition"></a></dt>
+<dd><p>Test the OpenAI connection with a simple API call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with test results</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>

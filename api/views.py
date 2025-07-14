@@ -1,3 +1,46 @@
+"""
+API Views for DocuMind Document Processing System.
+
+This module provides REST API endpoints for document processing, classification,
+entity extraction, and system monitoring. All endpoints use JWT authentication
+and include comprehensive error handling.
+
+Classes:
+    DocumentProcessView: Single document processing endpoint
+    DocumentSearchView: Vector-based document search endpoint
+    DocumentBatchProcessView: Batch document processing endpoint
+    SystemStatusView: System health monitoring endpoint
+    DocumentTypesView: Document type configuration endpoint
+    StatisticsView: System statistics and metrics endpoint
+
+Functions:
+    is_allowed_file_type: File type validation utility
+
+Example:
+    Process a document via API:
+    
+    ```python
+    import requests
+    
+    # Get authentication token
+    response = requests.post('http://localhost:8000/api/v1/token/', {
+        'username': 'admin',
+        'password': 'adminpassword'
+    })
+    token = response.json()['access']
+    
+    # Process document
+    with open('document.pdf', 'rb') as f:
+        response = requests.post(
+            'http://localhost:8000/api/v1/documents/process/',
+            headers={'Authorization': f'Bearer {token}'},
+            files={'file': f}
+        )
+    result = response.json()
+    ```
+
+"""
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,12 +62,75 @@ logger = logging.getLogger(__name__)
 ALLOWED_FILE_TYPES = ['.pdf', '.png', '.jpg', '.jpeg']
 
 def is_allowed_file_type(filename):
+    """
+    Check if a file type is supported for processing.
+    
+    Args:
+        filename (str): Name of the file to check
+        
+    Returns:
+        bool: True if file type is supported, False otherwise
+        
+    Example:
+        >>> is_allowed_file_type('document.pdf')
+        True
+        >>> is_allowed_file_type('document.txt')
+        False
+    """
     return os.path.splitext(filename)[1].lower() in ALLOWED_FILE_TYPES
 
 class DocumentProcessView(APIView):
+    """
+    API endpoint for processing single documents through the complete pipeline.
+    
+    This view handles file uploads and processes them through OCR, classification,
+    and entity extraction. It supports PDF, PNG, JPG, and JPEG file formats.
+    
+    Attributes:
+        parser_classes: Tuple of parser classes for handling multipart form data
+        
+    Methods:
+        post: Process uploaded document and return structured results
+        
+    Example:
+        POST /api/v1/documents/process/
+        Content-Type: multipart/form-data
+        
+        file: <binary_file_data>
+        extract_entities: true (optional, default: true)
+        
+    Returns:
+        JSON response with document type, confidence, and extracted entities:
+        {
+            "status": "success",
+            "document_id": "invoice_001.pdf",
+            "document_type": "invoice",
+            "confidence": 0.95,
+            "extracted_entities": {
+                "invoice_number": "INV-2024-001",
+                "total_amount": "$1,234.56",
+                ...
+            }
+        }
+    """
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
+        """
+        Process uploaded document through OCR, classification, and entity extraction.
+        
+        Args:
+            request: Django request object containing uploaded file
+            *args: Variable length argument list
+            **kwargs: Arbitrary keyword arguments
+            
+        Returns:
+            Response: JSON response with processing results or error message
+            
+        Raises:
+            HTTP 400: Invalid file type or serialization error
+            HTTP 500: Processing error (OCR, classification, or extraction failure)
+        """
         serializer = DocumentProcessSerializer(data=request.data)
         if serializer.is_valid():
             file_obj = serializer.validated_data['file']

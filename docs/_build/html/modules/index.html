@@ -51,6 +51,15 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#getting-started-tutorial">Getting Started Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#api-usage-examples">API Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#batch-processing">Batch Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#custom-document-types">Custom Document Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#advanced-configuration">Advanced Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#best-practices">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html#example-integration">Example Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
 </ul>
@@ -68,7 +77,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-api">API Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#views">Views</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-api.views">Views</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.is_allowed_file_type"><code class="docutils literal notranslate"><span class="pre">is_allowed_file_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.DocumentProcessView"><code class="docutils literal notranslate"><span class="pre">DocumentProcessView</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.DocumentSearchView"><code class="docutils literal notranslate"><span class="pre">DocumentSearchView</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.DocumentBatchProcessView"><code class="docutils literal notranslate"><span class="pre">DocumentBatchProcessView</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.SystemStatusView"><code class="docutils literal notranslate"><span class="pre">SystemStatusView</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.DocumentTypesView"><code class="docutils literal notranslate"><span class="pre">DocumentTypesView</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api.views.StatisticsView"><code class="docutils literal notranslate"><span class="pre">StatisticsView</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-api.serializers">Serializers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#api.serializers.DocumentProcessSerializer"><code class="docutils literal notranslate"><span class="pre">DocumentProcessSerializer</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#api.serializers.DocumentSearchSerializer"><code class="docutils literal notranslate"><span class="pre">DocumentSearchSerializer</span></code></a></li>
@@ -131,7 +149,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#views">Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#module-api.views">Views</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#module-api.serializers">Serializers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#authentication">Authentication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html#api-endpoints">API Endpoints</a></li>
@@ -160,8 +178,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ocr.html">OCR Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.base">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ocr.html#factory">Factory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ocr.html#tesseract-engine">Tesseract Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.factory">Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.tesseract_engine">Tesseract Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.google_vision_engine">Google Vision Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ocr.html#module-documents.ocr.azure_engine">Azure Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ocr.html#usage-example">Usage Example</a></li>
@@ -182,7 +200,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="extraction.html">Extraction Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.base">Base Extractor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extraction.html#llm-extractor">LLM Extractor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.llm_extractor">LLM Extractor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.prompt_manager">Prompt Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extraction.html#module-documents.extraction.entity_validator">Entity Validator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extraction.html#usage-example">Usage Example</a></li>
@@ -194,8 +212,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="llm.html">LLM Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="llm.html#module-documents.llm.base">Base Provider</a></li>
-<li class="toctree-l2"><a class="reference internal" href="llm.html#factory">Factory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="llm.html#openai-provider">OpenAI Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#module-documents.llm.factory">Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm.html#module-documents.llm.openai_provider">OpenAI Provider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm.html#usage-example">Usage Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm.html#provider-configuration">Provider Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm.html#request-structure">Request Structure</a></li>
@@ -211,8 +229,216 @@
 </section>
 <section id="module-api">
 <span id="api-module"></span><h2>API Module<a class="headerlink" href="#module-api" title="Link to this heading"></a></h2>
-<section id="views">
-<h3>Views<a class="headerlink" href="#views" title="Link to this heading"></a></h3>
+<section id="module-api.views">
+<span id="views"></span><h3>Views<a class="headerlink" href="#module-api.views" title="Link to this heading"></a></h3>
+<p>API Views for DocuMind Document Processing System.</p>
+<p>This module provides REST API endpoints for document processing, classification,
+entity extraction, and system monitoring. All endpoints use JWT authentication
+and include comprehensive error handling.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><p>DocumentProcessView: Single document processing endpoint
+DocumentSearchView: Vector-based document search endpoint
+DocumentBatchProcessView: Batch document processing endpoint
+SystemStatusView: System health monitoring endpoint
+DocumentTypesView: Document type configuration endpoint
+StatisticsView: System statistics and metrics endpoint</p>
+</dd>
+<dt>Functions:</dt><dd><p>is_allowed_file_type: File type validation utility</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Process a document via API:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+import requests</p>
+<p># Get authentication token
+response = requests.post(’<a class="reference external" href="http://localhost:8000/api/v1/token/">http://localhost:8000/api/v1/token/</a>’, {</p>
+<blockquote>
+<div><p>‘username’: ‘admin’,
+‘password’: ‘adminpassword’</p>
+</div></blockquote>
+<p>})
+token = response.json()[‘access’]</p>
+<p># Process document
+with open(‘document.pdf’, ‘rb’) as f:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>response = requests.post(</dt><dd><p>‘<a class="reference external" href="http://localhost:8000/api/v1/documents/process/">http://localhost:8000/api/v1/documents/process/</a>’,
+headers={‘Authorization’: f’Bearer {token}’},
+files={‘file’: f}</p>
+</dd>
+</dl>
+<p>)</p>
+</div></blockquote>
+<p>result = response.json()
+<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="api.views.is_allowed_file_type">
+<span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">is_allowed_file_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#is_allowed_file_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.is_allowed_file_type" title="Link to this definition"></a></dt>
+<dd><p>Check if a file type is supported for processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Name of the file to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if file type is supported, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_allowed_file_type</span><span class="p">(</span><span class="s1">&#39;document.pdf&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_allowed_file_type</span><span class="p">(</span><span class="s1">&#39;document.txt&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.DocumentProcessView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">DocumentProcessView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentProcessView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentProcessView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>API endpoint for processing single documents through the complete pipeline.</p>
+<p>This view handles file uploads and processes them through OCR, classification,
+and entity extraction. It supports PDF, PNG, JPG, and JPEG file formats.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="api.views.DocumentProcessView.parser_classes">
+<span class="sig-name descname"><span class="pre">parser_classes</span></span><a class="headerlink" href="#api.views.DocumentProcessView.parser_classes" title="Link to this definition"></a></dt>
+<dd><p>Tuple of parser classes for handling multipart form data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.DocumentProcessView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentProcessView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentProcessView.post" title="Link to this definition"></a></dt>
+<dd><p>Process uploaded document and return structured results</p>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p>POST /api/v1/documents/process/
+Content-Type: multipart/form-data</p>
+<p>file: &lt;binary_file_data&gt;
+extract_entities: true (optional, default: true)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl>
+<dt>{</dt><dd><p>“status”: “success”,
+“document_id”: “invoice_001.pdf”,
+“document_type”: “invoice”,
+“confidence”: 0.95,
+“extracted_entities”: {</p>
+<blockquote>
+<div><p>”invoice_number”: “INV-2024-001”,
+“total_amount”: “$1,234.56”,
+…</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON response with document type, confidence, and extracted entities</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">parser_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(rest_framework.parsers.MultiPartParser,</span> <span class="pre">rest_framework.parsers.FormParser)</span></em><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentProcessView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dd><p>Process uploaded document through OCR, classification, and entity extraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Django request object containing uploaded file</p></li>
+<li><p><strong>*args</strong> – Variable length argument list</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON response with processing results or error message</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Response</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>HTTP 400</strong> – Invalid file type or serialization error</p></li>
+<li><p><strong>HTTP 500</strong> – Processing error (OCR, classification, or extraction failure)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.DocumentSearchView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">DocumentSearchView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentSearchView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentSearchView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.DocumentSearchView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentSearchView.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentSearchView.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.DocumentBatchProcessView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">DocumentBatchProcessView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentBatchProcessView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentBatchProcessView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="api.views.DocumentBatchProcessView.parser_classes">
+<span class="sig-name descname"><span class="pre">parser_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(rest_framework.parsers.MultiPartParser,</span> <span class="pre">rest_framework.parsers.FormParser)</span></em><a class="headerlink" href="#api.views.DocumentBatchProcessView.parser_classes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.DocumentBatchProcessView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentBatchProcessView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentBatchProcessView.post" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.SystemStatusView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">SystemStatusView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#SystemStatusView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.SystemStatusView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Check system status and health of all components.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.SystemStatusView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#SystemStatusView.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.SystemStatusView.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.DocumentTypesView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">DocumentTypesView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentTypesView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentTypesView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Get available document types and their configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.DocumentTypesView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#DocumentTypesView.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.DocumentTypesView.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.views.StatisticsView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.views.</span></span><span class="sig-name descname"><span class="pre">StatisticsView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#StatisticsView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.StatisticsView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>Get system performance statistics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.views.StatisticsView.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/api/views.html#StatisticsView.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.views.StatisticsView.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-api.serializers">
 <span id="serializers"></span><h3>Serializers<a class="headerlink" href="#module-api.serializers" title="Link to this heading"></a></h3>
@@ -302,7 +528,7 @@
 <dd><p>Load document type configurations from YAML file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="documents.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -313,7 +539,7 @@
 <dd><p>Get all document type configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="documents.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -324,7 +550,7 @@
 <dd><p>Get configuration for a specific document type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="documents.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -365,7 +591,7 @@
 <dd><p>Get the global configuration loader instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.config_loader.ConfigLoader" title="documents.config_loader.ConfigLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigLoader</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="documents.html#documents.config_loader.ConfigLoader" title="documents.config_loader.ConfigLoader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigLoader</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,7 +602,7 @@
 <dd><p>Get all document type configurations (convenience function).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="documents.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -387,7 +613,7 @@
 <dd><p>Get configuration for a specific document type (convenience function).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="documents.html#documents.config_loader.DocumentTypeConfig" title="documents.config_loader.DocumentTypeConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentTypeConfig</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>

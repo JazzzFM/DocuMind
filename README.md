@@ -1327,14 +1327,53 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+## 📚 **Comprehensive Documentation**
+
+DocuMind includes extensive Sphinx-generated documentation with:
+
+### **📖 Available Documentation**
+- **📘 Complete API Reference**: Auto-generated from docstrings with examples
+- **🚀 Quick Start Guide**: Get up and running in 5 minutes
+- **📋 Detailed Tutorials**: Step-by-step guides for common use cases
+- **🏗️ System Architecture**: In-depth technical documentation
+- **⚙️ Configuration Guide**: Advanced setup and customization
+- **📊 Performance Benchmarks**: Metrics and optimization guidelines
+
+### **🌐 Access Documentation**
+- **Local Documentation**: Available at `docs/_build/html/index.html`
+- **Interactive API Docs**: `http://localhost:8000/api/schema/swagger-ui/`
+- **Module Reference**: Full autodoc coverage of all Python modules
+
+### **📝 Documentation Features**
+- **Auto-generated API docs** from comprehensive docstrings
+- **Code examples** for all major functionality
+- **Tutorials** for beginner to advanced use cases
+- **Performance guides** and best practices
+- **Troubleshooting** and common solutions
+- **Integration examples** for various platforms
+
+### **🛠️ Building Documentation Locally**
+```bash
+# Install Sphinx dependencies
+pip install sphinx sphinx-rtd-theme sphinx-autodoc-typehints
+
+# Build documentation
+cd docs && make html
+
+# Serve documentation locally
+python -m http.server 8080 --directory _build/html
+# Access at: http://localhost:8080
+```
+
 ## 📞 Support
 
 For questions, issues, or feature requests:
 
 -   📧 **Email**: jazzesfm@gmail.com
--   📚 **Documentation**: Comprehensive guides available in `/docs` directory
+-   📚 **Documentation**: Comprehensive Sphinx docs in `/docs/_build/html/`
 -   🐛 **Issues**: GitHub Issues for bug reports and feature requests
 -   💬 **Discussions**: GitHub Discussions for community support
+-   📖 **API Reference**: Interactive docs at `/api/schema/swagger-ui/`
 
 ### **Professional Services Available**
 - **Custom Document Types**: Tailored classification and extraction models

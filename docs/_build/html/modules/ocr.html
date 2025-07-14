@@ -63,8 +63,8 @@
 <li class="toctree-l3"><a class="reference internal" href="documents.html">Documents Module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">OCR Module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.ocr.base">Base Classes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#factory">Factory</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#tesseract-engine">Tesseract Engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.ocr.factory">Factory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.ocr.tesseract_engine">Tesseract Engine</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.ocr.google_vision_engine">Google Vision Engine</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.ocr.azure_engine">Azure Engine</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
@@ -112,41 +112,160 @@
 <p>The OCR (Optical Character Recognition) module provides a pluggable architecture for text extraction from documents.</p>
 <section id="module-documents.ocr.base">
 <span id="base-classes"></span><h2>Base Classes<a class="headerlink" href="#module-documents.ocr.base" title="Link to this heading"></a></h2>
+<p>Base OCR Engine Module for DocuMind Document Processing System.</p>
+<p>This module provides the abstract base class for all OCR engines in the system.
+It implements common functionality like caching and file handling, while requiring
+concrete implementations to provide the actual text extraction logic.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><p>BaseOCREngine: Abstract base class for OCR engines</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Creating a custom OCR engine:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+from documents.ocr.base import BaseOCREngine</p>
+<dl class="simple">
+<dt>class CustomOCREngine(BaseOCREngine):</dt><dd><dl class="simple">
+<dt>def _extract_text(self, file_path: str) -&gt; str:</dt><dd><p># Custom OCR implementation
+return extracted_text</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.ocr.base.</span></span><span class="sig-name descname"><span class="pre">BaseOCREngine</span></span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Abstract base class for OCR engines.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine.get_file_hash">
-<span class="sig-name descname"><span class="pre">get_file_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.get_file_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine.get_file_hash" title="Link to this definition"></a></dt>
-<dd><p>Computes the SHA256 hash of a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
-</dd>
-</dl>
-</dd></dl>
+<p>This class provides a common interface for all OCR implementations in the system.
+It includes built-in caching functionality to improve performance by avoiding
+redundant OCR operations on the same files.</p>
+<p>The caching mechanism uses SHA256 file hashes as cache keys to ensure that
+identical files are processed only once, regardless of their filename.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine.None">
+<span class="sig-name descname"><span class="pre">None</span></span><a class="headerlink" href="#documents.ocr.base.BaseOCREngine.None" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine.extract_text">
-<span class="sig-name descname"><span class="pre">extract_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.extract_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine.extract_text" title="Link to this definition"></a></dt>
-<dd><p>Extracts text from a given file, using cache if available.</p>
+<span class="sig-name descname"><span class="pre">extract_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.extract_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine.extract_text" title="Link to this definition"></a></dt>
+<dd><p>Public method to extract text with optional caching</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine.get_file_hash">
+<span class="sig-name descname"><span class="pre">get_file_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.get_file_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine.get_file_hash" title="Link to this definition"></a></dt>
+<dd><p>Generate SHA256 hash for file-based caching</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.ocr.base.BaseOCREngine._extract_text">
+<span class="sig-name descname"><span class="pre">_extract_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine._extract_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.base.BaseOCREngine._extract_text" title="Link to this definition"></a></dt>
+<dd><p>Abstract method for actual OCR implementation</p>
+</dd></dl>
+
+<p class="rubric">Example</p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a>python
+# Usage in concrete implementation
+engine = TesseractEngine()
+text = engine.extract_text(‘/path/to/document.pdf’)</p>
+<p># Second call will use cached result
+text = engine.extract_text(‘/path/to/document.pdf’)
+<a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">get_file_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.get_file_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Compute SHA256 hash of a file for caching purposes.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to the file to hash</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hexadecimal SHA256 hash of the file</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.13)"><strong>FileNotFoundError</strong></a> – If the file doesn’t exist</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IOError" title="(in Python v3.13)"><strong>IOError</strong></a> – If the file cannot be read</p></li>
+</ul>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span> <span class="o">=</span> <span class="n">TesseractEngine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hash_value</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">get_file_hash</span><span class="p">(</span><span class="s1">&#39;/path/to/document.pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hash_value</span><span class="p">))</span>
+<span class="go">64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">extract_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/base.html#BaseOCREngine.extract_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id17" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<p>Extract text from a document file with optional caching.</p>
+<p>This method first checks the cache for previously extracted text using
+the file’s SHA256 hash. If not found, it processes the file and caches
+the result for future use.</p>
+<dl>
+<dt>Args:</dt><dd><p>file_path (str): Path to the document file
+use_cache (bool): Whether to use caching (default: True)</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: Extracted text from the document</p>
+</dd>
+<dt>Raises:</dt><dd><p>FileNotFoundError: If the file doesn’t exist
+OCRProcessingError: If OCR processing fails</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span> <span class="o">=</span> <span class="n">TesseractEngine</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">extract_text</span><span class="p">(</span><span class="s1">&#39;/path/to/invoice.pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">[:</span><span class="mi">50</span><span class="p">])</span>
+<span class="go">&#39;INVOICE</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p>Company Name: Acme Corp
+Invoice Number: 001’</p>
 </dd></dl>
 
 </dd></dl>
 
 </section>
-<section id="factory">
-<h2>Factory<a class="headerlink" href="#factory" title="Link to this heading"></a></h2>
+<section id="module-documents.ocr.factory">
+<span id="factory"></span><h2>Factory<a class="headerlink" href="#module-documents.ocr.factory" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.ocr.factory.OCRFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.ocr.factory.</span></span><span class="sig-name descname"><span class="pre">OCRFactory</span></span><a class="reference internal" href="../_modules/documents/ocr/factory.html#OCRFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.factory.OCRFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Factory for creating OCR engines.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.ocr.factory.OCRFactory.get_engine">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_engine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/ocr/factory.html#OCRFactory.get_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.factory.OCRFactory.get_engine" title="Link to this definition"></a></dt>
+<dd><p>Gets the OCR engine based on the settings.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="tesseract-engine">
-<h2>Tesseract Engine<a class="headerlink" href="#tesseract-engine" title="Link to this heading"></a></h2>
+<section id="module-documents.ocr.tesseract_engine">
+<span id="tesseract-engine"></span><h2>Tesseract Engine<a class="headerlink" href="#module-documents.ocr.tesseract_engine" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.ocr.tesseract_engine.TesseractEngine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.ocr.tesseract_engine.</span></span><span class="sig-name descname"><span class="pre">TesseractEngine</span></span><a class="reference internal" href="../_modules/documents/ocr/tesseract_engine.html#TesseractEngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.ocr.tesseract_engine.TesseractEngine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.ocr.base.BaseOCREngine" title="documents.ocr.base.BaseOCREngine"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOCREngine</span></code></a></p>
+<p>OCR engine implementation using Tesseract.</p>
+</dd></dl>
+
 </section>
 <section id="module-documents.ocr.google_vision_engine">
 <span id="google-vision-engine"></span><h2>Google Vision Engine<a class="headerlink" href="#module-documents.ocr.google_vision_engine" title="Link to this heading"></a></h2>

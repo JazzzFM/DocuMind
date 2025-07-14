@@ -350,6 +350,34 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="VectorSearch.get_collection_info">
+<a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.get_collection_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_collection_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get information about the ChromaDB collection.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with collection information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;collection_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">,</span>
+                <span class="s2">&quot;persist_directory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="p">,</span>
+                <span class="s2">&quot;total_documents&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;healthy&quot;</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;error&quot;</span>
+            <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get collection info: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;collection_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection_name</span><span class="p">,</span>
+                <span class="s2">&quot;persist_directory&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">persist_directory</span><span class="p">,</span>
+                <span class="s2">&quot;total_documents&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">}</span></div>
+
+
 <div class="viewcode-block" id="VectorSearch.get_collection_stats">
 <a class="viewcode-back" href="../../../modules/classification.html#documents.classification.vector_search.VectorSearch.get_collection_stats">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_collection_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>

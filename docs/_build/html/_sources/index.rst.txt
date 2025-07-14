@@ -43,32 +43,31 @@ System Architecture
 
 DocuMind follows a modular architecture with clear separation of concerns:
 
-.. mermaid::
+.. code-block:: text
 
-   graph TB
-       subgraph "API Layer"
-           API[Django REST API]
-           AUTH[JWT Authentication]
-       end
-       
-       subgraph "Processing Pipeline"
-           OCR[OCR Engine]
-           CLASSIFIER[Document Classifier]
-           EXTRACTOR[Entity Extractor]
-       end
-       
-       subgraph "Data Layer"
-           POSTGRES[(PostgreSQL)]
-           CHROMADB[(ChromaDB)]
-           REDIS[(Redis)]
-       end
-       
-       API --> OCR
-       OCR --> CLASSIFIER
-       CLASSIFIER --> EXTRACTOR
-       API --> POSTGRES
-       CLASSIFIER --> CHROMADB
-       EXTRACTOR --> REDIS
+   ┌─────────────────────────────────────────────────────────────┐
+   │                        API Layer                            │
+   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+   │  │ Django REST │  │ JWT Auth    │  │ Rate Limiting       │  │
+   │  │ Framework   │  │             │  │                     │  │
+   │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+   └─────────────────────────────────────────────────────────────┘
+                                 │
+   ┌─────────────────────────────────────────────────────────────┐
+   │                    Processing Pipeline                      │
+   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+   │  │ OCR Engine  │  │ Document    │  │ Entity Extraction   │  │
+   │  │ (Tesseract) │  │ Classifier  │  │ (LLM)               │  │
+   │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+   └─────────────────────────────────────────────────────────────┘
+                                 │
+   ┌─────────────────────────────────────────────────────────────┐
+   │                     Data Layer                              │
+   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+   │  │ PostgreSQL  │  │ ChromaDB    │  │ Redis Cache         │  │
+   │  │ (Metadata)  │  │ (Vectors)   │  │ (Sessions)          │  │
+   │  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+   └─────────────────────────────────────────────────────────────┘
 
 Table of Contents
 -----------------
@@ -79,6 +78,7 @@ Table of Contents
 
    installation
    quickstart
+   tutorials
    configuration
    api_reference
 

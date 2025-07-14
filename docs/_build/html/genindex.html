@@ -48,6 +48,15 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#getting-started-tutorial">Getting Started Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#api-usage-examples">API Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#batch-processing">Batch Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#custom-document-types">Custom Document Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#advanced-configuration">Advanced Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#best-practices">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#example-integration">Example Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -134,6 +143,8 @@
 </li>
         <li><a href="modules/extraction.html#documents.extraction.entity_validator.ValidationRule.__init__">(documents.extraction.entity_validator.ValidationRule method)</a>
 </li>
+        <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.__init__">(documents.extraction.llm_extractor.LLMExtractor method)</a>
+</li>
         <li><a href="modules/extraction.html#documents.extraction.prompt_manager.PromptManager.__init__">(documents.extraction.prompt_manager.PromptManager method)</a>
 </li>
         <li><a href="modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate.__init__">(documents.extraction.prompt_manager.PromptTemplate method)</a>
@@ -144,7 +155,15 @@
 </li>
         <li><a href="modules/llm.html#documents.llm.base.LLMResponse.__init__">(documents.llm.base.LLMResponse method)</a>
 </li>
+        <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.__init__">(documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
+        <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.__init__">(documents.llm.openai_provider.OpenAIProvider method)</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine._extract_text">_extract_text() (documents.ocr.base.BaseOCREngine method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -169,6 +188,13 @@
 
       <ul>
         <li><a href="modules/api.html#module-api.serializers">module</a>, <a href="modules/index.html#module-api.serializers">[1]</a>
+</li>
+      </ul></li>
+      <li>
+    api.views
+
+      <ul>
+        <li><a href="modules/api.html#module-api.views">module</a>, <a href="modules/index.html#module-api.views">[1]</a>
 </li>
       </ul></li>
       <li><a href="modules/ocr.html#documents.ocr.azure_engine.AzureEngine">AzureEngine (class in documents.ocr.azure_engine)</a>
@@ -205,12 +231,14 @@
 </li>
       <li><a href="modules/classification.html#documents.classification.classifier.DocumentClassifier.classify">classify() (documents.classification.classifier.DocumentClassifier method)</a>
 </li>
-      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.clear_feedback_data">clear_feedback_data() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.clear_cache">clear_cache() (documents.extraction.llm_extractor.LLMExtractor method)</a>
 </li>
-      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationStats.confidence_distribution">confidence_distribution (documents.classification.feedback_tracker.ClassificationStats attribute)</a>
+      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.clear_feedback_data">clear_feedback_data() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationStats.confidence_distribution">confidence_distribution (documents.classification.feedback_tracker.ClassificationStats attribute)</a>
+</li>
       <li><a href="modules/documents.html#documents.config_loader.ConfigLoader">ConfigLoader (class in documents.config_loader)</a>, <a href="modules/index.html#documents.config_loader.ConfigLoader">[1]</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.LLMResponse.content">content (documents.llm.base.LLMResponse attribute)</a>
@@ -239,6 +267,8 @@
 </li>
       <li><a href="modules/api.html#api.serializers.DocumentBatchProcessSerializer">DocumentBatchProcessSerializer (class in api.serializers)</a>, <a href="modules/index.html#api.serializers.DocumentBatchProcessSerializer">[1]</a>
 </li>
+      <li><a href="modules/api.html#api.views.DocumentBatchProcessView">DocumentBatchProcessView (class in api.views)</a>, <a href="modules/index.html#api.views.DocumentBatchProcessView">[1]</a>
+</li>
       <li><a href="modules/index.html#documents.exceptions.DocumentClassificationError">DocumentClassificationError</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.classifier.DocumentClassifier">DocumentClassifier (class in documents.classification.classifier)</a>
@@ -246,6 +276,8 @@
       <li><a href="modules/index.html#documents.exceptions.DocumentProcessingError">DocumentProcessingError</a>
 </li>
       <li><a href="modules/api.html#api.serializers.DocumentProcessSerializer">DocumentProcessSerializer (class in api.serializers)</a>, <a href="modules/index.html#api.serializers.DocumentProcessSerializer">[1]</a>
+</li>
+      <li><a href="modules/api.html#api.views.DocumentProcessView">DocumentProcessView (class in api.views)</a>, <a href="modules/index.html#api.views.DocumentProcessView">[1]</a>
 </li>
       <li>
     documents
@@ -289,8 +321,6 @@
         <li><a href="modules/classification.html#module-documents.classification.vector_search">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     documents.config_loader
 
@@ -305,6 +335,8 @@
         <li><a href="modules/index.html#module-documents.exceptions">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     documents.extraction.base
 
@@ -317,6 +349,13 @@
 
       <ul>
         <li><a href="modules/extraction.html#module-documents.extraction.entity_validator">module</a>
+</li>
+      </ul></li>
+      <li>
+    documents.extraction.llm_extractor
+
+      <ul>
+        <li><a href="modules/extraction.html#module-documents.extraction.llm_extractor">module</a>
 </li>
       </ul></li>
       <li>
@@ -334,6 +373,20 @@
 </li>
       </ul></li>
       <li>
+    documents.llm.factory
+
+      <ul>
+        <li><a href="modules/llm.html#module-documents.llm.factory">module</a>
+</li>
+      </ul></li>
+      <li>
+    documents.llm.openai_provider
+
+      <ul>
+        <li><a href="modules/llm.html#module-documents.llm.openai_provider">module</a>
+</li>
+      </ul></li>
+      <li>
     documents.ocr.azure_engine
 
       <ul>
@@ -348,15 +401,33 @@
 </li>
       </ul></li>
       <li>
+    documents.ocr.factory
+
+      <ul>
+        <li><a href="modules/ocr.html#module-documents.ocr.factory">module</a>
+</li>
+      </ul></li>
+      <li>
     documents.ocr.google_vision_engine
 
       <ul>
         <li><a href="modules/ocr.html#module-documents.ocr.google_vision_engine">module</a>
 </li>
       </ul></li>
+      <li>
+    documents.ocr.tesseract_engine
+
+      <ul>
+        <li><a href="modules/ocr.html#module-documents.ocr.tesseract_engine">module</a>
+</li>
+      </ul></li>
       <li><a href="modules/api.html#api.serializers.DocumentSearchSerializer">DocumentSearchSerializer (class in api.serializers)</a>, <a href="modules/index.html#api.serializers.DocumentSearchSerializer">[1]</a>
 </li>
+      <li><a href="modules/api.html#api.views.DocumentSearchView">DocumentSearchView (class in api.views)</a>, <a href="modules/index.html#api.views.DocumentSearchView">[1]</a>
+</li>
       <li><a href="modules/documents.html#documents.config_loader.DocumentTypeConfig">DocumentTypeConfig (class in documents.config_loader)</a>, <a href="modules/index.html#documents.config_loader.DocumentTypeConfig">[1]</a>
+</li>
+      <li><a href="modules/api.html#api.views.DocumentTypesView">DocumentTypesView (class in api.views)</a>, <a href="modules/index.html#api.views.DocumentTypesView">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -387,10 +458,16 @@
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.export_feedback_data">export_feedback_data() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
 </li>
       <li><a href="modules/extraction.html#documents.extraction.base.BaseEntityExtractor.extract_entities">extract_entities() (documents.extraction.base.BaseEntityExtractor method)</a>
+
+      <ul>
+        <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.extract_entities">(documents.extraction.llm_extractor.LLMExtractor method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.extract_entities_batch">extract_entities_batch() (documents.extraction.llm_extractor.LLMExtractor method)</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.extract_entities_json">extract_entities_json() (documents.llm.base.BaseLLMProvider method)</a>
 </li>
-      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine.extract_text">extract_text() (documents.ocr.base.BaseOCREngine method)</a>
+      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine.extract_text">extract_text() (documents.ocr.base.BaseOCREngine method)</a>, <a href="modules/ocr.html#id17">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -410,16 +487,38 @@
 </li>
       <li><a href="modules/classification.html#documents.classification.embedding_generator.EmbeddingGenerator.generate_embeddings_batch">generate_embeddings_batch() (documents.classification.embedding_generator.EmbeddingGenerator method)</a>
 </li>
+      <li><a href="modules/api.html#api.views.DocumentSearchView.get">get() (api.views.DocumentSearchView method)</a>, <a href="modules/index.html#api.views.DocumentSearchView.get">[1]</a>
+
+      <ul>
+        <li><a href="modules/api.html#api.views.DocumentTypesView.get">(api.views.DocumentTypesView method)</a>, <a href="modules/index.html#api.views.DocumentTypesView.get">[1]</a>
+</li>
+        <li><a href="modules/api.html#api.views.StatisticsView.get">(api.views.StatisticsView method)</a>, <a href="modules/index.html#api.views.StatisticsView.get">[1]</a>
+</li>
+        <li><a href="modules/api.html#api.views.SystemStatusView.get">(api.views.SystemStatusView method)</a>, <a href="modules/index.html#api.views.SystemStatusView.get">[1]</a>
+</li>
+      </ul></li>
       <li><a href="modules/documents.html#documents.config_loader.ConfigLoader.get_all_keywords">get_all_keywords() (documents.config_loader.ConfigLoader method)</a>, <a href="modules/index.html#documents.config_loader.ConfigLoader.get_all_keywords">[1]</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_all_providers_info">get_all_providers_info() (documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_available_providers">get_available_providers() (documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.get_best_provider">get_best_provider() (documents.llm.factory.LLMFactory class method)</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.get_classification_performance">get_classification_performance() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.classifier.DocumentClassifier.get_classification_statistics">get_classification_statistics() (documents.classification.classifier.DocumentClassifier method)</a>
 </li>
+      <li><a href="modules/classification.html#documents.classification.vector_search.VectorSearch.get_collection_info">get_collection_info() (documents.classification.vector_search.VectorSearch method)</a>
+</li>
       <li><a href="modules/classification.html#documents.classification.vector_search.VectorSearch.get_collection_stats">get_collection_stats() (documents.classification.vector_search.VectorSearch method)</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.get_completion">get_completion() (documents.llm.base.BaseLLMProvider method)</a>
+
+      <ul>
+        <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.get_completion">(documents.llm.openai_provider.OpenAIProvider method)</a>
 </li>
+      </ul></li>
       <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.get_completion_simple">get_completion_simple() (documents.llm.base.BaseLLMProvider method)</a>
 </li>
       <li><a href="modules/documents.html#documents.config_loader.get_config_loader">get_config_loader() (in module documents.config_loader)</a>, <a href="modules/index.html#documents.config_loader.get_config_loader">[1]</a>
@@ -442,17 +541,23 @@
         <li><a href="modules/documents.html#documents.config_loader.get_document_types">(in module documents.config_loader)</a>, <a href="modules/index.html#documents.config_loader.get_document_types">[1]</a>
 </li>
       </ul></li>
-      <li><a href="modules/documents.html#documents.config_loader.DocumentTypeConfig.get_entity_by_name">get_entity_by_name() (documents.config_loader.DocumentTypeConfig method)</a>, <a href="modules/index.html#documents.config_loader.DocumentTypeConfig.get_entity_by_name">[1]</a>
+      <li><a href="modules/ocr.html#documents.ocr.factory.OCRFactory.get_engine">get_engine() (documents.ocr.factory.OCRFactory static method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/documents.html#documents.config_loader.DocumentTypeConfig.get_entity_by_name">get_entity_by_name() (documents.config_loader.DocumentTypeConfig method)</a>, <a href="modules/index.html#documents.config_loader.DocumentTypeConfig.get_entity_by_name">[1]</a>
+</li>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.get_extraction_statistics">get_extraction_statistics() (documents.extraction.llm_extractor.LLMExtractor method)</a>
+</li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.get_feedback_statistics">get_feedback_statistics() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.get_feedback_tracker">get_feedback_tracker() (in module documents.classification.feedback_tracker)</a>
 </li>
-      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine.get_file_hash">get_file_hash() (documents.ocr.base.BaseOCREngine method)</a>
+      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine.get_file_hash">get_file_hash() (documents.ocr.base.BaseOCREngine method)</a>, <a href="modules/ocr.html#id0">[1]</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.keyword_matcher.KeywordMatcher.get_keyword_matches">get_keyword_matches() (documents.classification.keyword_matcher.KeywordMatcher method)</a>
+</li>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.get_llm_extractor">get_llm_extractor() (in module documents.extraction.llm_extractor)</a>
 </li>
       <li><a href="modules/classification.html#documents.classification.embedding_generator.EmbeddingGenerator.get_model_info">get_model_info() (documents.classification.embedding_generator.EmbeddingGenerator method)</a>
 </li>
@@ -460,7 +565,23 @@
 </li>
       <li><a href="modules/extraction.html#documents.extraction.prompt_manager.get_prompt_manager">get_prompt_manager() (in module documents.extraction.prompt_manager)</a>
 </li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.get_provider">get_provider() (documents.llm.factory.LLMFactory class method)</a>
+
+      <ul>
+        <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_provider">(documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.get_provider_for_task">get_provider_for_task() (documents.llm.factory.LLMFactory class method)</a>
+</li>
       <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.get_provider_info">get_provider_info() (documents.llm.base.BaseLLMProvider method)</a>
+
+      <ul>
+        <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.get_provider_info">(documents.llm.openai_provider.OpenAIProvider method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.get_provider_name">get_provider_name() (documents.llm.openai_provider.OpenAIProvider method)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.get_providers_info">get_providers_info() (documents.llm.factory.LLMFactory class method)</a>
 </li>
       <li><a href="modules/documents.html#documents.config_loader.DocumentTypeConfig.get_required_entities">get_required_entities() (documents.config_loader.DocumentTypeConfig method)</a>, <a href="modules/index.html#documents.config_loader.DocumentTypeConfig.get_required_entities">[1]</a>
 </li>
@@ -486,10 +607,18 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.is_available">is_available() (documents.llm.base.BaseLLMProvider method)</a>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.initialize">initialize() (documents.llm.factory.LLMFactory class method)</a>
+</li>
+      <li><a href="modules/api.html#api.views.is_allowed_file_type">is_allowed_file_type() (in module api.views)</a>, <a href="modules/index.html#api.views.is_allowed_file_type">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/llm.html#documents.llm.base.BaseLLMProvider.is_available">is_available() (documents.llm.base.BaseLLMProvider method)</a>
+
+      <ul>
+        <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.is_available">(documents.llm.openai_provider.OpenAIProvider method)</a>
+</li>
+      </ul></li>
       <li><a href="modules/extraction.html#documents.extraction.entity_validator.ValidationResult.is_valid">is_valid (documents.extraction.entity_validator.ValidationResult attribute)</a>
 </li>
   </ul></td>
@@ -508,10 +637,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationStats.last_updated">last_updated (documents.classification.feedback_tracker.ClassificationStats attribute)</a>
 </li>
-      <li><a href="modules/llm.html#documents.llm.base.LLMRequest">LLMRequest (class in documents.llm.base)</a>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.list_providers">list_providers() (documents.llm.factory.LLMFactory class method)</a>
+</li>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor">LLMExtractor (class in documents.extraction.llm_extractor)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory">LLMFactory (class in documents.llm.factory)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry">LLMProviderRegistry (class in documents.llm.factory)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.base.LLMRequest">LLMRequest (class in documents.llm.base)</a>
+</li>
       <li><a href="modules/llm.html#documents.llm.base.LLMResponse">LLMResponse (class in documents.llm.base)</a>
 </li>
       <li><a href="modules/documents.html#documents.config_loader.ConfigLoader.load_config">load_config() (documents.config_loader.ConfigLoader method)</a>, <a href="modules/index.html#documents.config_loader.ConfigLoader.load_config">[1]</a>
@@ -546,6 +683,8 @@
 </li>
         <li><a href="modules/api.html#module-api.serializers">api.serializers</a>, <a href="modules/index.html#module-api.serializers">[1]</a>
 </li>
+        <li><a href="modules/api.html#module-api.views">api.views</a>, <a href="modules/index.html#module-api.views">[1]</a>
+</li>
         <li><a href="modules/index.html#module-documents">documents</a>
 </li>
         <li><a href="modules/classification.html#module-documents.classification.classifier">documents.classification.classifier</a>
@@ -566,15 +705,25 @@
 </li>
         <li><a href="modules/extraction.html#module-documents.extraction.entity_validator">documents.extraction.entity_validator</a>
 </li>
+        <li><a href="modules/extraction.html#module-documents.extraction.llm_extractor">documents.extraction.llm_extractor</a>
+</li>
         <li><a href="modules/extraction.html#module-documents.extraction.prompt_manager">documents.extraction.prompt_manager</a>
 </li>
         <li><a href="modules/llm.html#module-documents.llm.base">documents.llm.base</a>
+</li>
+        <li><a href="modules/llm.html#module-documents.llm.factory">documents.llm.factory</a>
+</li>
+        <li><a href="modules/llm.html#module-documents.llm.openai_provider">documents.llm.openai_provider</a>
 </li>
         <li><a href="modules/ocr.html#module-documents.ocr.azure_engine">documents.ocr.azure_engine</a>
 </li>
         <li><a href="modules/ocr.html#module-documents.ocr.base">documents.ocr.base</a>
 </li>
+        <li><a href="modules/ocr.html#module-documents.ocr.factory">documents.ocr.factory</a>
+</li>
         <li><a href="modules/ocr.html#module-documents.ocr.google_vision_engine">documents.ocr.google_vision_engine</a>
+</li>
+        <li><a href="modules/ocr.html#module-documents.ocr.tesseract_engine">documents.ocr.tesseract_engine</a>
 </li>
       </ul></li>
   </ul></td>
@@ -582,6 +731,10 @@
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/ocr.html#documents.ocr.base.BaseOCREngine.None">None (documents.ocr.base.BaseOCREngine attribute)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedback.notes">notes (documents.classification.feedback_tracker.ClassificationFeedback attribute)</a>
 </li>
@@ -591,12 +744,16 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/ocr.html#documents.ocr.factory.OCRFactory">OCRFactory (class in documents.ocr.factory)</a>
+</li>
       <li><a href="modules/index.html#documents.exceptions.OCRProcessingError">OCRProcessingError</a>
 </li>
-      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedback.original_classification">original_classification (documents.classification.feedback_tracker.ClassificationFeedback attribute)</a>
+      <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider">OpenAIProvider (class in documents.llm.openai_provider)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedback.original_classification">original_classification (documents.classification.feedback_tracker.ClassificationFeedback attribute)</a>
+</li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedback.original_confidence">original_confidence (documents.classification.feedback_tracker.ClassificationFeedback attribute)</a>
 </li>
       <li><a href="modules/extraction.html#documents.extraction.entity_validator.ValidationResult.original_value">original_value (documents.extraction.entity_validator.ValidationResult attribute)</a>
@@ -607,14 +764,26 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/api.html#api.views.DocumentBatchProcessView.parser_classes">parser_classes (api.views.DocumentBatchProcessView attribute)</a>, <a href="modules/index.html#api.views.DocumentBatchProcessView.parser_classes">[1]</a>
+
+      <ul>
+        <li><a href="modules/api.html#api.views.DocumentProcessView.parser_classes">(api.views.DocumentProcessView attribute)</a>, <a href="modules/api.html#id0">[1]</a>, <a href="modules/index.html#api.views.DocumentProcessView.parser_classes">[2]</a>, <a href="modules/index.html#id0">[3]</a>
+</li>
+      </ul></li>
       <li><a href="modules/extraction.html#documents.extraction.entity_validator.ValidationRule.pattern">pattern (documents.extraction.entity_validator.ValidationRule attribute)</a>
 </li>
+      <li><a href="modules/api.html#api.views.DocumentBatchProcessView.post">post() (api.views.DocumentBatchProcessView method)</a>, <a href="modules/index.html#api.views.DocumentBatchProcessView.post">[1]</a>
+
+      <ul>
+        <li><a href="modules/api.html#api.views.DocumentProcessView.post">(api.views.DocumentProcessView method)</a>, <a href="modules/api.html#id9">[1]</a>, <a href="modules/index.html#api.views.DocumentProcessView.post">[2]</a>, <a href="modules/index.html#id9">[3]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationStats.processing_time_stats">processing_time_stats (documents.classification.feedback_tracker.ClassificationStats attribute)</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.LLMRequest.prompt">prompt (documents.llm.base.LLMRequest attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/extraction.html#documents.extraction.prompt_manager.PromptManager">PromptManager (class in documents.extraction.prompt_manager)</a>
 </li>
       <li><a href="modules/extraction.html#documents.extraction.prompt_manager.PromptTemplate">PromptTemplate (class in documents.extraction.prompt_manager)</a>
@@ -627,6 +796,8 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.register_provider">register_provider() (documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
       <li><a href="modules/documents.html#documents.config_loader.ConfigLoader.reload_config">reload_config() (documents.config_loader.ConfigLoader method)</a>, <a href="modules/index.html#documents.config_loader.ConfigLoader.reload_config">[1]</a>
 </li>
       <li><a href="modules/extraction.html#documents.extraction.prompt_manager.PromptManager.reload_templates">reload_templates() (documents.extraction.prompt_manager.PromptManager method)</a>
@@ -640,7 +811,11 @@
       <li><a href="modules/classification.html#documents.classification.vector_search.VectorSearch.reset_collection">reset_collection() (documents.classification.vector_search.VectorSearch method)</a>
 </li>
       <li><a href="modules/extraction.html#documents.extraction.entity_validator.EntityValidator.reset_statistics">reset_statistics() (documents.extraction.entity_validator.EntityValidator method)</a>
+
+      <ul>
+        <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.reset_statistics">(documents.extraction.llm_extractor.LLMExtractor method)</a>
 </li>
+      </ul></li>
       <li><a href="modules/llm.html#documents.llm.base.LLMResponse.response_time_ms">response_time_ms (documents.llm.base.LLMResponse attribute)</a>
 </li>
   </ul></td>
@@ -653,15 +828,21 @@
 </li>
       <li><a href="modules/classification.html#documents.classification.vector_search.VectorSearch.search_by_document_type">search_by_document_type() (documents.classification.vector_search.VectorSearch method)</a>
 </li>
-      <li><a href="modules/llm.html#documents.llm.base.LLMRequest.stop_sequences">stop_sequences (documents.llm.base.LLMRequest attribute)</a>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMProviderRegistry.set_default_provider">set_default_provider() (documents.llm.factory.LLMProviderRegistry method)</a>
+</li>
+      <li><a href="modules/api.html#api.views.StatisticsView">StatisticsView (class in api.views)</a>, <a href="modules/index.html#api.views.StatisticsView">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/llm.html#documents.llm.base.LLMRequest.stop_sequences">stop_sequences (documents.llm.base.LLMRequest attribute)</a>
+</li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationFeedbackTracker.submit_feedback">submit_feedback() (documents.classification.feedback_tracker.ClassificationFeedbackTracker method)</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.LLMResponse.success">success (documents.llm.base.LLMResponse attribute)</a>
 </li>
       <li><a href="modules/llm.html#documents.llm.base.LLMRequest.system_message">system_message (documents.llm.base.LLMRequest attribute)</a>
+</li>
+      <li><a href="modules/api.html#api.views.SystemStatusView">SystemStatusView (class in api.views)</a>, <a href="modules/index.html#api.views.SystemStatusView">[1]</a>
 </li>
   </ul></td>
 </tr></table>
@@ -671,8 +852,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/llm.html#documents.llm.base.LLMRequest.temperature">temperature (documents.llm.base.LLMRequest attribute)</a>
 </li>
+      <li><a href="modules/ocr.html#documents.ocr.tesseract_engine.TesseractEngine">TesseractEngine (class in documents.ocr.tesseract_engine)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.test_all_providers">test_all_providers() (documents.llm.factory.LLMFactory class method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/llm.html#documents.llm.openai_provider.OpenAIProvider.test_connection">test_connection() (documents.llm.openai_provider.OpenAIProvider method)</a>
+</li>
+      <li><a href="modules/extraction.html#documents.extraction.llm_extractor.LLMExtractor.test_extraction">test_extraction() (documents.extraction.llm_extractor.LLMExtractor method)</a>
+</li>
+      <li><a href="modules/llm.html#documents.llm.factory.LLMFactory.test_provider">test_provider() (documents.llm.factory.LLMFactory class method)</a>
+</li>
       <li><a href="modules/classification.html#documents.classification.feedback_tracker.ClassificationStats.total_classifications">total_classifications (documents.classification.feedback_tracker.ClassificationStats attribute)</a>
 </li>
   </ul></td>

@@ -13,15 +13,9 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../documind'))
 
-# Try to setup Django if available
-try:
-    import django
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'documind.settings')
-    django.setup()
-    DJANGO_AVAILABLE = True
-except (ImportError, Exception) as e:
-    DJANGO_AVAILABLE = False
-    print(f"Django setup failed: {e}. Building docs without Django autodoc.")
+# Skip Django setup for docs generation - use mock imports instead
+DJANGO_AVAILABLE = False
+print("Building docs without Django autodoc to avoid configuration issues.")
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -54,11 +48,12 @@ try:
 except ImportError:
     pass
 
-try:
-    import sphinxcontrib_django
-    extensions.append('sphinxcontrib_django')
-except ImportError:
-    pass
+# Skip Django extension to avoid configuration issues
+# try:
+#     import sphinxcontrib_django
+#     extensions.append('sphinxcontrib_django')
+# except ImportError:
+#     pass
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

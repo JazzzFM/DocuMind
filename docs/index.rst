@@ -78,6 +78,7 @@ Table of Contents
 
    installation
    quickstart
+   tutorials
    configuration
    api_reference
 

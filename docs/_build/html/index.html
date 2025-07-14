@@ -50,6 +50,15 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#getting-started-tutorial">Getting Started Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#api-usage-examples">API Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#batch-processing">Batch Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#custom-document-types">Custom Document Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#advanced-configuration">Advanced Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#best-practices">Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#example-integration">Example Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -118,6 +127,31 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <section id="system-architecture">
 <h2>System Architecture<a class="headerlink" href="#system-architecture" title="Link to this heading"></a></h2>
 <p>DocuMind follows a modular architecture with clear separation of concerns:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>┌─────────────────────────────────────────────────────────────┐
+│                        API Layer                            │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ Django REST │  │ JWT Auth    │  │ Rate Limiting       │  │
+│  │ Framework   │  │             │  │                     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    Processing Pipeline                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ OCR Engine  │  │ Document    │  │ Entity Extraction   │  │
+│  │ (Tesseract) │  │ Classifier  │  │ (LLM)               │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                     Data Layer                              │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ PostgreSQL  │  │ ChromaDB    │  │ Redis Cache         │  │
+│  │ (Metadata)  │  │ (Vectors)   │  │ (Sessions)          │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
 </section>
 <section id="table-of-contents">
 <h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
@@ -149,6 +183,47 @@ curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </spa
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials and Examples</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#getting-started-tutorial">Getting Started Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#quick-setup">Quick Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#first-document-processing">First Document Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#api-usage-examples">API Usage Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#document-processing">Document Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#batch-processing">Batch Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#command-line-interface">Command Line Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#api-batch-processing">API Batch Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#custom-document-types">Custom Document Types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#adding-new-document-types">Adding New Document Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#custom-prompt-templates">Custom Prompt Templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#testing-custom-types">Testing Custom Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#advanced-configuration">Advanced Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#performance-tuning">Performance Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#monitoring-and-logging">Monitoring and Logging</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#best-practices">Best Practices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#document-quality">Document Quality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#api-usage">API Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#security">Security</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html#example-integration">Example Integration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#environment-variables">Environment Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration.html#yaml-configuration-files">YAML Configuration Files</a></li>

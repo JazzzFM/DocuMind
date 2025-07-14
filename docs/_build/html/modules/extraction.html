@@ -65,7 +65,7 @@
 <li class="toctree-l3"><a class="reference internal" href="classification.html">Classification Module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Extraction Module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.base">Base Extractor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#llm-extractor">LLM Extractor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.llm_extractor">LLM Extractor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.prompt_manager">Prompt Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-documents.extraction.entity_validator">Entity Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
@@ -133,8 +133,140 @@
 </dd></dl>
 
 </section>
-<section id="llm-extractor">
-<h2>LLM Extractor<a class="headerlink" href="#llm-extractor" title="Link to this heading"></a></h2>
+<section id="module-documents.extraction.llm_extractor">
+<span id="llm-extractor"></span><h2>LLM Extractor<a class="headerlink" href="#module-documents.extraction.llm_extractor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">documents.extraction.llm_extractor.</span></span><span class="sig-name descname"><span class="pre">LLMExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#documents.extraction.base.BaseEntityExtractor" title="documents.extraction.base.BaseEntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEntityExtractor</span></code></a></p>
+<p>Advanced LLM-based entity extractor with comprehensive validation and prompt management.</p>
+<p>Integrates LLM providers, prompt templates, and entity validation for robust
+entity extraction from documents.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize the LLM extractor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>provider_name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – Specific LLM provider to use (defaults to configured provider)</p></li>
+<li><p><strong>use_cache</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to cache extraction results</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.extract_entities">
+<span class="sig-name descname"><span class="pre">extract_entities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.extract_entities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.extract_entities" title="Link to this definition"></a></dt>
+<dd><p>Extract entities from document text using LLM with comprehensive validation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Type of document being processed</p></li>
+<li><p><strong>text</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Document text content</p></li>
+<li><p><strong>**kwargs</strong> – Additional parameters for extraction</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing extracted and validated entities</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="index.html#documents.exceptions.EntityExtractionError" title="documents.exceptions.EntityExtractionError"><strong>EntityExtractionError</strong></a> – If extraction fails</p></li>
+<li><p><a class="reference internal" href="index.html#documents.exceptions.DocumentClassificationError" title="documents.exceptions.DocumentClassificationError"><strong>DocumentClassificationError</strong></a> – If document type configuration issues</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.extract_entities_batch">
+<span class="sig-name descname"><span class="pre">extract_entities_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">documents</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.extract_entities_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.extract_entities_batch" title="Link to this definition"></a></dt>
+<dd><p>Extract entities from multiple documents in batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span>) – List of dicts with ‘document_type’ and ‘text’ keys</p></li>
+<li><p><strong>**kwargs</strong> – Additional parameters for extraction</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of extraction results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.clear_cache">
+<span class="sig-name descname"><span class="pre">clear_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.clear_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.clear_cache" title="Link to this definition"></a></dt>
+<dd><p>Clear extraction cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – If specified, only clear cache for this document type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.get_extraction_statistics">
+<span class="sig-name descname"><span class="pre">get_extraction_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.get_extraction_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.get_extraction_statistics" title="Link to this definition"></a></dt>
+<dd><p>Get extraction performance statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with extraction statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.reset_statistics">
+<span class="sig-name descname"><span class="pre">reset_statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.reset_statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.reset_statistics" title="Link to this definition"></a></dt>
+<dd><p>Reset extraction statistics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.LLMExtractor.test_extraction">
+<span class="sig-name descname"><span class="pre">test_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">document_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#LLMExtractor.test_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.LLMExtractor.test_extraction" title="Link to this definition"></a></dt>
+<dd><p>Test extraction functionality with sample text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>document_type</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Document type to test</p></li>
+<li><p><strong>sample_text</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Sample text to extract from</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Test results including timing and validation info</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="documents.extraction.llm_extractor.get_llm_extractor">
+<span class="sig-prename descclassname"><span class="pre">documents.extraction.llm_extractor.</span></span><span class="sig-name descname"><span class="pre">get_llm_extractor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/documents/extraction/llm_extractor.html#get_llm_extractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#documents.extraction.llm_extractor.get_llm_extractor" title="Link to this definition"></a></dt>
+<dd><p>Get or create global LLM extractor instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#documents.extraction.llm_extractor.LLMExtractor" title="documents.extraction.llm_extractor.LLMExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMExtractor</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-documents.extraction.prompt_manager">
 <span id="prompt-manager"></span><h2>Prompt Manager<a class="headerlink" href="#module-documents.extraction.prompt_manager" title="Link to this heading"></a></h2>

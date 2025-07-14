@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>documents.llm.factory &mdash; DocuMind v1.0.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            DocuMind
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api_reference.html">API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/index.html">API Modules Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DocuMind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">documents.llm.factory</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for documents.llm.factory</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decouple</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.llm.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseLLMProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.llm.openai_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">documents.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentClassificationError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LLMProviderRegistry">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMProviderRegistry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Registry for managing multiple LLM providers.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="LLMProviderRegistry.__init__">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseLLMProvider</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="LLMProviderRegistry.register_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.register_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="n">BaseLLMProvider</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new LLM provider.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">provider</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registered LLM provider: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LLMProviderRegistry.get_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseLLMProvider</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a specific provider by name or the default provider.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_provider</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_provider</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">:</span>
+            <span class="c1"># Return the first available provider</span>
+            <span class="k">for</span> <span class="n">provider</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+                    <span class="k">return</span> <span class="n">provider</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="LLMProviderRegistry.get_available_providers">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_available_providers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_providers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of available provider names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">provider</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> 
+            <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
+        <span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="LLMProviderRegistry.set_default_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.set_default_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_default_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the default provider.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_default_provider</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set default LLM provider to: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provider &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; not registered&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LLMProviderRegistry.get_all_providers_info">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMProviderRegistry.get_all_providers_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_providers_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get information about all registered providers.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">name</span><span class="p">:</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_provider_info</span><span class="p">()</span> 
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">provider</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LLMFactory">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMFactory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enhanced factory for creating and managing LLM providers with fallback support.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">_registry</span> <span class="o">=</span> <span class="n">LLMProviderRegistry</span><span class="p">()</span>
+    <span class="n">_initialized</span> <span class="o">=</span> <span class="kc">False</span>
+    
+<div class="viewcode-block" id="LLMFactory.initialize">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.initialize">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the factory with available providers.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_initialized</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Register OpenAI provider</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">openai_provider</span> <span class="o">=</span> <span class="n">OpenAIProvider</span><span class="p">()</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">register_provider</span><span class="p">(</span><span class="s2">&quot;openai&quot;</span><span class="p">,</span> <span class="n">openai_provider</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">openai_provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OpenAI provider is available&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;OpenAI provider registered but not available (likely missing API key)&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to register OpenAI provider: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># TODO: Register other providers (Anthropic, Hugging Face, etc.)</span>
+            <span class="c1"># try:</span>
+            <span class="c1">#     anthropic_provider = AnthropicProvider()</span>
+            <span class="c1">#     cls._registry.register_provider(&quot;anthropic&quot;, anthropic_provider)</span>
+            <span class="c1"># except Exception as e:</span>
+            <span class="c1">#     logger.warning(f&quot;Failed to register Anthropic provider: {e}&quot;)</span>
+            
+            <span class="c1"># Set default provider based on configuration</span>
+            <span class="n">default_provider</span> <span class="o">=</span> <span class="n">config</span><span class="p">(</span><span class="s1">&#39;LLM_PROVIDER&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;openai&#39;</span><span class="p">)</span>
+            <span class="n">available_providers</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="n">default_provider</span> <span class="ow">in</span> <span class="n">available_providers</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">set_default_provider</span><span class="p">(</span><span class="n">default_provider</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using configured default provider: </span><span class="si">{</span><span class="n">default_provider</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">available_providers</span><span class="p">:</span>
+                <span class="c1"># Fallback to first available provider</span>
+                <span class="n">fallback_provider</span> <span class="o">=</span> <span class="n">available_providers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">set_default_provider</span><span class="p">(</span><span class="n">fallback_provider</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Configured provider &#39;</span><span class="si">{</span><span class="n">default_provider</span><span class="si">}</span><span class="s2">&#39; not available. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Using fallback: </span><span class="si">{</span><span class="n">fallback_provider</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;No LLM providers are available!&quot;</span><span class="p">)</span>
+            
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_initialized</span> <span class="o">=</span> <span class="kc">True</span>
+            
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize LLM factory: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLM factory initialization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.get_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.get_provider">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_provider</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseLLMProvider</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get an LLM provider instance.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            provider_name: Optional specific provider name. If None, returns default.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            LLM provider instance</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            DocumentClassificationError: If no providers are available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        
+        <span class="n">provider</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">available</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">provider_name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;LLM provider &#39;</span><span class="si">{</span><span class="n">provider_name</span><span class="si">}</span><span class="s2">&#39; not available. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Available providers: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;No LLM providers available. Available providers: </span><span class="si">{</span><span class="n">available</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LLM provider &#39;</span><span class="si">{</span><span class="n">provider</span><span class="o">.</span><span class="n">provider_name</span><span class="si">}</span><span class="s2">&#39; is not available&quot;</span>
+            <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">provider</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.get_best_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.get_best_provider">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_best_provider</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseLLMProvider</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the best available provider based on performance and availability.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Best available LLM provider</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        
+        <span class="n">available_providers</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">available_providers</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DocumentClassificationError</span><span class="p">(</span><span class="s2">&quot;No LLM providers are available&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># For now, just return the default provider</span>
+        <span class="c1"># In the future, this could implement more sophisticated selection logic</span>
+        <span class="c1"># based on performance metrics, cost, etc.</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_provider</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.get_provider_for_task">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.get_provider_for_task">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_provider_for_task</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseLLMProvider</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the best provider for a specific task.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            task: Task type (e.g., &#39;entity_extraction&#39;, &#39;classification&#39;, &#39;summarization&#39;)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Best provider for the task</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        
+        <span class="c1"># For now, all tasks use the same provider</span>
+        <span class="c1"># In the future, this could route different tasks to different providers</span>
+        <span class="c1"># based on their strengths</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_provider</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.list_providers">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.list_providers">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_providers</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of all available provider names.&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_available_providers</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.get_providers_info">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.get_providers_info">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_providers_info</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get detailed information about all providers.&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_all_providers_info</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.test_provider">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.test_provider">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_provider</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">provider_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test a specific provider&#39;s connectivity and functionality.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            provider_name: Name of the provider to test</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Test results dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">provider</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="n">provider_name</span><span class="p">,</span>
+                    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Provider not found or not registered&quot;</span>
+                <span class="p">}</span>
+            
+            <span class="c1"># Test basic connectivity</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s1">&#39;test_connection&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">provider</span><span class="o">.</span><span class="n">test_connection</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Fallback test</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="n">provider_name</span><span class="p">,</span>
+                    <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="n">provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">(),</span>
+                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">provider</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;Provider not available&quot;</span>
+                <span class="p">}</span>
+                
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;provider&quot;</span><span class="p">:</span> <span class="n">provider_name</span><span class="p">,</span>
+                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="LLMFactory.test_all_providers">
+<a class="viewcode-back" href="../../../modules/llm.html#documents.llm.factory.LLMFactory.test_all_providers">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_all_providers</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test all registered providers.&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        
+        <span class="n">all_providers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">_providers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">for</span> <span class="n">provider_name</span> <span class="ow">in</span> <span class="n">all_providers</span><span class="p">:</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">provider_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">test_provider</span><span class="p">(</span><span class="n">provider_name</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">results</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DocuMind Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
