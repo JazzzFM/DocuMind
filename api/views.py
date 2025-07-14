@@ -50,7 +50,7 @@ class DocumentProcessView(APIView):
                 text = ocr_engine.extract_text(temp_file_path)
 
                 # Classification
-                doc_type, confidence = classifier.classify(text)
+                doc_type, confidence, _ = classifier.classify(text)
 
                 extracted_entities_data = {}
                 if extract_entities and doc_type != 'unknown':
@@ -184,7 +184,7 @@ class DocumentBatchProcessView(APIView):
                         extractor = get_llm_extractor()
 
                         text = ocr_engine.extract_text(temp_file_path)
-                        doc_type, confidence = classifier.classify(text)
+                        doc_type, confidence, _ = classifier.classify(text)
                         extracted_entities_data = {}
                         if doc_type != 'unknown':
                             extraction_result = extractor.extract_entities(doc_type, text)

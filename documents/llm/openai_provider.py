@@ -179,6 +179,15 @@ class OpenAIProvider(BaseLLMProvider):
             logger.warning(f"OpenAI availability check failed: {e}")
             return False
 
+    def get_provider_name(self) -> str:
+        """
+        Get the provider name.
+        
+        Returns:
+            Provider name string
+        """
+        return self.provider_name
+
     def get_provider_info(self) -> Dict[str, Any]:
         """
         Get information about the OpenAI provider and its configuration.

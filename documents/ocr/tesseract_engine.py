@@ -1,6 +1,6 @@
 import pytesseract
 from PIL import Image
-from pdf2image import convert_from_path, PDFInfoNotInstalledError, PDFPageCountError
+from pdf2image import convert_from_path
 from documents.ocr.base import BaseOCREngine
 from documents.exceptions import OCRProcessingError
 
@@ -16,7 +16,7 @@ class TesseractEngine(BaseOCREngine):
                 return text
             else:
                 return pytesseract.image_to_string(Image.open(file_path))
-        except (pytesseract.TesseractError, PDFInfoNotInstalledError, PDFPageCountError, FileNotFoundError) as e:
+        except (pytesseract.TesseractError, FileNotFoundError) as e:
             raise OCRProcessingError(f"Error during Tesseract OCR processing: {e}") from e
         except Exception as e:
             raise OCRProcessingError(f"An unexpected error occurred during Tesseract OCR processing: {e}") from e

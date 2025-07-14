@@ -76,7 +76,7 @@ class Command(BaseCommand):
         filename = os.path.basename(file_path)
         text = ocr_engine.extract_text(file_path)
 
-        doc_type, confidence = classifier.classify(text)
+        doc_type, confidence, _ = classifier.classify(text)
         
         extracted_entities = {}
         if doc_type != 'unknown':

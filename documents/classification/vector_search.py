@@ -243,6 +243,31 @@ class VectorSearch:
             logger.error(f"Failed to retrieve document {doc_id}: {e}")
             return None
 
+    def get_collection_info(self) -> Dict[str, Any]:
+        """
+        Get information about the ChromaDB collection.
+        
+        Returns:
+            Dictionary with collection information
+        """
+        try:
+            count = self.collection.count()
+            return {
+                "collection_name": self.collection_name,
+                "persist_directory": self.persist_directory,
+                "total_documents": count,
+                "status": "healthy" if count >= 0 else "error"
+            }
+        except Exception as e:
+            logger.error(f"Failed to get collection info: {e}")
+            return {
+                "collection_name": self.collection_name,
+                "persist_directory": self.persist_directory,
+                "total_documents": 0,
+                "status": "error",
+                "error": str(e)
+            }
+
     def get_collection_stats(self) -> Dict[str, Any]:
         """
         Get statistics about the ChromaDB collection.
