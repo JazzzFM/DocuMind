@@ -1220,8 +1220,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For any questions, issues, or support, please use the following channels:
 
 -   📧 **Email**: jazzesfm@gmail.com
--   📚 **Documentation**: [docs.documind.ai](https://docs.documind.ai) (if applicable)
--   🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/documind/issues) (for bug reports and feature requests)
 
 ---
 
